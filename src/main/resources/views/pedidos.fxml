@@ -1,14 +1,490 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane prefHeight="900.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
 
-</AnchorPane>
+<!-- ========================= -->
+<!-- CONTENIDO -->
+<!-- ========================= -->
+<center>
+
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: #F9F7F5;                        -fx-background-color: #F9F7F5;">
+
+        <content>
+
+            <VBox spacing="20" style="-fx-background-color: #F9F7F5;">
+
+                <padding>
+                    <Insets bottom="20.0" left="25.0" right="25.0" />
+                </padding>
+               <HBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="20" style="-fx-background-color: #F7F3F1; -fx-border-color: #D6C8C2; -fx-border-width: 0 0 1 0;">
+
+                   <padding>
+                       <Insets bottom="10" left="25" right="25" top="10" />
+                   </padding>
+
+                   <Label text="Gestión de Pedidos">
+                       <font>
+                           <Font name="Segoe UI Semibold" size="28" />
+                       </font>
+                   </Label>
+
+                   <Pane HBox.hgrow="ALWAYS" />
+
+                   <Label style="-fx-text-fill: #7A4B34; -fx-font-size: 16px; -fx-font-family: 'Segoe UI Semibold';" text="Pedidos Recientes" />
+
+                   <Label style="-fx-text-fill: #8E8E8E; -fx-font-size: 16px; -fx-font-family: 'Segoe UI';" text="Histórico" />
+
+                   <Label style="-fx-text-fill: #8E8E8E; -fx-font-size: 15px; -fx-font-family: 'Segoe UI Semibold';" text="ADMIN" />
+
+                   <Button prefHeight="40" prefWidth="40" style="-fx-background-color: transparent; -fx-font-size: 18px;" text="⚙" />
+
+               </HBox>
+
+                <!-- ========================= -->
+                <!-- FILTROS -->
+                <!-- ========================= -->
+
+                <VBox spacing="15" style="-fx-background-color: white; -fx-border-color: #D9CBC5; -fx-border-radius: 8; -fx-background-radius: 8;">
+
+                    <padding>
+                        <Insets bottom="20" left="20" right="20" top="20" />
+                    </padding>
+
+                    <HBox alignment="CENTER_LEFT" spacing="20">
+
+                        <!-- CLIENTE -->
+                        <VBox spacing="8">
+                            <Label style="-fx-font-size: 15px; -fx-font-family: 'Segoe UI Semibold';" text="Cliente" />
+
+                            <TextField fx:id="txtBuscarCliente" prefHeight="40" prefWidth="300" promptText="Buscar cliente..." style="-fx-font-size: 14px; -fx-font-family: 'Segoe UI';" />
+                        </VBox>
+
+                        <!-- FECHA -->
+                        <VBox spacing="8">
+                            <Label style="-fx-font-size: 15px; -fx-font-family: 'Segoe UI Semibold';" text="Fecha" />
+
+                            <DatePicker fx:id="dpFechaFiltro" prefHeight="40" prefWidth="300" style="-fx-font-size: 14px;" />
+                        </VBox>
+
+                        <!-- ESTADO -->
+                        <VBox spacing="8">
+                            <Label style="-fx-font-size: 15px; -fx-font-family: 'Segoe UI Semibold';" text="Estado" />
+
+                            <ComboBox fx:id="cbEstadoFiltro" prefHeight="40" prefWidth="300" promptText="Todos los estados" style="-fx-font-size: 14px;" />
+                        </VBox>
+
+                        <Pane HBox.hgrow="ALWAYS" />
+
+                        <!-- BOTONES -->
+                        <VBox alignment="BOTTOM_CENTER">
+                            <HBox spacing="10">
+
+                                <Button fx:id="btnNuevoPedido" prefHeight="42" prefWidth="180" style="-fx-background-color: #5C3B2E;                                            -fx-text-fill: white;                                            -fx-font-size: 15px;                                            -fx-font-family: 'Segoe UI Semibold';                                            -fx-background-radius: 5;" text="+ Nuevo Pedido" />
+
+                                <Button fx:id="btnLimpiar" prefHeight="42" prefWidth="120" style="-fx-background-color: white;                                            -fx-border-color: #D0C2BB;                                            -fx-border-radius: 5;                                            -fx-font-size: 15px;" text="Limpiar" />
+
+                            </HBox>
+                        </VBox>
+
+                    </HBox>
+
+                </VBox>
+
+                <!-- ========================= -->
+                <!-- TABLA + FORMULARIO -->
+                <!-- ========================= -->
+
+                <HBox spacing="20" VBox.vgrow="ALWAYS">
+
+                    <!-- ========================= -->
+                    <!-- TABLA PEDIDOS -->
+                    <!-- ========================= -->
+
+                    <VBox prefWidth="900" spacing="10" style="-fx-background-color: white;                              -fx-border-color: #D9CBC5;                              -fx-border-radius: 8;                              -fx-background-radius: 8;" VBox.vgrow="ALWAYS">
+
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+
+                        <HBox alignment="CENTER_LEFT">
+
+                            <Label style="-fx-font-size: 22px;                                       -fx-font-family: 'Segoe UI Semibold';" text="Listado de Pedidos" />
+
+                            <Pane HBox.hgrow="ALWAYS" />
+
+                            <Label style="-fx-text-fill: #8C8C8C;                                       -fx-font-size: 14px;" text="Mostrando pedidos" />
+                        </HBox>
+
+                        <!-- TABLA -->
+
+                        <TableView fx:id="tablePedidos" prefHeight="500" VBox.vgrow="ALWAYS">
+
+                            <columns>
+
+                                <!-- pedido.id_pedido -->
+                                <TableColumn fx:id="colIdPedido" prefWidth="120" text="ID PEDIDO" />
+
+                                <!-- cliente.nombre -->
+                                <TableColumn fx:id="colCliente" prefWidth="200" text="CLIENTE" />
+
+                                <!-- pedido.fecha_pedido -->
+                                <TableColumn fx:id="colFechaPedido" prefWidth="160" text="FECHA PEDIDO" />
+
+                                <!-- pedido.fecha_entrega -->
+                                <TableColumn fx:id="colFechaEntrega" prefWidth="160" text="FECHA ENTREGA" />
+
+                                <!-- pedido.total_pedido -->
+                                <TableColumn fx:id="colTotalPedido" prefWidth="140" text="TOTAL" />
+
+                                <!-- estado_pedido.nombre_estado -->
+                                <TableColumn fx:id="colEstadoPedido" prefWidth="180" text="ESTADO" />
+
+                            </columns>
+
+                        </TableView>
+
+                    </VBox>
+
+                    <!-- ========================= -->
+                    <!-- PANEL DERECHO -->
+                    <!-- ========================= -->
+
+                    <VBox prefWidth="420" spacing="18" style="-fx-background-color: white;                              -fx-border-color: #D9CBC5;                              -fx-border-radius: 8;                              -fx-background-radius: 8;">
+
+                        <padding>
+                            <Insets bottom="20" left="20" right="20" top="20" />
+                        </padding>
+
+                        <Label style="-fx-font-size: 22px;                                   -fx-font-family: 'Segoe UI Semibold';                                   -fx-text-fill: #7A4B34;" text="Tomar Pedido" />
+
+                        <!-- CLIENTE -->
+
+                        <VBox spacing="8">
+
+                            <Label style="-fx-font-size: 15px;                                       -fx-font-family: 'Segoe UI Semibold';" text="Cliente" />
+
+                            <!-- cliente.id_cliente -->
+                            <ComboBox fx:id="cbCliente" prefHeight="40" promptText="Seleccionar cliente..." style="-fx-font-size: 14px;" />
+                        </VBox>
+
+                        <!-- FECHAS -->
+
+                        <HBox spacing="15">
+
+                            <VBox spacing="8" HBox.hgrow="ALWAYS">
+
+                                <Label style="-fx-font-size: 15px;                                           -fx-font-family: 'Segoe UI Semibold';" text="Fecha Pedido" />
+
+                                <!-- pedido.fecha_pedido -->
+                                <DatePicker fx:id="dpFechaPedido" prefHeight="40" />
+                            </VBox>
+
+                            <VBox spacing="8" HBox.hgrow="ALWAYS">
+
+                                <Label style="-fx-font-size: 15px;                                           -fx-font-family: 'Segoe UI Semibold';" text="Fecha Entrega" />
+
+                                <!-- pedido.fecha_entrega -->
+                                <DatePicker fx:id="dpFechaEntrega" prefHeight="40" />
+                            </VBox>
+
+                        </HBox>
+
+                        <!-- ESTADO -->
+
+                        <VBox spacing="8">
+
+                            <Label style="-fx-font-size: 15px;                                       -fx-font-family: 'Segoe UI Semibold';" text="Estado" />
+
+                            <!-- pedido.id_estado_pedido -->
+                            <ComboBox fx:id="cbEstadoPedido" prefHeight="40" promptText="Seleccionar estado" />
+                        </VBox>
+
+                        <!-- DESCRIPCION -->
+
+                        <VBox spacing="8">
+
+                            <Label style="-fx-font-size: 15px;                                       -fx-font-family: 'Segoe UI Semibold';" text="Descripción / Notas" />
+
+                            <!-- pedido.descripcion_pedido -->
+                            <TextArea fx:id="txtDescripcionPedido" prefHeight="100" promptText="Notas de producción..." style="-fx-font-size: 14px;" wrapText="true" />
+                        </VBox>
+
+                        <!-- DETALLE PEDIDO -->
+
+                        <HBox alignment="CENTER_LEFT">
+
+                            <Label style="-fx-font-size: 18px;                                       -fx-font-family: 'Segoe UI Semibold';" text="Líneas de Pedido" />
+
+                            <Pane HBox.hgrow="ALWAYS" />
+
+                            <Button fx:id="btnAgregarItem" style="-fx-background-color: transparent;                                        -fx-text-fill: #A65A37;                                        -fx-font-size: 14px;                                        -fx-font-family: 'Segoe UI Semibold';" text="+ Añadir Item" />
+                        </HBox>
+
+                        <!-- TABLA DETALLE -->
+
+                        <TableView fx:id="tableDetallePedido" prefHeight="220">
+
+                            <columns>
+
+                                <!-- producto.nombre_producto -->
+                                <TableColumn fx:id="colProductoDetalle" prefWidth="160" text="PRODUCTO" />
+
+                                <!-- detalle_pedido.cantidad -->
+                                <TableColumn fx:id="colCantidadDetalle" prefWidth="80" text="CANT." />
+
+                                <!-- detalle_pedido.precio_unitario -->
+                                <TableColumn fx:id="colPrecioDetalle" prefWidth="100" text="P. UNIT" />
+
+                                <!-- detalle_pedido.subtotal -->
+                                <TableColumn fx:id="colSubtotalDetalle" prefWidth="110" text="SUBTOTAL" />
+
+                            </columns>
+
+                        </TableView>
+
+                        <!-- TOTAL -->
+
+                        <HBox alignment="CENTER_RIGHT" spacing="15">
+
+                            <Label style="-fx-font-size: 20px;                                       -fx-font-family: 'Segoe UI Semibold';" text="TOTAL:" />
+
+                            <!-- pedido.total_pedido -->
+                            <Label fx:id="lblTotalPedido" style="-fx-font-size: 22px;                                       -fx-font-family: 'Segoe UI Bold';                                       -fx-text-fill: #A65A37;" text="\$0.00" />
+                        </HBox>
+
+                        <!-- BOTON -->
+
+                        <Button fx:id="btnGuardarPedido" maxWidth="Infinity" prefHeight="48" style="-fx-background-color: #9A5B39;                                    -fx-text-fill: white;                                    -fx-font-size: 17px;                                    -fx-font-family: 'Segoe UI Semibold';                                    -fx-background-radius: 6;" text="Crear Nuevo Pedido" />
+
+                    </VBox>
+
+                </HBox>
+
+                <!-- ========================= -->
+                <!-- DETALLE DEL PEDIDO -->
+                <!-- ========================= -->
+
+                <VBox spacing="15" style="-fx-background-color: white;                          -fx-border-color: #D9CBC5;                          -fx-border-radius: 8;                          -fx-background-radius: 8;">
+
+                    <padding>
+                        <Insets bottom="20" left="20" right="20" top="20" />
+                    </padding>
+
+                    <Label style="-fx-font-size: 22px;                               -fx-font-family: 'Segoe UI Semibold';                               -fx-text-fill: #7A4B34;" text="Detalle de Pedido Seleccionado" />
+
+                    <HBox spacing="40">
+
+                        <!-- DATOS -->
+                        <VBox prefWidth="300" spacing="15">
+
+                            <VBox spacing="5">
+
+                                <Label style="-fx-font-size: 14px;                                           -fx-text-fill: #7B7B7B;" text="Orden #" />
+
+                                <Label fx:id="lblDetalleIdPedido" style="-fx-font-size: 28px;                                           -fx-font-family: 'Segoe UI Bold';" text="ORD-0001" />
+                            </VBox>
+
+                            <VBox spacing="5">
+
+                                <Label style="-fx-font-size: 14px;                                           -fx-text-fill: #7B7B7B;" text="Fecha Solicitud" />
+
+                                <Label fx:id="lblDetalleFecha" style="-fx-font-size: 18px;" text="15/10/2023" />
+                            </VBox>
+
+                            <VBox spacing="8" style="-fx-border-color: #D9CBC5;                                      -fx-border-radius: 5;                                      -fx-background-radius: 5;                                      -fx-padding: 15;">
+
+                                <Label style="-fx-font-size: 16px;                                           -fx-font-family: 'Segoe UI Semibold';" text="Notas de Producción" />
+
+                                <Label fx:id="lblNotasProduccion" text="Sin notas" wrapText="true" />
+                            </VBox>
+
+                            <HBox spacing="10">
+
+                                <Button fx:id="btnImprimir" prefHeight="40" prefWidth="160" style="-fx-background-color: white;                                            -fx-border-color: #9A5B39;                                            -fx-text-fill: #9A5B39;                                            -fx-font-size: 15px;" text="Imprimir" />
+
+                                <Button fx:id="btnModificar" prefHeight="40" prefWidth="160" style="-fx-background-color: #3B2A25;                                            -fx-text-fill: white;                                            -fx-font-size: 15px;" text="Modificar" />
+
+                            </HBox>
+
+                        </VBox>
+
+                        <!-- PRODUCTOS -->
+
+                        <VBox spacing="10" HBox.hgrow="ALWAYS">
+
+                            <Label style="-fx-font-size: 18px;                                       -fx-font-family: 'Segoe UI Semibold';" text="Productos del Pedido" />
+
+                            <TableView fx:id="tableDetalleSeleccionado" prefHeight="250">
+
+                                <columns>
+
+                                    <TableColumn fx:id="colDetalleProducto" prefWidth="350" text="PRODUCTO" />
+
+                                    <TableColumn fx:id="colDetalleCantidad" prefWidth="120" text="CANT" />
+
+                                    <TableColumn fx:id="colDetallePrecio" prefWidth="150" text="P. UNIT" />
+
+                                    <TableColumn fx:id="colDetalleSubtotal" prefWidth="170" text="SUBTOTAL" />
+
+                                </columns>
+
+                            </TableView>
+
+                        </VBox>
+
+                    </HBox>
+
+                </VBox>
+
+            </VBox>
+
+        </content>
+
+    </ScrollPane>
+
+</center>
+   <left>
+      <VBox prefHeight="678.0" prefWidth="223.0" style="-fx-background-color: #4B3832; -fx-spacing: 15;" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="207.0" style="-fx-line-spacing: 10;" text="LV BAKERY" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font name="Segoe UI Bold" size="28.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" prefHeight="10.0" prefWidth="202.0" style="-fx-line-spacing: 10;" text="Inventory &amp; management" textFill="#f4d764">
+               <font>
+                  <Font name="Segoe UI" size="12.0" />
+               </font>
+            </Label>
+            <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #6B4F4F;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Dashboard" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/panel.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font name="Segoe UI" size="15.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Ordenes" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/carrito-de-compras.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font name="Segoe UI" size="15.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Ventas" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/dinero.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font name="Segoe UI" size="15.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Ventas" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/libro.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font name="Segoe UI" size="15.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Reportes" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/grafico-de-barras.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font name="Segoe UI" size="15.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Inventario" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/contenedor-de-comida.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font name="Segoe UI" size="15.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Usuarios" textFill="WHITE">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                     <image>
+                        <Image url="@../img/usuario.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font name="Segoe UI" size="15.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="25.0" />
+         </padding>
+      </VBox>
+   </left>
+
+</BorderPane>

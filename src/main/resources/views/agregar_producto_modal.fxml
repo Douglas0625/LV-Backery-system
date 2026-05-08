@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="20"
+      prefHeight="420"
+      prefWidth="420"
+      style="-fx-background-color: white;
+             -fx-padding: 25;
+             -fx-background-radius: 20;"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1">
+
+    <children>
+
+        <!-- TITULO -->
+        <Label text="Agregar Producto"
+               textFill="#3E2C27">
+
+            <font>
+                <Font name="Segoe UI Bold" size="28"/>
+            </font>
+
+        </Label>
+
+        <!-- PRODUCTO -->
+        <VBox spacing="8">
+
+            <children>
+
+                <Label text="Producto">
+
+                    <font>
+                        <Font name="Segoe UI Bold" size="14"/>
+                    </font>
+
+                </Label>
+
+                <ComboBox prefHeight="42"
+                          promptText="Seleccionar producto"
+                          style="-fx-background-color: #F0EFEB;
+                                 -fx-border-color: #E5E1D8;"/>
+
+            </children>
+
+        </VBox>
+
+        <!-- CANTIDAD -->
+        <VBox spacing="8">
+
+            <children>
+
+                <Label text="Cantidad">
+
+                    <font>
+                        <Font name="Segoe UI Bold" size="14"/>
+                    </font>
+
+                </Label>
+
+                <Spinner prefHeight="42"
+                         prefWidth="150"/>
+
+            </children>
+
+        </VBox>
+
+        <!-- STOCK -->
+        <HBox spacing="10">
+
+            <children>
+
+                <Label text="Stock Disponible:"
+                       textFill="#666666"/>
+
+                <Label text="25"
+                       textFill="#3E2C27">
+
+                    <font>
+                        <Font name="Segoe UI Bold" size="14"/>
+                    </font>
+
+                </Label>
+
+            </children>
+
+        </HBox>
+
+        <!-- PRECIO -->
+        <HBox spacing="10">
+
+            <children>
+
+                <Label text="Precio Unitario:"
+                       textFill="#666666"/>
+
+                <Label text="\$2.50"
+                       textFill="#3E2C27">
+
+                    <font>
+                        <Font name="Segoe UI Bold" size="14"/>
+                    </font>
+
+                </Label>
+
+            </children>
+
+        </HBox>
+
+        <Region VBox.vgrow="ALWAYS"/>
+
+        <!-- BOTONES -->
+        <HBox spacing="15"
+              alignment="CENTER_RIGHT">
+
+            <children>
+
+                <Button prefHeight="45"
+                        prefWidth="120"
+                        style="-fx-background-color: white;
+                               -fx-border-color: #4B3832;
+                               -fx-border-radius: 10;
+                               -fx-background-radius: 10;"
+                        text="Cancelar"/>
+
+                <Button prefHeight="45"
+                        prefWidth="150"
+                        style="-fx-background-color: #4B3832;
+                               -fx-text-fill: white;
+                               -fx-background-radius: 10;
+                               -fx-font-weight: bold;"
+                        text="Agregar"/>
+
+            </children>
+
+        </HBox>
+
+    </children>
+
+</VBox>
