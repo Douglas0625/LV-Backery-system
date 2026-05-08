@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.ComboBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="681.0" prefWidth="998.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+    <left>
+        <VBox prefHeight="678.0" prefWidth="223.0" style="-fx-background-color: #4B3832; -fx-padding: 10; -fx-spacing: 15;" BorderPane.alignment="CENTER">
+            <children>
+                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="207.0" style="-fx-line-spacing: 10;" text="LV BAKERY" textAlignment="CENTER" textFill="WHITE">
+                    <font>
+                        <Font name="Segoe UI Bold" size="28.0" />
+                    </font>
+                </Label>
+                <Label alignment="CENTER" prefHeight="10.0" prefWidth="202.0" style="-fx-line-spacing: 10;" text="Inventory &amp; management" textFill="#f4d764">
+                    <font>
+                        <Font name="Segoe UI" size="12.0" />
+                    </font>
+                </Label>
+                <!-- DASHBOARD -->
+                <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #6B4F4F;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Dashboard" textFill="WHITE">
+
+                    <graphic>
+                        <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/panel.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+
+                    <font>
+                        <Font name="Segoe UI" size="15.0" />
+                    </font>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+
+                <!-- ORDENES -->
+                <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Ordenes" textFill="WHITE">
+
+                    <graphic>
+                        <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/carrito-de-compras.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+
+                    <font>
+                        <Font name="Segoe UI" size="15.0" />
+                    </font>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+
+                <!-- VENTAS -->
+                <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Ventas" textFill="WHITE">
+
+                    <graphic>
+                        <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/dinero.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+
+                    <font>
+                        <Font name="Segoe UI" size="15.0" />
+                    </font>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+
+                <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Ventas" textFill="WHITE">
+
+                    <graphic>
+                        <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/libro.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+
+                    <font>
+                        <Font name="Segoe UI" size="15.0" />
+                    </font>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+
+                <!-- REPORTES -->
+                <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Reportes" textFill="WHITE">
+
+                    <graphic>
+                        <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/grafico-de-barras.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+
+                    <font>
+                        <Font name="Segoe UI" size="15.0" />
+                    </font>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+
+                <!-- INVENTARIO -->
+                <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Inventario" textFill="WHITE">
+
+                    <graphic>
+                        <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/contenedor-de-comida.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+
+                    <font>
+                        <Font name="Segoe UI" size="15.0" />
+                    </font>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+
+                <!-- USUARIOS -->
+                <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Usuarios" textFill="WHITE">
+
+                    <graphic>
+                        <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/usuario.png" />
+                            </image>
+                        </ImageView>
+                    </graphic>
+
+                    <font>
+                        <Font name="Segoe UI" size="15.0" />
+                    </font>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </Button>
+            </children>
+        </VBox>
+    </left>
+    <center>
+        <VBox prefHeight="685.0" prefWidth="866.0" spacing="0" style="-fx-background-color: #F5F3EF;" BorderPane.alignment="CENTER">
+            <children>
+                <HBox alignment="CENTER" prefHeight="55.0" prefWidth="597.0" style="-fx-border-color: #4B3832; -fx-border-width: 2; -fx-background-color: #F5F3EF;">
+                    <children>
+                        <Label prefHeight="50.0" prefWidth="147.0" text="Bakery Manager" textFill="#4b3832">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                            <padding>
+                                <Insets left="5.0" />
+                            </padding>
+                        </Label>
+                        <Region prefHeight="55.0" prefWidth="300.0" HBox.hgrow="ALWAYS" />
+                        <Label prefHeight="15.0" prefWidth="43.0" text="Admin" textFill="#4b3832">
+                            <font>
+                                <Font name="Segoe UI" size="12.0" />
+                            </font>
+                        </Label>
+                        <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="46.0" style="-fx-background-color: transparent;">
+                            <graphic>
+                                <ImageView fitHeight="23.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../img/avatar.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                        <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="46.0" style="-fx-background-color: transparent;">
+                            <graphic>
+                                <ImageView fitHeight="23.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../img/cerrar-sesion.png" />
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                            <cursor>
+                                <Cursor fx:constant="HAND" />
+                            </cursor>
+                        </Button>
+                    </children>
+                </HBox>
+                <!-- CONTENIDO PRINCIPAL -->
+                <HBox spacing="15"
+                      VBox.vgrow="ALWAYS"
+                      alignment="TOP_LEFT">
+
+                    <VBox.margin>
+                        <Insets top="15.0" left="15.0" right="15.0" bottom="15.0"/>
+                    </VBox.margin>
+
+                    <children>
+
+                        <!-- PANEL IZQUIERDO -->
+                        <VBox spacing="12"
+                              HBox.hgrow="ALWAYS">
+
+                            <children>
+
+                                <!-- HEADER TABLA -->
+                                <HBox alignment="CENTER_LEFT"
+                                      spacing="10"
+                                      style="-fx-background-color: white;
+                                     -fx-background-radius: 10 10 0 0;
+                                     -fx-border-color: #E5E1DC;
+                                     -fx-border-radius: 10 10 0 0;
+                                     -fx-padding: 12;">
+
+                                    <children>
+
+                                        <Label text="Listado de Productos"
+                                               textFill="#4B3832">
+
+                                            <font>
+                                                <Font name="Segoe UI Bold" size="18.0"/>
+                                            </font>
+
+                                        </Label>
+
+                                        <Region HBox.hgrow="ALWAYS"/>
+
+                                        <!-- BUSCADOR -->
+                                        <TextField prefWidth="220.0"
+                                                   promptText="Buscar producto..."
+                                                   style="-fx-background-radius: 6;
+                                          -fx-border-radius: 6;"/>
+
+                                    </children>
+
+                                </HBox>
+
+                                <!-- TABLA -->
+                                <TableView VBox.vgrow="ALWAYS"
+                                           style="-fx-background-color: white;
+                                  -fx-border-color: #E5E1DC;
+                                  -fx-border-radius: 0 0 10 10;">
+
+                                    <columns>
+
+                                        <TableColumn prefWidth="230.0"
+                                                     text="PRODUCTO"/>
+
+                                        <TableColumn prefWidth="140.0"
+                                                     text="CATEGORÍA"/>
+
+                                        <TableColumn prefWidth="100.0"
+                                                     text="PRECIO"/>
+
+                                        <TableColumn prefWidth="110.0"
+                                                     text="ESTADO"/>
+
+                                    </columns>
+
+                                </TableView>
+
+                            </children>
+
+                        </VBox>
+
+                        <!-- PANEL DERECHO -->
+                        <VBox spacing="15"
+                              prefWidth="320.0"
+                              maxWidth="320.0"
+                              minWidth="320.0">
+
+                            <children>
+
+                                <!-- DETALLE -->
+                                <VBox spacing="15"
+                                      style="-fx-background-color: white;
+                                         -fx-background-radius: 10;
+                                         -fx-border-radius: 10;
+                                         -fx-border-color: #E5E1DC;
+                                         -fx-padding: 18;">
+
+                                    <children>
+
+                                        <!-- TITULO -->
+                                        <Label text="Detalle del Producto"
+                                               textFill="#4B3832">
+
+                                            <font>
+                                                <Font name="Segoe UI Bold" size="18.0"/>
+                                            </font>
+
+                                        </Label>
+
+                                        <!-- NOMBRE -->
+                                        <VBox spacing="5">
+
+                                            <children>
+
+                                                <Label text="Nombre del Producto"/>
+
+                                                <TextField promptText="Ej: Pan Integral"/>
+
+                                            </children>
+
+                                        </VBox>
+
+                                        <!-- PRECIO Y CATEGORIA -->
+                                        <HBox spacing="10">
+
+                                            <children>
+
+                                                <VBox spacing="5">
+
+                                                    <children>
+
+                                                        <Label text="Precio"/>
+
+                                                        <TextField promptText="0.00"
+                                                                   prefWidth="120.0"/>
+
+                                                    </children>
+
+                                                </VBox>
+
+                                                <VBox spacing="5"
+                                                      HBox.hgrow="ALWAYS">
+
+                                                    <children>
+
+                                                        <Label text="Categoría"/>
+
+                                                        <ComboBox prefWidth="150.0"
+                                                                  promptText="Seleccionar"/>
+
+                                                    </children>
+
+                                                </VBox>
+
+                                            </children>
+
+                                        </HBox>
+
+                                        <!-- RECETA -->
+                                        <VBox spacing="10">
+
+                                            <children>
+
+                                                <Label text="Receta"
+                                                       textFill="#8B4A2F">
+
+                                                    <font>
+                                                        <Font name="Segoe UI Bold" size="15.0"/>
+                                                    </font>
+
+                                                </Label>
+
+                                                <!-- NOMBRE RECETA -->
+                                                <VBox spacing="5">
+
+                                                    <children>
+
+                                                        <Label text="Nombre de la Receta"/>
+
+                                                        <TextField promptText="Nombre receta"/>
+
+                                                    </children>
+
+                                                </VBox>
+
+                                                <!-- RENDIMIENTO -->
+                                                <VBox spacing="5">
+
+                                                    <children>
+
+                                                        <Label text="Rendimiento (unidades)"/>
+
+                                                        <TextField promptText="12"/>
+
+                                                    </children>
+
+                                                </VBox>
+
+                                            </children>
+
+                                        </VBox>
+
+                                        <!-- TABLA INGREDIENTES -->
+                                        <VBox spacing="8">
+
+                                            <children>
+
+                                                <Label text="Ingredientes">
+
+                                                    <font>
+                                                        <Font name="Segoe UI Bold" size="13.0"/>
+                                                    </font>
+
+                                                </Label>
+
+                                                <TableView prefHeight="180.0"
+                                                           style="-fx-border-color: #E5E1DC;">
+
+                                                    <columns>
+
+                                                        <TableColumn prefWidth="180.0"
+                                                                     text="INGREDIENTE"/>
+
+                                                        <TableColumn prefWidth="90.0"
+                                                                     text="GRAMOS"/>
+
+                                                    </columns>
+
+                                                </TableView>
+
+                                            </children>
+
+                                        </VBox>
+
+                                        <!-- BOTONES -->
+                                        <HBox spacing="10">
+
+                                            <children>
+
+                                                <Button mnemonicParsing="false"
+                                                        prefWidth="130.0"
+                                                        prefHeight="38.0"
+                                                        style="-fx-background-color: #3E2A24;
+                                               -fx-background-radius: 6;"
+                                                        text="Guardar"
+                                                        textFill="WHITE">
+
+                                                    <font>
+                                                        <Font name="Segoe UI Bold" size="13.0"/>
+                                                    </font>
+
+                                                </Button>
+
+                                                <Button mnemonicParsing="false"
+                                                        prefWidth="130.0"
+                                                        prefHeight="38.0"
+                                                        style="-fx-background-color: transparent;
+                                               -fx-border-color: #3E2A24;
+                                               -fx-border-radius: 6;
+                                               -fx-background-radius: 6;"
+                                                        text="Limpiar"
+                                                        textFill="#3E2A24">
+
+                                                    <font>
+                                                        <Font name="Segoe UI Bold" size="13.0"/>
+                                                    </font>
+
+                                                </Button>
+
+                                            </children>
+
+                                        </HBox>
+
+                                    </children>
+
+                                </VBox>
+
+                                <!-- COSTO ESTIMADO -->
+                                <HBox alignment="CENTER_LEFT"
+                                      spacing="10"
+                                      style="-fx-background-color: #F2A47F;
+                                     -fx-background-radius: 10;
+                                     -fx-padding: 15;">
+
+                                    <children>
+
+                                        <VBox spacing="3">
+
+                                            <children>
+
+                                                <Label text="COSTO ESTIMADO"
+                                                       textFill="#8A4B32">
+
+                                                    <font>
+                                                        <Font name="Segoe UI Bold" size="11.0"/>
+                                                    </font>
+
+                                                </Label>
+
+                                                <Label text="1.24 / ud"
+                                                       textFill="#4B3832">
+
+                                                    <font>
+                                                        <Font name="Segoe UI Bold" size="22.0"/>
+                                                    </font>
+
+                                                </Label>
+
+                                            </children>
+
+                                        </VBox>
+
+                                        <Region HBox.hgrow="ALWAYS"/>
+
+                                        <ImageView fitHeight="28.0"
+                                                   fitWidth="28.0"
+                                                   preserveRatio="true">
+
+                                            <image>
+                                                <Image url="@../img/grafico-de-barras.png"/>
+                                            </image>
+
+                                        </ImageView>
+
+                                    </children>
+
+                                </HBox>
+
+                            </children>
+
+                        </VBox>
+
+                    </children>
+
+                </HBox>
+            </children>
+        </VBox>
+    </center>
+</BorderPane>
