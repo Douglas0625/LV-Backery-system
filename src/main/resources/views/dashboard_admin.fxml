@@ -1,138 +1,694 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.Priority?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="677.0" prefWidth="820.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
-   <right>
-        <AnchorPane prefHeight="678.0" prefWidth="206.0" style="-fx-background-color: #4B3832;" BorderPane.alignment="CENTER" />
-   </right>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="681.0" prefWidth="998.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
    <left>
-      <VBox prefHeight="678.0" prefWidth="223.0" style="-fx-background-color: #4B3832; -fx-padding: 10; -fx-spacing: 15;" BorderPane.alignment="CENTER">
-         <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="207.0" style="-fx-line-spacing: 10;" text="LV BAKERY" textAlignment="CENTER" textFill="#f0efeb">
-               <font>
-                  <Font name="Segoe UI Bold" size="21.0" />
-               </font>
-            </Label>
-            <Label alignment="CENTER" prefHeight="10.0" prefWidth="202.0" style="-fx-line-spacing: 10;" text="Inventory &amp; management" textFill="#f0efeb">
-               <font>
-                  <Font name="Segoe UI" size="8.0" />
-               </font>
-            </Label>
-            <Button alignment="TOP_LEFT" blendMode="SRC_ATOP" mnemonicParsing="false" prefHeight="47.0" prefWidth="204.0" style="-fx-background-color: #4B3832; -fx-max-width: infinity;" text="Dashboard" textFill="#f0efeb">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <graphic>
-                  <ImageView fitHeight="37.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/panel.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <font>
-                  <Font name="Segoe UI" size="15.0" />
-               </font>
-            </Button>
-            <Button alignment="TOP_LEFT" blendMode="SRC_ATOP" mnemonicParsing="false" prefHeight="47.0" prefWidth="204.0" style="-fx-background-color: #4B3832; -fx-max-width: infinity;" text="Ordenes" textFill="#f0efeb">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <graphic>
-                  <ImageView fitHeight="37.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/carrito-de-compras.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <font>
-                  <Font name="Segoe UI" size="15.0" />
-               </font>
-            </Button>
-            <Button alignment="TOP_LEFT" blendMode="SRC_ATOP" mnemonicParsing="false" prefHeight="47.0" prefWidth="204.0" style="-fx-background-color: #4B3832; -fx-max-width: infinity;" text="Ventas" textFill="#f0efeb">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <graphic>
-                  <ImageView fitHeight="37.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/dinero.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <font>
-                  <Font name="Segoe UI" size="15.0" />
-               </font>
-            </Button>
-            <Button alignment="TOP_LEFT" blendMode="SRC_ATOP" mnemonicParsing="false" prefHeight="47.0" prefWidth="204.0" style="-fx-background-color: #4B3832; -fx-max-width: infinity;" text="Reportes" textFill="#f0efeb">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <graphic>
-                  <ImageView fitHeight="37.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/grafico-de-barras.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <font>
-                  <Font name="Segoe UI" size="15.0" />
-               </font>
-            </Button>
-            <Button alignment="TOP_LEFT" blendMode="SRC_ATOP" mnemonicParsing="false" prefHeight="47.0" prefWidth="204.0" style="-fx-background-color: #4B3832; -fx-max-width: infinity;" text="Catalogo" textFill="#f0efeb">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <graphic>
-                  <ImageView fitHeight="37.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/libro.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <font>
-                  <Font name="Segoe UI" size="15.0" />
-               </font>
-            </Button>
-            <Button alignment="TOP_LEFT" blendMode="SRC_ATOP" mnemonicParsing="false" prefHeight="47.0" prefWidth="204.0" style="-fx-background-color: #4B3832; -fx-max-width: infinity;" text="Inventario" textFill="#f0efeb">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <graphic>
-                  <ImageView fitHeight="37.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/contenedor-de-comida.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <font>
-                  <Font name="Segoe UI" size="15.0" />
-               </font>
-            </Button>
-            <Button alignment="TOP_LEFT" blendMode="SRC_ATOP" mnemonicParsing="false" prefHeight="47.0" prefWidth="204.0" style="-fx-background-color: #4B3832; -fx-max-width: infinity;" text="Usuarios" textFill="#f0efeb">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-               <graphic>
-                  <ImageView fitHeight="37.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/usuario.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <font>
-                  <Font name="Segoe UI" size="15.0" />
-               </font>
-            </Button>
-         </children>
-      </VBox>
+       <VBox prefHeight="678.0" prefWidth="223.0" style="-fx-background-color: #4B3832; -fx-padding: 10; -fx-spacing: 15;" BorderPane.alignment="CENTER">
+           <children>
+               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="207.0" style="-fx-line-spacing: 10;" text="LV BAKERY" textAlignment="CENTER" textFill="WHITE">
+                   <font>
+                       <Font name="Segoe UI Bold" size="28.0" />
+                   </font>
+               </Label>
+               <Label alignment="CENTER" prefHeight="10.0" prefWidth="202.0" style="-fx-line-spacing: 10;" text="Inventory &amp; management" textFill="#f4d764">
+                   <font>
+                       <Font name="Segoe UI" size="12.0" />
+                   </font>
+               </Label>
+               <!-- DASHBOARD -->
+               <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: #6B4F4F;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Dashboard" textFill="WHITE">
+
+                   <graphic>
+                       <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                           <image>
+                               <Image url="@../img/panel.png" />
+                           </image>
+                       </ImageView>
+                   </graphic>
+
+                   <font>
+                       <Font name="Segoe UI" size="15.0" />
+                   </font>
+
+                   <cursor>
+                       <Cursor fx:constant="HAND" />
+                   </cursor>
+               </Button>
+
+               <!-- ORDENES -->
+               <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Ordenes" textFill="WHITE">
+
+                   <graphic>
+                       <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                           <image>
+                               <Image url="@../img/carrito-de-compras.png" />
+                           </image>
+                       </ImageView>
+                   </graphic>
+
+                   <font>
+                       <Font name="Segoe UI" size="15.0" />
+                   </font>
+
+                   <cursor>
+                       <Cursor fx:constant="HAND" />
+                   </cursor>
+               </Button>
+
+               <!-- VENTAS -->
+               <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Ventas" textFill="WHITE">
+
+                   <graphic>
+                       <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                           <image>
+                               <Image url="@../img/dinero.png" />
+                           </image>
+                       </ImageView>
+                   </graphic>
+
+                   <font>
+                       <Font name="Segoe UI" size="15.0" />
+                   </font>
+
+                   <cursor>
+                       <Cursor fx:constant="HAND" />
+                   </cursor>
+               </Button>
+
+               <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Ventas" textFill="WHITE">
+
+                   <graphic>
+                       <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                           <image>
+                               <Image url="@../img/libro.png" />
+                           </image>
+                       </ImageView>
+                   </graphic>
+
+                   <font>
+                       <Font name="Segoe UI" size="15.0" />
+                   </font>
+
+                   <cursor>
+                       <Cursor fx:constant="HAND" />
+                   </cursor>
+               </Button>
+
+               <!-- REPORTES -->
+               <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Reportes" textFill="WHITE">
+
+                   <graphic>
+                       <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                           <image>
+                               <Image url="@../img/grafico-de-barras.png" />
+                           </image>
+                       </ImageView>
+                   </graphic>
+
+                   <font>
+                       <Font name="Segoe UI" size="15.0" />
+                   </font>
+
+                   <cursor>
+                       <Cursor fx:constant="HAND" />
+                   </cursor>
+               </Button>
+
+               <!-- INVENTARIO -->
+               <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Inventario" textFill="WHITE">
+
+                   <graphic>
+                       <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                           <image>
+                               <Image url="@../img/contenedor-de-comida.png" />
+                           </image>
+                       </ImageView>
+                   </graphic>
+
+                   <font>
+                       <Font name="Segoe UI" size="15.0" />
+                   </font>
+
+                   <cursor>
+                       <Cursor fx:constant="HAND" />
+                   </cursor>
+               </Button>
+
+               <!-- USUARIOS -->
+               <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Usuarios" textFill="WHITE">
+
+                   <graphic>
+                       <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
+                           <image>
+                               <Image url="@../img/usuario.png" />
+                           </image>
+                       </ImageView>
+                   </graphic>
+
+                   <font>
+                       <Font name="Segoe UI" size="15.0" />
+                   </font>
+
+                   <cursor>
+                       <Cursor fx:constant="HAND" />
+                   </cursor>
+               </Button>
+           </children>
+       </VBox>
    </left>
+   <center>
+       <VBox prefHeight="685.0" prefWidth="866.0" spacing="0" style="-fx-background-color: #F5F3EF;" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" prefHeight="55.0" prefWidth="597.0" style="-fx-border-color: #4B3832; -fx-border-width: 2; -fx-background-color: #F5F3EF;">
+               <children>
+                  <Label prefHeight="50.0" prefWidth="147.0" text="Bakery Manager" textFill="#4b3832">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </Label>
+                  <Region prefHeight="55.0" prefWidth="300.0" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="15.0" prefWidth="43.0" text="Admin" textFill="#4b3832">
+                     <font>
+                        <Font name="Segoe UI" size="12.0" />
+                     </font>
+                  </Label>
+                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="46.0" style="-fx-background-color: transparent;">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/avatar.png" />
+                            </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                   <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="46.0" style="-fx-background-color: transparent;">
+                       <graphic>
+                           <ImageView fitHeight="23.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                               <image>
+                                   <Image url="@../img/cerrar-sesion.png" />
+                               </image>
+                           </ImageView>
+                       </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                   </Button>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="125.0" prefWidth="597.0" style="-fx-background-color: white;">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </VBox.margin>
+               <children>
+                  <VBox alignment="CENTER_LEFT" prefHeight="126.0" prefWidth="386.0">
+                     <children>
+                        <Label alignment="CENTER" prefHeight="50.0" prefWidth="261.0" text="Bienvenido, Administrador" textFill="#4b3832">
+                           <font>
+                              <Font name="Segoe UI Bold" size="20.0" />
+                           </font>
+                        </Label>
+                        <Label prefHeight="18.0" prefWidth="379.0" text="Aquí tienes el resumen de la actividad de hoy en la panadería artesanal." />
+                     </children>
+                  </VBox>
+                  <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="118.0" style="-fx-background-color: #4b3832;" text="Nuevo Pedido" textFill="WHITE">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" style="-fx-background-color: transparent; -fx-border-color: #4b3832;" text="Registrar venta" textFill="#4b3832">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <HBox.margin>
+                        <Insets left="10.0" right="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+             <!-- CARDS DE ESTADISTICAS -->
+             <HBox prefHeight="160.0" prefWidth="820.0" spacing="15">
+                 <VBox.margin>
+                     <Insets left="10.0" right="10.0" />
+                 </VBox.margin>
+
+                 <children>
+
+                     <!-- CARD 1 -->
+                     <VBox prefHeight="140.0" prefWidth="250.0" style="-fx-background-color: white;                      -fx-background-radius: 10;                      -fx-border-radius: 10;                      -fx-padding: 20;                      -fx-border-color: #E5E1DC;">
+
+                         <children>
+
+                             <HBox alignment="CENTER_LEFT">
+                                 <children>
+                                     <Label text="PEDIDOS PENDIENTES" textFill="#7A6F68">
+                                         <font>
+                                             <Font name="Segoe UI Bold" size="12.0" />
+                                         </font>
+                                     </Label>
+
+                                     <Region HBox.hgrow="ALWAYS" />
+
+                                     <ImageView fitHeight="20.0" fitWidth="20.0" preserveRatio="true">
+                                         <image>
+                                             <Image url="@../img/variante-de-portapapeles-con-listas-y-cheques.png" />
+                                         </image>
+                                     </ImageView>
+                                 </children>
+                             </HBox>
+
+                             <Label text="12" textFill="#4B3832">
+                                 <font>
+                                     <Font name="Segoe UI Bold" size="36.0" />
+                                 </font>
+
+                                 <VBox.margin>
+                                     <Insets top="15.0" />
+                                 </VBox.margin>
+                             </Label>
+
+                             <Label text="+2 hoy" textFill="#3FAE5A">
+                                 <font>
+                                     <Font name="Segoe UI" size="13.0" />
+                                 </font>
+                             </Label>
+
+                             <!-- LINEA INFERIOR -->
+                             <Region prefHeight="4.0" prefWidth="200.0" style="-fx-background-color: #8B5E3C;                                -fx-background-radius: 10;">
+
+                                 <VBox.margin>
+                                     <Insets top="20.0" />
+                                 </VBox.margin>
+                             </Region>
+
+                         </children>
+                     </VBox>
+
+
+                     <!-- CARD 2 -->
+                     <VBox prefHeight="140.0" prefWidth="250.0" style="-fx-background-color: white;                      -fx-background-radius: 10;                      -fx-border-radius: 10;                      -fx-padding: 20;                      -fx-border-color: #E5E1DC;">
+
+                         <children>
+
+                             <HBox alignment="CENTER_LEFT">
+                                 <children>
+
+                                     <Label text="VENTAS DEL DIA" textFill="#7A6F68">
+                                         <font>
+                                             <Font name="Segoe UI Bold" size="12.0" />
+                                         </font>
+                                     </Label>
+
+                                     <Region HBox.hgrow="ALWAYS" />
+
+                                     <ImageView fitHeight="20.0" fitWidth="20.0" preserveRatio="true">
+                                         <image>
+                                             <Image url="@../img/billete-de-un-dolar.png" />
+                                         </image>
+                                     </ImageView>
+
+                                 </children>
+                             </HBox>
+
+                             <Label text="1,450.00" textFill="#4B3832">
+                                 <font>
+                                     <Font name="Segoe UI Bold" size="30.0" />
+                                 </font>
+
+                                 <VBox.margin>
+                                     <Insets top="15.0" />
+                                 </VBox.margin>
+                             </Label>
+
+                             <Label text="+14%" textFill="#3FAE5A">
+                                 <font>
+                                     <Font name="Segoe UI" size="13.0" />
+                                 </font>
+                             </Label>
+
+                         </children>
+                     </VBox>
+
+
+                     <!-- CARD 3 -->
+                     <VBox prefHeight="140.0" prefWidth="250.0" style="-fx-background-color: white;                      -fx-background-radius: 10;                      -fx-border-radius: 10;                      -fx-padding: 20;                      -fx-border-color: #E5E1DC;">
+
+                         <children>
+
+                             <HBox alignment="CENTER_LEFT">
+                                 <children>
+
+                                     <Label text="STOCK BAJO" textFill="#7A6F68">
+                                         <font>
+                                             <Font name="Segoe UI Bold" size="12.0" />
+                                         </font>
+                                     </Label>
+
+                                     <Region HBox.hgrow="ALWAYS" />
+
+                                     <ImageView fitHeight="20.0" fitWidth="20.0" preserveRatio="true">
+                                         <image>
+                                             <Image url="@../img/peligro.png" />
+                                         </image>
+                                     </ImageView>
+
+                                 </children>
+                             </HBox>
+                        <HBox alignment="BOTTOM_LEFT" prefHeight="57.0" prefWidth="97.0">
+                           <children>
+      
+                                   <Label text="5" textFill="#D64545">
+                                       <font>
+                                           <Font name="Segoe UI Bold" size="36.0" />
+                                       </font>
+                                   </Label>
+      
+                                   <Label text="Productos" textFill="#4B3832">
+                                       <font>
+                                           <Font name="Segoe UI" size="13.0" />
+                                       </font>
+                                   </Label>
+                           </children>
+                        </HBox>
+
+                         </children>
+                     </VBox>
+<!--                     card 4-->
+                     <VBox prefHeight="140.0" prefWidth="250.0" style="-fx-background-color: white;                              -fx-background-radius: 10;                              -fx-border-radius: 10;                              -fx-padding: 20;                              -fx-border-color: #E5E1DC;">
+
+                         <children>
+
+                             <HBox alignment="CENTER_LEFT">
+                                 <children>
+
+                                     <Label text="CLIENTES ATENDIDOS" textFill="#7A6F68">
+                                         <font>
+                                             <Font name="Segoe UI Bold" size="12.0" />
+                                         </font>
+                                     </Label>
+
+                                     <Region HBox.hgrow="ALWAYS" />
+
+                                     <ImageView fitHeight="20.0" fitWidth="20.0" preserveRatio="true">
+                                         <image>
+                                             <Image url="@../img/usuario.png" />
+                                         </image>
+                                     </ImageView>
+
+                                 </children>
+                             </HBox>
+
+                             <Label text="84" textFill="#4B3832">
+                                 <font>
+                                     <Font name="Segoe UI Bold" size="36.0" />
+                                 </font>
+
+                                 <VBox.margin>
+                                     <Insets top="15.0" />
+                                 </VBox.margin>
+                             </Label>
+
+                             <Label text="+12 desde ayer" textFill="#3FAE5A">
+                                 <font>
+                                     <Font name="Segoe UI" size="13.0" />
+                                 </font>
+                             </Label>
+
+                         </children>
+                     </VBox>
+                    <!--card 5-->
+                     <VBox prefHeight="140.0" prefWidth="250.0" style="-fx-background-color: white;              -fx-background-radius: 10;              -fx-border-radius: 10;              -fx-padding: 20;              -fx-border-color: #E5E1DC;">
+
+                         <children>
+
+                             <HBox alignment="CENTER_LEFT">
+                                 <children>
+
+                                     <Label text="PRODUCTO TOP" textFill="#7A6F68">
+                                         <font>
+                                             <Font name="Segoe UI Bold" size="12.0" />
+                                         </font>
+                                     </Label>
+
+                                     <Region HBox.hgrow="ALWAYS" />
+
+                                     <ImageView fitHeight="20.0" fitWidth="20.0" preserveRatio="true">
+                                         <image>
+                                             <Image url="@../img/libro.png" />
+                                         </image>
+                                     </ImageView>
+
+                                 </children>
+                             </HBox>
+
+                             <Label text="Croissant" textFill="#4B3832">
+                                 <font>
+                                     <Font name="Segoe UI Bold" size="28.0" />
+                                 </font>
+
+                                 <VBox.margin>
+                                     <Insets top="15.0" />
+                                 </VBox.margin>
+                             </Label>
+
+                             <Label text="58 vendidos hoy" textFill="#D89B00">
+                                 <font>
+                                     <Font name="Segoe UI" size="13.0" />
+                                 </font>
+                             </Label>
+
+                         </children>
+                     </VBox>
+                 </children>
+             </HBox>
+             <!-- SECCION INFERIOR -->
+             <HBox spacing="15" VBox.vgrow="ALWAYS">
+
+                 <VBox.margin>
+                     <Insets left="10.0" right="10.0" top="10.0" bottom="10.0"/>
+                 </VBox.margin>
+
+                 <children>
+
+                     <!-- TABLA PEDIDOS -->
+                     <VBox prefWidth="600.0"
+                           spacing="10"
+                           style="-fx-background-color: white;
+                     -fx-background-radius: 10;
+                     -fx-padding: 15;
+                     -fx-border-color: #E5E1DC;
+                     -fx-border-radius: 10;"
+                           HBox.hgrow="ALWAYS">
+
+                         <children>
+
+                             <!-- TITULO -->
+                             <HBox alignment="CENTER_LEFT">
+
+                                 <children>
+
+                                     <Label text="Últimos Pedidos"
+                                            textFill="#4B3832">
+
+                                         <font>
+                                             <Font name="Segoe UI Bold" size="20.0"/>
+                                         </font>
+
+                                     </Label>
+
+                                     <Region HBox.hgrow="ALWAYS"/>
+
+                                     <Button mnemonicParsing="false"
+                                             style="-fx-background-color: transparent;"
+                                             text="Ver todo"
+                                             textFill="#8B5E3C">
+
+                                         <font>
+                                             <Font name="Segoe UI Bold" size="12.0"/>
+                                         </font>
+
+                                         <cursor>
+                                             <Cursor fx:constant="HAND"/>
+                                         </cursor>
+
+                                     </Button>
+
+                                 </children>
+
+                             </HBox>
+
+                             <!-- TABLA -->
+                             <TableView VBox.vgrow="ALWAYS"
+                                        prefHeight="300.0"
+                                        style="-fx-background-color: white;">
+
+                                 <columns>
+
+                                     <TableColumn prefWidth="110.0" text="PEDIDO #" />
+                                     <TableColumn prefWidth="180.0" text="CLIENTE" />
+                                     <TableColumn prefWidth="150.0" text="ESTADO" />
+                                     <TableColumn prefWidth="120.0" text="TOTAL" />
+
+                                 </columns>
+
+                             </TableView>
+
+                         </children>
+
+                     </VBox>
+
+                     <!-- ULTIMOS INGRESOS -->
+                     <VBox prefWidth="350.0"
+                           spacing="15"
+                           style="-fx-background-color: white;
+                     -fx-background-radius: 10;
+                     -fx-padding: 15;
+                     -fx-border-color: #E5E1DC;
+                     -fx-border-radius: 10;"
+                           HBox.hgrow="ALWAYS">
+
+                         <children>
+
+                             <!-- TITULO -->
+                             <Label text="Últimos Ingresos"
+                                    textFill="#4B3832">
+
+                                 <font>
+                                     <Font name="Segoe UI Bold" size="20.0"/>
+                                 </font>
+
+                             </Label>
+
+                             <!-- INGRESO 1 -->
+                             <HBox prefHeight="50.0"
+                                   alignment="CENTER_LEFT"
+                                   spacing="10"
+                                   style="-fx-background-color: #F5F3EF;
+                             -fx-background-radius: 8;
+                             -fx-padding: 10;">
+
+                                 <children>
+
+                                     <Region prefWidth="4.0"
+                                             style="-fx-background-color: #8B5E3C;
+                                       -fx-background-radius: 10;" />
+
+                                     <VBox spacing="2">
+
+                                         <children>
+
+                                             <Label text="Harina de trigo" textFill="#4B3832">
+                                                 <font>
+                                                     <Font name="Segoe UI Bold" size="13.0"/>
+                                                 </font>
+                                             </Label>
+
+                                             <Label text="+50kg" textFill="#7A6F68"/>
+
+                                         </children>
+
+                                     </VBox>
+
+                                 </children>
+
+                             </HBox>
+
+                             <!-- INGRESO 2 -->
+                             <HBox prefHeight="50.0"
+                                   alignment="CENTER_LEFT"
+                                   spacing="10"
+                                   style="-fx-background-color: #F5F3EF;
+                             -fx-background-radius: 8;
+                             -fx-padding: 10;">
+
+                                 <children>
+
+                                     <Region prefWidth="4.0"
+                                             style="-fx-background-color: #8B5E3C;
+                                       -fx-background-radius: 10;" />
+
+                                     <VBox spacing="2">
+
+                                         <children>
+
+                                             <Label text="Azúcar" textFill="#4B3832">
+                                                 <font>
+                                                     <Font name="Segoe UI Bold" size="13.0"/>
+                                                 </font>
+                                             </Label>
+
+                                             <Label text="+20kg" textFill="#7A6F68"/>
+
+                                         </children>
+
+                                     </VBox>
+
+                                 </children>
+
+                             </HBox>
+
+                             <!-- INGRESO 3 -->
+                             <HBox prefHeight="50.0"
+                                   alignment="CENTER_LEFT"
+                                   spacing="10"
+                                   style="-fx-background-color: #F5F3EF;
+                             -fx-background-radius: 8;
+                             -fx-padding: 10;">
+
+                                 <children>
+
+                                     <Region prefWidth="4.0"
+                                             style="-fx-background-color: #8B5E3C;
+                                       -fx-background-radius: 10;" />
+
+                                     <VBox spacing="2">
+
+                                         <children>
+
+                                             <Label text="Levadura" textFill="#4B3832">
+                                                 <font>
+                                                     <Font name="Segoe UI Bold" size="13.0"/>
+                                                 </font>
+                                             </Label>
+
+                                             <Label text="+5kg" textFill="#7A6F68"/>
+
+                                         </children>
+
+                                     </VBox>
+
+                                 </children>
+
+                             </HBox>
+
+                         </children>
+
+                     </VBox>
+
+                 </children>
+
+             </HBox>
+         </children>
+       </VBox>
+   </center>
 </BorderPane>
