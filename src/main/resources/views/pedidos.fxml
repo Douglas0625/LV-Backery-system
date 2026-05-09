@@ -16,6 +16,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -33,30 +34,49 @@
             <VBox spacing="20" style="-fx-background-color: #F9F7F5;">
 
                 <padding>
-                    <Insets bottom="20.0" left="25.0" right="25.0" />
+                    <Insets bottom="20.0" />
                 </padding>
-               <HBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="20" style="-fx-background-color: #F7F3F1; -fx-border-color: #D6C8C2; -fx-border-width: 0 0 1 0;">
-
-                   <padding>
-                       <Insets bottom="10" left="25" right="25" top="10" />
-                   </padding>
-
-                   <Label text="Gestión de Pedidos">
-                       <font>
-                           <Font name="Segoe UI Semibold" size="28" />
-                       </font>
-                   </Label>
-
-                   <Pane HBox.hgrow="ALWAYS" />
-
-                   <Label style="-fx-text-fill: #7A4B34; -fx-font-size: 16px; -fx-font-family: 'Segoe UI Semibold';" text="Pedidos Recientes" />
-
-                   <Label style="-fx-text-fill: #8E8E8E; -fx-font-size: 16px; -fx-font-family: 'Segoe UI';" text="Histórico" />
-
-                   <Label style="-fx-text-fill: #8E8E8E; -fx-font-size: 15px; -fx-font-family: 'Segoe UI Semibold';" text="ADMIN" />
-
-                   <Button prefHeight="40" prefWidth="40" style="-fx-background-color: transparent; -fx-font-size: 18px;" text="⚙" />
-
+               <HBox alignment="CENTER" prefHeight="55.0" prefWidth="597.0" style="-fx-border-color: #4B3832; -fx-border-width: 2; -fx-background-color: #F5F3EF;">
+                  <children>
+                     <Label prefHeight="50.0" prefWidth="147.0" text="Bakery Manager" textFill="#4b3832">
+                        <font>
+                           <Font name="System Bold" size="18.0" />
+                        </font>
+                        <padding>
+                           <Insets left="5.0" />
+                        </padding>
+                     </Label>
+                     <Region prefHeight="55.0" prefWidth="300.0" HBox.hgrow="ALWAYS" />
+                     <Label prefHeight="15.0" prefWidth="43.0" text="Admin" textFill="#4b3832">
+                        <font>
+                           <Font name="Segoe UI" size="12.0" />
+                        </font>
+                     </Label>
+                     <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="46.0" style="-fx-background-color: transparent;">
+                        <graphic>
+                           <ImageView fitHeight="23.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../img/avatar.png" />
+                              </image>
+                           </ImageView>
+                        </graphic>
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
+                     </Button>
+                     <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="46.0" style="-fx-background-color: transparent;">
+                        <graphic>
+                           <ImageView fitHeight="23.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                 <Image url="@../img/cerrar-sesion.png" />
+                              </image>
+                           </ImageView>
+                        </graphic>
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
+                     </Button>
+                  </children>
                </HBox>
 
                 <!-- ========================= -->
@@ -106,6 +126,9 @@
                         </VBox>
 
                     </HBox>
+                  <VBox.margin>
+                     <Insets left="25.0" right="25.0" />
+                  </VBox.margin>
 
                 </VBox>
 
@@ -161,6 +184,9 @@
                             </columns>
 
                         </TableView>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
 
                     </VBox>
 
@@ -276,6 +302,9 @@
                         <Button fx:id="btnGuardarPedido" maxWidth="Infinity" prefHeight="48" style="-fx-background-color: #9A5B39;                                    -fx-text-fill: white;                                    -fx-font-size: 17px;                                    -fx-font-family: 'Segoe UI Semibold';                                    -fx-background-radius: 6;" text="Crear Nuevo Pedido" />
 
                     </VBox>
+                  <VBox.margin>
+                     <Insets left="25.0" right="25.0" />
+                  </VBox.margin>
 
                 </HBox>
 
@@ -352,6 +381,9 @@
                         </VBox>
 
                     </HBox>
+                  <VBox.margin>
+                     <Insets left="25.0" right="25.0" />
+                  </VBox.margin>
 
                 </VBox>
 

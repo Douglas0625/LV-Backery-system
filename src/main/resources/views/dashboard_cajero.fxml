@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -17,25 +16,47 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="762.0" prefWidth="968.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <VBox prefHeight="513.0" prefWidth="512.0" style="-fx-spacing: 20; -fx-padding: 15; -fx-background-color: #F0EFEB;" BorderPane.alignment="CENTER">
+      <VBox prefHeight="513.0" prefWidth="512.0" style="-fx-spacing: 20; -fx-background-color: #F0EFEB;" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 20; -fx-padding: 15; -fx-pref-height: 30;">
+            <HBox alignment="CENTER" prefHeight="55.0" prefWidth="597.0" style="-fx-border-color: #4B3832; -fx-border-width: 2; -fx-background-color: #F5F3EF;">
                <children>
-                  <Label prefHeight="15.0" prefWidth="60.0" text="Usuario">
+                  <Label prefHeight="50.0" prefWidth="147.0" text="Bakery Manager" textFill="#4b3832">
                      <font>
-                        <Font name="Segoe UI Bold" size="14.0" />
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </Label>
+                  <Region prefHeight="55.0" prefWidth="300.0" HBox.hgrow="ALWAYS" />
+                  <Label prefHeight="15.0" prefWidth="43.0" text="Admin" textFill="#4b3832">
+                     <font>
+                        <Font name="Segoe UI" size="12.0" />
                      </font>
                   </Label>
-                  <Button id="btnIniciarSesion" alignment="CENTER" mnemonicParsing="false" prefHeight="28.0" prefWidth="144.0" style="-fx-background-color: #331B0F;" text="Cerrar Sesion" textAlignment="CENTER" textFill="#faf9f9">
+                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="46.0" style="-fx-background-color: transparent;">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/avatar.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                      <cursor>
-                        <Cursor fx:constant="OPEN_HAND" />
+                        <Cursor fx:constant="HAND" />
                      </cursor>
-                     <effect>
-                        <ColorAdjust />
-                     </effect>
-                     <font>
-                        <Font name="Segoe UI Bold" size="14.0" />
-                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="46.0" style="-fx-background-color: transparent;">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/cerrar-sesion.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
                   </Button>
                </children>
             </HBox>
@@ -84,6 +105,9 @@
                      </HBox>
 
                  </children>
+               <VBox.margin>
+                  <Insets left="15.0" right="15.0" />
+               </VBox.margin>
 
              </HBox>
 
@@ -102,6 +126,9 @@
                      <Button style="                         -fx-background-color: transparent;                         -fx-text-fill: #B08968;                         -fx-font-weight: bold;                         -fx-font-size: 13;                         " text="Ver todo" />
 
                  </children>
+               <VBox.margin>
+                  <Insets left="15.0" right="15.0" />
+               </VBox.margin>
 
              </HBox>
              <HBox spacing="25" style="-fx-padding: 10;" VBox.vgrow="ALWAYS">
@@ -215,6 +242,9 @@
                      </VBox>
 
                  </children>
+               <VBox.margin>
+                  <Insets left="15.0" right="15.0" />
+               </VBox.margin>
 
              </HBox>
          </children>

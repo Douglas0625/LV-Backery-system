@@ -105,9 +105,36 @@
     <!-- ===================== CONTENIDO ===================== -->
     <center>
 
-        <VBox spacing="25" style="-fx-padding: 30;">
+        <VBox spacing="25">
 
             <children>
+            <HBox alignment="CENTER" prefHeight="55.0" style="-fx-border-color: #4B3832;                                      -fx-border-width: 2;                                      -fx-background-color: #F5F3EF;">
+               <children>
+                  <Label text="Bakery Manager" textFill="#4b3832">
+                     <font>
+                        <Font name="System Bold" size="18" />
+                     </font>
+                     <padding>
+                        <Insets left="5" />
+                     </padding>
+                  </Label>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Label text="Admin" textFill="#4b3832">
+                     <font>
+                        <Font name="Segoe UI" size="12" />
+                     </font>
+                  </Label>
+                  <Button style="-fx-background-color: transparent;">
+                     <graphic>
+                        <ImageView fitHeight="23" fitWidth="25" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/avatar.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
 
                 <!-- HEADER -->
                 <HBox alignment="CENTER_LEFT">
@@ -138,6 +165,9 @@
                         <ComboBox prefHeight="42" prefWidth="240" promptText="Tipo de Venta" style="-fx-background-color: white;                                          -fx-border-color: #E5E1D8;" />
 
                     </children>
+               <VBox.margin>
+                  <Insets left="25.0" right="25.0" />
+               </VBox.margin>
 
                 </HBox>
 
@@ -398,6 +428,9 @@
                         </VBox>
 
                     </children>
+               <VBox.margin>
+                  <Insets left="25.0" right="25.0" />
+               </VBox.margin>
 
                 </HBox>
 
