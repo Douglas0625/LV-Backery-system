@@ -4,6 +4,8 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -11,9 +13,6 @@
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.Priority?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="681.0" prefWidth="998.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
    <left>
@@ -50,7 +49,7 @@
                </Button>
 
                <!-- ORDENES -->
-               <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Ordenes" textFill="WHITE">
+               <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Pedidos" textFill="WHITE">
 
                    <graphic>
                        <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
@@ -89,7 +88,7 @@
                    </cursor>
                </Button>
 
-               <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Ventas" textFill="WHITE">
+               <Button alignment="CENTER_LEFT" graphicTextGap="12" mnemonicParsing="false" prefHeight="45.0" prefWidth="200.0" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15 10 15;" text="Recetas" textFill="WHITE">
 
                    <graphic>
                        <ImageView fitHeight="28.0" fitWidth="28.0" preserveRatio="true">
@@ -231,18 +230,24 @@
                      </children>
                   </VBox>
                   <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="118.0" style="-fx-background-color: #4b3832;" text="Nuevo Pedido" textFill="WHITE">
+                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="134.0" style="-fx-background-color: #4b3832;" text="Nuevo Pedido" textFill="WHITE">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
+                     <font>
+                        <Font name="Segoe UI Bold" size="12.0" />
+                     </font>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="28.0" prefWidth="130.0" style="-fx-background-color: transparent; -fx-border-color: #4b3832;" text="Registrar venta" textFill="#4b3832">
+                  <Button mnemonicParsing="false" prefHeight="28.0" prefWidth="146.0" style="-fx-background-color: transparent; -fx-border-color: #4b3832;" text="Registrar venta" textFill="#4b3832">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>
                      <HBox.margin>
                         <Insets left="10.0" right="10.0" />
                      </HBox.margin>
+                     <font>
+                        <Font name="Segoe UI Bold" size="12.0" />
+                     </font>
                   </Button>
                </children>
             </HBox>
@@ -485,20 +490,13 @@
              <HBox spacing="15" VBox.vgrow="ALWAYS">
 
                  <VBox.margin>
-                     <Insets left="10.0" right="10.0" top="10.0" bottom="10.0"/>
+                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                  </VBox.margin>
 
                  <children>
 
                      <!-- TABLA PEDIDOS -->
-                     <VBox prefWidth="600.0"
-                           spacing="10"
-                           style="-fx-background-color: white;
-                     -fx-background-radius: 10;
-                     -fx-padding: 15;
-                     -fx-border-color: #E5E1DC;
-                     -fx-border-radius: 10;"
-                           HBox.hgrow="ALWAYS">
+                     <VBox prefWidth="600.0" spacing="10" style="-fx-background-color: white;                      -fx-background-radius: 10;                      -fx-padding: 15;                      -fx-border-color: #E5E1DC;                      -fx-border-radius: 10;" HBox.hgrow="ALWAYS">
 
                          <children>
 
@@ -507,28 +505,24 @@
 
                                  <children>
 
-                                     <Label text="Últimos Pedidos"
-                                            textFill="#4B3832">
+                                     <Label text="Últimos Pedidos" textFill="#4B3832">
 
                                          <font>
-                                             <Font name="Segoe UI Bold" size="20.0"/>
+                                             <Font name="Segoe UI Bold" size="20.0" />
                                          </font>
 
                                      </Label>
 
-                                     <Region HBox.hgrow="ALWAYS"/>
+                                     <Region HBox.hgrow="ALWAYS" />
 
-                                     <Button mnemonicParsing="false"
-                                             style="-fx-background-color: transparent;"
-                                             text="Ver todo"
-                                             textFill="#8B5E3C">
+                                     <Button mnemonicParsing="false" style="-fx-background-color: transparent;" text="Ver todo" textFill="#8B5E3C">
 
                                          <font>
-                                             <Font name="Segoe UI Bold" size="12.0"/>
+                                             <Font name="Segoe UI Bold" size="12.0" />
                                          </font>
 
                                          <cursor>
-                                             <Cursor fx:constant="HAND"/>
+                                             <Cursor fx:constant="HAND" />
                                          </cursor>
 
                                      </Button>
@@ -538,9 +532,7 @@
                              </HBox>
 
                              <!-- TABLA -->
-                             <TableView VBox.vgrow="ALWAYS"
-                                        prefHeight="300.0"
-                                        style="-fx-background-color: white;">
+                             <TableView prefHeight="300.0" style="-fx-background-color: white;" VBox.vgrow="ALWAYS">
 
                                  <columns>
 
@@ -558,40 +550,25 @@
                      </VBox>
 
                      <!-- ULTIMOS INGRESOS -->
-                     <VBox prefWidth="350.0"
-                           spacing="15"
-                           style="-fx-background-color: white;
-                     -fx-background-radius: 10;
-                     -fx-padding: 15;
-                     -fx-border-color: #E5E1DC;
-                     -fx-border-radius: 10;"
-                           HBox.hgrow="ALWAYS">
+                     <VBox prefWidth="350.0" spacing="15" style="-fx-background-color: white;                      -fx-background-radius: 10;                      -fx-padding: 15;                      -fx-border-color: #E5E1DC;                      -fx-border-radius: 10;" HBox.hgrow="ALWAYS">
 
                          <children>
 
                              <!-- TITULO -->
-                             <Label text="Últimos Ingresos"
-                                    textFill="#4B3832">
+                             <Label text="Últimos Ingresos" textFill="#4B3832">
 
                                  <font>
-                                     <Font name="Segoe UI Bold" size="20.0"/>
+                                     <Font name="Segoe UI Bold" size="20.0" />
                                  </font>
 
                              </Label>
 
                              <!-- INGRESO 1 -->
-                             <HBox prefHeight="50.0"
-                                   alignment="CENTER_LEFT"
-                                   spacing="10"
-                                   style="-fx-background-color: #F5F3EF;
-                             -fx-background-radius: 8;
-                             -fx-padding: 10;">
+                             <HBox alignment="CENTER_LEFT" prefHeight="50.0" spacing="10" style="-fx-background-color: #F5F3EF;                              -fx-background-radius: 8;                              -fx-padding: 10;">
 
                                  <children>
 
-                                     <Region prefWidth="4.0"
-                                             style="-fx-background-color: #8B5E3C;
-                                       -fx-background-radius: 10;" />
+                                     <Region prefWidth="4.0" style="-fx-background-color: #8B5E3C;                                        -fx-background-radius: 10;" />
 
                                      <VBox spacing="2">
 
@@ -599,11 +576,11 @@
 
                                              <Label text="Harina de trigo" textFill="#4B3832">
                                                  <font>
-                                                     <Font name="Segoe UI Bold" size="13.0"/>
+                                                     <Font name="Segoe UI Bold" size="13.0" />
                                                  </font>
                                              </Label>
 
-                                             <Label text="+50kg" textFill="#7A6F68"/>
+                                             <Label text="+50kg" textFill="#7A6F68" />
 
                                          </children>
 
@@ -614,18 +591,11 @@
                              </HBox>
 
                              <!-- INGRESO 2 -->
-                             <HBox prefHeight="50.0"
-                                   alignment="CENTER_LEFT"
-                                   spacing="10"
-                                   style="-fx-background-color: #F5F3EF;
-                             -fx-background-radius: 8;
-                             -fx-padding: 10;">
+                             <HBox alignment="CENTER_LEFT" prefHeight="50.0" spacing="10" style="-fx-background-color: #F5F3EF;                              -fx-background-radius: 8;                              -fx-padding: 10;">
 
                                  <children>
 
-                                     <Region prefWidth="4.0"
-                                             style="-fx-background-color: #8B5E3C;
-                                       -fx-background-radius: 10;" />
+                                     <Region prefWidth="4.0" style="-fx-background-color: #8B5E3C;                                        -fx-background-radius: 10;" />
 
                                      <VBox spacing="2">
 
@@ -633,11 +603,11 @@
 
                                              <Label text="Azúcar" textFill="#4B3832">
                                                  <font>
-                                                     <Font name="Segoe UI Bold" size="13.0"/>
+                                                     <Font name="Segoe UI Bold" size="13.0" />
                                                  </font>
                                              </Label>
 
-                                             <Label text="+20kg" textFill="#7A6F68"/>
+                                             <Label text="+20kg" textFill="#7A6F68" />
 
                                          </children>
 
@@ -648,18 +618,11 @@
                              </HBox>
 
                              <!-- INGRESO 3 -->
-                             <HBox prefHeight="50.0"
-                                   alignment="CENTER_LEFT"
-                                   spacing="10"
-                                   style="-fx-background-color: #F5F3EF;
-                             -fx-background-radius: 8;
-                             -fx-padding: 10;">
+                             <HBox alignment="CENTER_LEFT" prefHeight="50.0" spacing="10" style="-fx-background-color: #F5F3EF;                              -fx-background-radius: 8;                              -fx-padding: 10;">
 
                                  <children>
 
-                                     <Region prefWidth="4.0"
-                                             style="-fx-background-color: #8B5E3C;
-                                       -fx-background-radius: 10;" />
+                                     <Region prefWidth="4.0" style="-fx-background-color: #8B5E3C;                                        -fx-background-radius: 10;" />
 
                                      <VBox spacing="2">
 
@@ -667,11 +630,11 @@
 
                                              <Label text="Levadura" textFill="#4B3832">
                                                  <font>
-                                                     <Font name="Segoe UI Bold" size="13.0"/>
+                                                     <Font name="Segoe UI Bold" size="13.0" />
                                                  </font>
                                              </Label>
 
-                                             <Label text="+5kg" textFill="#7A6F68"/>
+                                             <Label text="+5kg" textFill="#7A6F68" />
 
                                          </children>
 
