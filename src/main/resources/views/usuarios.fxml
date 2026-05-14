@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UsuariosController">
 
     <!-- ================= CONTENIDO ================= -->
 
@@ -186,15 +186,17 @@
 
                             <columns>
 
-                                <TableColumn prefWidth="70" text="ID" />
+                                <TableColumn fx:id="colId"
+                                             text="ID"/>
 
-                                <TableColumn prefWidth="280" text="NOMBRE" />
+                                <TableColumn fx:id="colNombre"
+                                             text="NOMBRE"/>
 
-                                <TableColumn prefWidth="220" text="USUARIO" />
+                                <TableColumn fx:id="colUsername"
+                                             text="USUARIO"/>
 
-                                <TableColumn prefWidth="180" text="ROL" />
-
-                                <TableColumn prefWidth="220" text="ACCIONES" />
+                                <TableColumn fx:id="colRol"
+                                             text="ROL"/>
 
                             </columns>
 
