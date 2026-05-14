@@ -1,14 +1,443 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
+<BorderPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #F0EFEB;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
 
-</AnchorPane>
+    <!-- ===================== SIDEBAR ===================== -->
+    <!-- NO TOCADO -->
+    <left>
+
+        <VBox prefWidth="223.0" style="-fx-background-color: #4B3832; -fx-spacing: 15;">
+
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="25" />
+            </padding>
+
+            <children>
+
+                <Label text="LV BAKERY" textFill="WHITE">
+
+                    <font>
+                        <Font name="Segoe UI Bold" size="28" />
+                    </font>
+
+                </Label>
+
+                <Label text="Inventory &amp; management" textFill="#f4d764">
+
+                    <font>
+                        <Font size="12" />
+                    </font>
+
+                </Label>
+
+                <!-- DASHBOARD -->
+                <Button alignment="CENTER_LEFT" graphicTextGap="12" prefHeight="45" prefWidth="200" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15;" text="Dashboard" textFill="WHITE">
+
+                    <graphic>
+                        <ImageView fitHeight="28" fitWidth="28" preserveRatio="true">
+
+                            <image>
+                                <Image url="@../img/panel.png" />
+                            </image>
+
+                        </ImageView>
+                    </graphic>
+
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+
+                </Button>
+
+                <!-- ORDENES -->
+                <Button alignment="CENTER_LEFT" graphicTextGap="12" prefHeight="45" prefWidth="200" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15;" text="Ordenes" textFill="WHITE">
+
+                    <graphic>
+                        <ImageView fitHeight="28" fitWidth="28" preserveRatio="true">
+
+                            <image>
+                                <Image url="@../img/carrito-de-compras.png" />
+                            </image>
+
+                        </ImageView>
+                    </graphic>
+
+                </Button>
+
+                <!-- VENTAS -->
+                <Button alignment="CENTER_LEFT" graphicTextGap="12" prefHeight="45" prefWidth="200" style="-fx-background-color: #6B4F4F;                                -fx-background-radius: 10;                                -fx-padding: 10 15;" text="Ventas" textFill="WHITE">
+
+                    <graphic>
+                        <ImageView fitHeight="28" fitWidth="28" preserveRatio="true">
+
+                            <image>
+                                <Image url="@../img/dinero.png" />
+                            </image>
+
+                        </ImageView>
+                    </graphic>
+
+                </Button>
+
+            </children>
+
+        </VBox>
+
+    </left>
+
+    <!-- ===================== CONTENIDO ===================== -->
+    <center>
+
+        <VBox spacing="25">
+
+            <children>
+            <HBox alignment="CENTER" prefHeight="55.0" style="-fx-border-color: #4B3832;                                      -fx-border-width: 2;                                      -fx-background-color: #F5F3EF;">
+               <children>
+                  <Label text="Bakery Manager" textFill="#4b3832">
+                     <font>
+                        <Font name="System Bold" size="18" />
+                     </font>
+                     <padding>
+                        <Insets left="5" />
+                     </padding>
+                  </Label>
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Label text="Admin" textFill="#4b3832">
+                     <font>
+                        <Font name="Segoe UI" size="12" />
+                     </font>
+                  </Label>
+                  <Button style="-fx-background-color: transparent;">
+                     <graphic>
+                        <ImageView fitHeight="23" fitWidth="25" preserveRatio="true">
+                           <image>
+                              <Image url="@../img/avatar.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+
+                <!-- HEADER -->
+                <HBox alignment="CENTER_LEFT">
+
+                    <children>
+
+                        <VBox spacing="5">
+
+                            <children>
+
+                                <Label text="Registrar Nueva Venta" textFill="#3E2C27">
+
+                                    <font>
+                                        <Font name="Segoe UI Bold" size="32" />
+                                    </font>
+
+                                </Label>
+
+                                <Label text="Complete los detalles de la venta y registre productos." textFill="#7A6E69" />
+
+                            </children>
+
+                        </VBox>
+
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <!-- TIPO VENTA -->
+                        <ComboBox prefHeight="42" prefWidth="240" promptText="Tipo de Venta" style="-fx-background-color: white;                                          -fx-border-color: #E5E1D8;" />
+
+                    </children>
+               <VBox.margin>
+                  <Insets left="25.0" right="25.0" />
+               </VBox.margin>
+
+                </HBox>
+
+                <!-- CONTENIDO PRINCIPAL -->
+                <HBox spacing="25" VBox.vgrow="ALWAYS">
+
+                    <children>
+
+                        <!-- PANEL IZQUIERDO -->
+                        <VBox prefWidth="340" spacing="18" style="-fx-background-color: white;                                      -fx-background-radius: 20;                                      -fx-padding: 25;">
+
+                            <children>
+
+                                <Label text="Información General" textFill="#3E2C27">
+
+                                    <font>
+                                        <Font name="Segoe UI Bold" size="26" />
+                                    </font>
+
+                                </Label>
+
+                                <!-- CLIENTE -->
+                                <VBox spacing="8">
+
+                                    <children>
+
+                                        <Label text="Cliente">
+
+                                            <font>
+                                                <Font name="Segoe UI Bold" size="14" />
+                                            </font>
+
+                                        </Label>
+
+                                        <ComboBox prefHeight="42" promptText="Seleccionar cliente" style="-fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8; -fx-pref-width: infinity;" />
+
+                                    </children>
+
+                                </VBox>
+
+                                <!-- FECHA -->
+                                <VBox spacing="8">
+
+                                    <children>
+
+                                        <Label text="Fecha de Venta">
+
+                                            <font>
+                                                <Font name="Segoe UI Bold" size="14" />
+                                            </font>
+
+                                        </Label>
+
+                                        <DatePicker prefHeight="42" style="-fx-min-width: inifnity;" />
+
+                                    </children>
+
+                                </VBox>
+
+                                <!-- METODO -->
+                                <VBox spacing="8">
+
+                                    <children>
+
+                                        <Label text="Método de Pago">
+
+                                            <font>
+                                                <Font name="Segoe UI Bold" size="14" />
+                                            </font>
+
+                                        </Label>
+
+                                        <HBox spacing="10">
+
+                                            <children>
+
+                                                <Button prefHeight="42" prefWidth="130" style="-fx-background-color: #4B3832;                                                                -fx-text-fill: white;                                                                -fx-background-radius: 10;" text="Efectivo" />
+
+                                                <Button prefHeight="42" prefWidth="130" style="-fx-background-color: white;                                                                -fx-border-color: #4B3832;                                                                -fx-border-radius: 10;                                                                -fx-background-radius: 10;" text="Transferencia" />
+
+                                            </children>
+
+                                        </HBox>
+
+                                    </children>
+
+                                </VBox>
+
+                                <!-- COMPROBANTE -->
+                                <VBox spacing="8">
+
+                                    <children>
+
+                                        <Label text="Comprobante">
+
+                                            <font>
+                                                <Font name="Segoe UI Bold" size="14" />
+                                            </font>
+
+                                        </Label>
+
+                                        <ComboBox prefHeight="42" promptText="Tipo de comprobante" style="-fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8; -fx-pref-width: infinity;" />
+
+                                    </children>
+
+                                </VBox>
+
+                            </children>
+
+                        </VBox>
+
+                        <!-- PANEL DERECHO -->
+                        <VBox spacing="20" HBox.hgrow="ALWAYS">
+
+                            <children>
+
+                                <!-- TABLA -->
+                                <VBox spacing="18" style="-fx-background-color: white;                                              -fx-background-radius: 20;                                              -fx-padding: 25;" VBox.vgrow="ALWAYS">
+
+                                    <children>
+
+                                        <!-- HEADER -->
+                                        <HBox alignment="CENTER_LEFT">
+
+                                            <children>
+
+                                                <Label text="Detalle de Productos" textFill="#3E2C27">
+
+                                                    <font>
+                                                        <Font name="Segoe UI Bold" size="26" />
+                                                    </font>
+
+                                                </Label>
+
+                                                <Region HBox.hgrow="ALWAYS" />
+
+                                                <Button prefHeight="40" style="-fx-background-color: #D8B08C;                                                                -fx-text-fill: white;                                                                -fx-font-weight: bold;                                                                -fx-background-radius: 10;" text="+ Agregar Producto" />
+
+                                            </children>
+
+                                        </HBox>
+
+                                        <!-- TABLA -->
+                                        <TableView prefHeight="400" style="-fx-background-color: white;                                                           -fx-border-color: #E8E3DD;                                                           -fx-border-radius: 10;" VBox.vgrow="ALWAYS">
+
+                                            <columns>
+
+                                                <TableColumn prefWidth="320" text="PRODUCTO" />
+
+                                                <TableColumn prefWidth="100" text="CANT." />
+
+                                                <TableColumn prefWidth="160" text="PRECIO UNIT." />
+
+                                                <TableColumn prefWidth="160" text="SUBTOTAL" />
+
+                                                <TableColumn prefWidth="120" text="ACCIÓN" />
+
+                                            </columns>
+
+                                        </TableView>
+
+                                    </children>
+
+                                </VBox>
+
+                                <!-- RESUMEN -->
+                                <VBox maxWidth="520" spacing="20" style="-fx-background-color: white;                                              -fx-background-radius: 20;                                              -fx-padding: 25;">
+
+                                    <children>
+
+                                        <HBox>
+
+                                            <children>
+
+                                                <Label text="Subtotal" />
+
+                                                <Region HBox.hgrow="ALWAYS" />
+
+                                                <Label text="\$0.00">
+
+                                                    <font>
+                                                        <Font name="Segoe UI Bold" size="18" />
+                                                    </font>
+
+                                                </Label>
+
+                                            </children>
+
+                                        </HBox>
+
+                                        <HBox>
+
+                                            <children>
+
+                                                <Label text="IVA (13%)" />
+
+                                                <Region HBox.hgrow="ALWAYS" />
+
+                                                <Label text="\$0.00">
+
+                                                    <font>
+                                                        <Font name="Segoe UI Bold" size="18" />
+                                                    </font>
+
+                                                </Label>
+
+                                            </children>
+
+                                        </HBox>
+
+                                        <Separator />
+
+                                        <HBox>
+
+                                            <children>
+
+                                                <Label text="TOTAL">
+
+                                                    <font>
+                                                        <Font name="Segoe UI Bold" size="24" />
+                                                    </font>
+
+                                                </Label>
+
+                                                <Region HBox.hgrow="ALWAYS" />
+
+                                                <Label text="\$0.00" textFill="#3E2C27">
+
+                                                    <font>
+                                                        <Font name="Segoe UI Bold" size="38" />
+                                                    </font>
+
+                                                </Label>
+
+                                            </children>
+
+                                        </HBox>
+
+                                        <!-- BOTONES -->
+                                        <HBox spacing="15">
+
+                                            <children>
+
+                                                <Button prefHeight="50" prefWidth="190" style="-fx-background-color: white;                                                                -fx-border-color: #4B3832;                                                                -fx-border-radius: 10;                                                                -fx-background-radius: 10;                                                                -fx-font-weight: bold;" text="Imprimir Ticket" />
+
+                                                <Button prefHeight="50" prefWidth="240" style="-fx-background-color: #3E2C27;                                                                -fx-text-fill: white;                                                                -fx-background-radius: 10;                                                                -fx-font-weight: bold;" text="Registrar Venta" />
+
+                                            </children>
+
+                                        </HBox>
+
+                                    </children>
+
+                                </VBox>
+
+                            </children>
+
+                        </VBox>
+
+                    </children>
+               <VBox.margin>
+                  <Insets left="25.0" right="25.0" />
+               </VBox.margin>
+
+                </HBox>
+
+            </children>
+
+        </VBox>
+
+    </center>
+
+</BorderPane>

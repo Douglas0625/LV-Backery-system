@@ -45,7 +45,7 @@ public class UsuarioDAO {
 
                 usuario.setPassword(
                         rs.getString("password")
-                );contro
+                );
 
                 usuario.setRol(
                         rs.getString("rol")
