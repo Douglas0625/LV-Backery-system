@@ -1,67 +1,61 @@
 package dao;
 
-import database.DatabaseConnection;
+import config.DatabaseConnection;
+import model.Rol;
 import model.Usuario;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 
 public class UsuarioDAO {
 
-    public List<Usuario> listarUsuarios() {
+    public Usuario iniciarSesion(String username, String password) {
 
-        List<Usuario> lista = new ArrayList<>();
+        Usuario usuario = null;
 
         String sql = """
-                SELECT *
-                FROM usuarios
-                ORDER BY id_usuario
+                SELECT u.id_usuario,
+                       u.nombre,
+                       u.usuario,
+                       u.password,
+                       r.id_rol,
+                       r.nombre_rol
+                FROM usuario u
+                INNER JOIN rol r
+                    ON u.id_rol = r.id_rol
+                WHERE u.usuario = ?
+                AND u.password = ?
                 """;
 
         try (
                 Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                ResultSet rs = stmt.executeQuery()
+                PreparedStatement ps = conn.prepareStatement(sql)
         ) {
 
-            while (rs.next()) {
+            ps.setString(1, username);
+            ps.setString(2, password);
 
-                Usuario usuario = new Usuario();
+            ResultSet rs = ps.executeQuery();
 
-                usuario.setIdUsuario(
-                        rs.getInt("id_usuario")
-                );
+            if (rs.next()) {
 
-                usuario.setNombre(
-                        rs.getString("nombre")
-                );
+                Rol rol = new Rol();
+                rol.setIdRol(rs.getInt("id_rol"));
+                rol.setNombreRol(rs.getString("nombre_rol"));
 
-                usuario.setUsername(
-                        rs.getString("username")
-                );
-
-                usuario.setPassword(
-                        rs.getString("password")
-                );
-
-                usuario.setRol(
-                        rs.getString("rol")
-                );
-
-                usuario.setActivo(
-                        rs.getBoolean("activo")
-                );
-
-                lista.add(usuario);
+                usuario = new Usuario();
+                usuario.setIdUsuario(rs.getInt("id_usuario"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setUsuario(rs.getString("usuario"));
+                usuario.setPassword(rs.getString("password"));
+                usuario.setRol(rol);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return lista;
+        return usuario;
     }
 }

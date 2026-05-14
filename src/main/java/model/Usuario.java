@@ -4,28 +4,19 @@ public class Usuario {
 
     private int idUsuario;
     private String nombre;
-    private String username;
+    private String usuario;
     private String password;
-    private String rol;
-    private boolean activo;
+    private Rol rol;
 
     public Usuario() {
     }
 
-    public Usuario(
-            int idUsuario,
-            String nombre,
-            String username,
-            String password,
-            String rol,
-            boolean activo
-    ) {
+    public Usuario(int idUsuario, String nombre, String usuario, String password, Rol rol) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
-        this.username = username;
+        this.usuario = usuario;
         this.password = password;
         this.rol = rol;
-        this.activo = activo;
     }
 
     public int getIdUsuario() {
@@ -44,12 +35,12 @@ public class Usuario {
         this.nombre = nombre;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUsuario() {
+        return usuario;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     public String getPassword() {
@@ -60,19 +51,11 @@ public class Usuario {
         this.password = password;
     }
 
-    public String getRol() {
+    public Rol getRol() {
         return rol;
     }
 
-    public void setRol(String rol) {
+    public void setRol(Rol rol) {
         this.rol = rol;
-    }
-
-    public boolean isActivo() {
-        return activo;
-    }
-
-    public void setActivo(boolean activo) {
-        this.activo = activo;
     }
 }
