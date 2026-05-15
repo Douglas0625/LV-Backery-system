@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefWidth="520.0"
+      prefHeight="720.0"
+      spacing="18"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      style="-fx-background-color: white;
+             -fx-padding: 25;">
+
+    <children>
+
+        <!-- TITULO -->
+
+        <Label text="Nuevo Producto y Receta"
+               textFill="#3E2C27">
+
+            <font>
+                <Font name="Segoe UI Bold" size="28"/>
+            </font>
+
+        </Label>
+
+        <Label text="Complete la información del producto y su receta"
+               textFill="#7A6E69">
+
+            <font>
+                <Font name="Segoe UI" size="14"/>
+            </font>
+
+        </Label>
+
+        <!-- ================= PRODUCTO ================= -->
+
+        <Separator/>
+
+        <Label text="Información del Producto"
+               textFill="#8B4A2F">
+
+            <font>
+                <Font name="Segoe UI Bold" size="18"/>
+            </font>
+
+        </Label>
+
+        <!-- NOMBRE -->
+
+        <VBox spacing="6">
+
+            <children>
+
+                <Label text="Nombre del Producto"/>
+
+                <TextField promptText="Ej: Cheesecake"/>
+
+            </children>
+
+        </VBox>
+
+        <!-- DESCRIPCION -->
+
+        <VBox spacing="6">
+
+            <children>
+
+                <Label text="Descripción"/>
+
+                <TextArea prefHeight="90"
+                          wrapText="true"
+                          promptText="Descripción del producto"/>
+
+            </children>
+
+        </VBox>
+
+        <!-- PRECIO Y PRESENTACION -->
+
+        <HBox spacing="12">
+
+            <children>
+
+                <VBox spacing="6">
+
+                    <children>
+
+                        <Label text="Precio Venta"/>
+
+                        <TextField promptText="0.00"
+                                   prefWidth="200"/>
+
+                    </children>
+
+                </VBox>
+
+                <VBox spacing="6">
+
+                    <children>
+
+                        <Label text="Unidades por Presentación"/>
+
+                        <TextField promptText="12"
+                                   prefWidth="220"/>
+
+                    </children>
+
+                </VBox>
+
+            </children>
+
+        </HBox>
+
+        <!-- ================= RECETA ================= -->
+
+        <Separator/>
+
+        <Label text="Información de la Receta"
+               textFill="#8B4A2F">
+
+            <font>
+                <Font name="Segoe UI Bold" size="18"/>
+            </font>
+
+        </Label>
+
+        <!-- NOMBRE RECETA -->
+
+        <VBox spacing="6">
+
+            <children>
+
+                <Label text="Nombre de la Receta"/>
+
+                <TextField promptText="Ej: Receta Cheesecake"/>
+
+            </children>
+
+        </VBox>
+
+        <!-- RENDIMIENTO -->
+
+        <VBox spacing="6">
+
+            <children>
+
+                <Label text="Rendimiento Total"/>
+
+                <TextField promptText="12 unidades"/>
+
+            </children>
+
+        </VBox>
+
+        <!-- ================= INGREDIENTES ================= -->
+
+        <Separator/>
+
+        <HBox alignment="CENTER_LEFT">
+
+            <children>
+
+                <Label text="Ingredientes"
+                       textFill="#8B4A2F">
+
+                    <font>
+                        <Font name="Segoe UI Bold" size="18"/>
+                    </font>
+
+                </Label>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button text="+ Agregar Ingrediente"
+                        prefHeight="35"
+                        prefWidth="180"
+                        style="-fx-background-color: #D8B08C;
+                               -fx-text-fill: white;
+                               -fx-font-weight: bold;
+                               -fx-background-radius: 8;"/>
+
+            </children>
+
+        </HBox>
+
+        <!-- TABLA INGREDIENTES -->
+
+        <TableView prefHeight="220">
+
+            <columns>
+
+                <TableColumn text="INGREDIENTE"
+                             prefWidth="210"/>
+
+                <TableColumn text="GRAMOS"
+                             prefWidth="100"/>
+
+                <TableColumn text="COSTO"
+                             prefWidth="90"/>
+
+                <TableColumn text="ACC."
+                             prefWidth="70"/>
+
+            </columns>
+
+        </TableView>
+
+        <!-- COSTO ESTIMADO -->
+
+        <VBox spacing="5"
+              style="-fx-background-color: #F2A47F;
+                     -fx-padding: 15;
+                     -fx-background-radius: 10;">
+
+            <children>
+
+                <Label text="COSTO ESTIMADO"
+                       textFill="#8A4B32">
+
+                    <font>
+                        <Font name="Segoe UI Bold" size="12"/>
+                    </font>
+
+                </Label>
+
+                <Label text="\$0.00 / unidad"
+                       textFill="#4B3832">
+
+                    <font>
+                        <Font name="Segoe UI Bold" size="28"/>
+                    </font>
+
+                </Label>
+
+            </children>
+
+        </VBox>
+
+        <!-- BOTONES -->
+
+        <HBox spacing="15">
+
+            <children>
+
+                <Button text="Cancelar"
+                        prefWidth="220"
+                        prefHeight="45"
+                        style="-fx-background-color: transparent;
+                               -fx-border-color: #3E2A24;
+                               -fx-border-radius: 8;
+                               -fx-background-radius: 8;
+                               -fx-font-weight: bold;"/>
+
+                <Button text="Guardar Producto"
+                        prefWidth="220"
+                        prefHeight="45"
+                        style="-fx-background-color: #3E2A24;
+                               -fx-text-fill: white;
+                               -fx-background-radius: 8;
+                               -fx-font-weight: bold;"/>
+
+            </children>
+
+        </HBox>
+
+    </children>
+
+</VBox>

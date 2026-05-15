@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="18"
+      prefWidth="350"
+      prefHeight="250"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      style="-fx-background-color: white;
+             -fx-padding: 25;">
+
+    <children>
+
+        <Label text="Agregar Ingrediente"
+               textFill="#3E2C27">
+
+            <font>
+                <Font name="Segoe UI Bold" size="24"/>
+            </font>
+
+        </Label>
+
+        <!-- INGREDIENTE -->
+
+        <VBox spacing="6">
+
+            <children>
+
+                <Label text="Ingrediente"/>
+
+                <ComboBox prefWidth="280"
+                          promptText="Seleccionar ingrediente"/>
+
+            </children>
+
+        </VBox>
+
+        <!-- GRAMOS -->
+
+        <VBox spacing="6">
+
+            <children>
+
+                <Label text="Cantidad en gramos"/>
+
+                <TextField promptText="0"/>
+
+            </children>
+
+        </VBox>
+
+        <!-- BOTONES -->
+
+        <HBox spacing="12">
+
+            <children>
+
+                <Button text="Cancelar"
+                        prefWidth="130"
+                        prefHeight="40"
+                        style="-fx-background-color: transparent;
+                               -fx-border-color: #3E2A24;
+                               -fx-border-radius: 8;"/>
+
+                <Button text="Agregar"
+                        prefWidth="130"
+                        prefHeight="40"
+                        style="-fx-background-color: #3E2A24;
+                               -fx-text-fill: white;
+                               -fx-background-radius: 8;"/>
+
+            </children>
+
+        </HBox>
+
+    </children>
+
+</VBox>

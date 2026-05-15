@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="520.0" prefWidth="420.0" spacing="18" style="-fx-background-color: white;              -fx-padding: 25;              -fx-background-radius: 12;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+
+    <children>
+
+        <!-- TITULO -->
+        <Label text="Nuevo Ingrediente" textFill="#4B3832">
+
+            <font>
+                <Font name="Segoe UI Bold" size="24" />
+            </font>
+
+        </Label>
+
+        <!-- NOMBRE -->
+        <VBox spacing="5">
+
+            <children>
+
+                <Label text="Nombre del Ingrediente">
+
+                    <font>
+                        <Font name="Segoe UI Bold" size="12" />
+                    </font>
+
+                </Label>
+
+                <TextField fx:id="txtNombre" promptText="Ej: Harina" />
+
+            </children>
+
+        </VBox>
+
+        <!-- STOCK -->
+        <HBox spacing="12.0">
+
+            <children>
+
+                <VBox prefHeight="46.0" prefWidth="162.0" spacing="5" HBox.hgrow="ALWAYS">
+
+                    <children>
+
+                        <Label text="Stock Actual Inicial (gramos)">
+
+                            <font>
+                                <Font name="Segoe UI Bold" size="12" />
+                            </font>
+
+                        </Label>
+
+                        <TextField fx:id="txtStock" prefHeight="26.0" prefWidth="191.0" promptText="0" />
+
+                    </children>
+
+                </VBox>
+      
+                    <!-- STOCK MINIMO -->
+              <VBox spacing="5">
+      
+                        <children>
+      
+                            <Label text="Stock Mínimo">
+      
+                                <font>
+                              <Font name="Segoe UI Bold" size="12" />
+                          </font>
+      
+                            </Label>
+      
+                            <TextField fx:id="txtStockMinimo" prefHeight="26.0" prefWidth="161.0" promptText="0" />
+      
+                        </children>
+      
+                    </VBox>
+
+            </children>
+
+        </HBox>
+
+        <!-- COSTOS -->
+        <HBox spacing="12">
+
+            <children>
+
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+
+                    <children>
+
+                        <Label text="Costo Compra">
+
+                            <font>
+                                <Font name="Segoe UI Bold" size="12" />
+                            </font>
+
+                        </Label>
+
+                        <TextField fx:id="txtCostoCompra" promptText="0.00" />
+
+                    </children>
+
+                </VBox>
+
+                <VBox spacing="5" HBox.hgrow="ALWAYS">
+
+                    <children>
+
+                        <Label text="Costo por Gramo">
+
+                            <font>
+                                <Font name="Segoe UI Bold" size="12" />
+                            </font>
+
+                        </Label>
+
+                        <TextField fx:id="txtCostoGramo" promptText="0.00" />
+
+                    </children>
+
+                </VBox>
+
+            </children>
+
+        </HBox>
+
+        <!-- PROVEEDOR -->
+        <VBox spacing="5">
+
+            <children>
+
+                <Label text="Proveedor Principal">
+
+                    <font>
+                        <Font name="Segoe UI Bold" size="12" />
+                    </font>
+
+                </Label>
+
+                <ComboBox fx:id="cbProveedor" prefWidth="350" promptText="Seleccionar proveedor" />
+
+            </children>
+
+        </VBox>
+
+        <!-- DESCRIPCION -->
+        <VBox spacing="5">
+
+            <children>
+
+                <Label text="Descripción">
+
+                    <font>
+                        <Font name="Segoe UI Bold" size="12" />
+                    </font>
+
+                </Label>
+
+                <TextArea fx:id="txtDescripcion" prefHeight="90" promptText="Descripción del ingrediente..." wrapText="true" />
+
+            </children>
+
+        </VBox>
+
+        <!-- BOTONES -->
+        <HBox alignment="CENTER_RIGHT" spacing="12">
+
+            <children>
+
+                <Button prefHeight="38" prefWidth="120" style="-fx-background-color: transparent;                                -fx-border-color: #4B3832;                                -fx-border-radius: 6;                                -fx-background-radius: 6;" text="Cancelar" textFill="#4B3832" />
+
+                <Button prefHeight="38" prefWidth="120" style="-fx-background-color: #4B3832;                                -fx-background-radius: 6;" text="Guardar" textFill="WHITE" />
+
+            </children>
+
+        </HBox>
+
+    </children>
+
+</VBox>
