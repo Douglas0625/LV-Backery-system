@@ -58,7 +58,7 @@ public class PedidoDAO {
     public List<DetallePedido> listarDetalles(int idPedido) {
         List<DetallePedido> detalles = new ArrayList<>();
         String sql = "SELECT id_detalle_pedido, id_pedido, id_producto, cantidad, precio_unitario, subtotal " +
-                "FROM detalle_pedido WHERE id_pedido = ?";
+                     "FROM detalle_pedido WHERE id_pedido = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idPedido);
@@ -92,7 +92,7 @@ public class PedidoDAO {
 
     public int insertar(Pedido pedido) {
         String sql = "INSERT INTO pedido (id_cliente, fecha_pedido, fecha_entrega, id_estado_pedido, " +
-                "descripcion_pedido, total_pedido) VALUES (?,?,?,?,?,?)";
+                     "descripcion_pedido, total_pedido) VALUES (?,?,?,?,?,?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, pedido.getCliente().getIdCliente());
@@ -126,7 +126,7 @@ public class PedidoDAO {
 
     public long contarPendientes() {
         String sql = "SELECT COUNT(*) FROM pedido p INNER JOIN estado_pedido e ON p.id_estado_pedido=e.id_estado_pedido " +
-                "WHERE e.nombre_estado NOT IN ('Entregado','Cancelado')";
+                     "WHERE e.nombre_estado NOT IN ('Entregado','Cancelado')";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -137,7 +137,7 @@ public class PedidoDAO {
 
     private void insertarDetalle(Connection conn, int idPedido, DetallePedido d) throws SQLException {
         String sql = "INSERT INTO detalle_pedido (id_pedido, id_producto, cantidad, precio_unitario, subtotal) " +
-                "VALUES (?,?,?,?,?)";
+                     "VALUES (?,?,?,?,?)";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setInt(1, idPedido);
         ps.setInt(2, d.getProducto().getIdProducto());

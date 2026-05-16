@@ -24,228 +24,340 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<!-- CAMBIOS: fx:controller + fx:id en labels, charts y tablas + onAction="filtrar" -->
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="controller.ReportesController">
 
-<BorderPane prefHeight="720.0" prefWidth="1280.0"
-            xmlns="http://javafx.com/javafx/26"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.ReportesController">
-
-    <!-- SIDEBAR -->
-    <left>
-        <VBox prefHeight="720.0" prefWidth="223.0"
-              style="-fx-background-color: #4B3832; -fx-padding: 10; -fx-spacing: 15;">
-            <children>
-                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="207.0"
-                       text="LV BAKERY" textAlignment="CENTER" textFill="WHITE">
-                    <font><Font name="Segoe UI Bold" size="28.0" /></font>
-                </Label>
-                <Label alignment="CENTER" prefHeight="10.0" prefWidth="202.0"
-                       text="Inventory &amp; management" textFill="#f4d764">
-                    <font><Font name="Segoe UI" size="12.0" /></font>
-                </Label>
-            </children>
-        </VBox>
-    </left>
-
-    <!-- CONTENIDO -->
+    <!-- ================= CONTENIDO ================= -->
     <center>
+
         <ScrollPane fitToWidth="true" style="-fx-background: #F5F3EF;">
+
             <content>
-                <VBox spacing="15" style="-fx-background-color: #F5F3EF; -fx-padding: 0 15 20 15;">
 
-                    <!-- TOPBAR -->
-                    <HBox alignment="CENTER" prefHeight="55.0"
-                          style="-fx-border-color: #4B3832; -fx-border-width: 2; -fx-background-color: #F5F3EF;">
-                        <padding><Insets left="-15" right="-15" /></padding>
-                        <children>
-                            <Label prefHeight="50.0" prefWidth="147.0" text="Bakery Manager" textFill="#4b3832">
-                                <font><Font name="System Bold" size="18.0" /></font>
-                                <padding><Insets left="5.0" /></padding>
-                            </Label>
-                            <Region HBox.hgrow="ALWAYS" />
-                            <Label text="Admin" textFill="#4b3832">
-                                <font><Font name="Segoe UI" size="12.0" /></font>
-                            </Label>
-                            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="46.0"
-                                    style="-fx-background-color: transparent;">
-                                <graphic><ImageView fitHeight="23.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                    <image><Image url="@../img/avatar.png" /></image>
-                                </ImageView></graphic>
-                                <cursor><Cursor fx:constant="HAND" /></cursor>
-                            </Button>
-                        </children>
-                    </HBox>
+                <VBox spacing="15" style="-fx-background-color: #F5F3EF;">
 
-                    <!-- HEADER + FILTROS -->
+                    <!-- HEADER -->
                     <HBox alignment="CENTER_LEFT" spacing="15">
+
+                        <padding>
+                            <Insets bottom="0.0" left="15.0" right="15.0" top="10.0" />
+                        </padding>
+
                         <children>
+
                             <VBox spacing="5">
+
                                 <children>
+
                                     <Label text="Reportes y Estadísticas" textFill="#4B3832">
-                                        <font><Font name="Segoe UI Bold" size="26.0" /></font>
+
+                                        <font>
+                                            <Font name="Segoe UI Bold" size="26.0" />
+                                        </font>
+
                                     </Label>
+
                                     <Label text="Análisis completo de ventas, inventario y rendimiento." />
+
                                 </children>
+
                             </VBox>
+
                             <Region HBox.hgrow="ALWAYS" />
-                            <DatePicker fx:id="dpInicio" promptText="Fecha inicio" />
-                            <DatePicker fx:id="dpFin" promptText="Fecha fin" />
-                            <Button mnemonicParsing="false" prefHeight="36.0" prefWidth="100.0"
-                                    style="-fx-background-color: #4b3832; -fx-text-fill: white; -fx-background-radius: 8;"
-                                    text="Filtrar" onAction="#filtrar">
-                                <cursor><Cursor fx:constant="HAND" /></cursor>
-                            </Button>
+
+                            <DatePicker promptText="Fecha inicio" />
+
+                            <DatePicker promptText="Fecha fin" />
+                     <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #4b3832;" text="Filtrar" textFill="WHITE">
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
+                        <font>
+                           <Font name="Segoe UI Bold" size="12.0" />
+                        </font>
+                     </Button>
+
                         </children>
+
                     </HBox>
 
-                    <!-- KPI CARDS -->
-                    <HBox spacing="15">
-                        <children>
-                            <!-- Ventas del mes -->
-                            <VBox prefWidth="220.0" spacing="5"
-                                  style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-border-color: #E5E1DC;">
-                                <children>
-                                    <Label text="VENTAS DEL MES" textFill="#7A6F68">
-                                        <font><Font name="Segoe UI Bold" size="11.0" /></font>
-                                    </Label>
-                                    <Label fx:id="lblVentasMes" text="\$ —" textFill="#4B3832">
-                                        <font><Font name="Segoe UI Bold" size="24.0" /></font>
-                                        <VBox.margin><Insets top="5.0" /></VBox.margin>
-                                    </Label>
-                                </children>
-                            </VBox>
-                            <!-- Ganancia neta -->
-                            <VBox prefWidth="220.0" spacing="5"
-                                  style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-border-color: #E5E1DC;">
-                                <children>
-                                    <Label text="GANANCIA NETA" textFill="#7A6F68">
-                                        <font><Font name="Segoe UI Bold" size="11.0" /></font>
-                                    </Label>
-                                    <Label fx:id="lblGananciaNeta" text="\$ —" textFill="#4B3832">
-                                        <font><Font name="Segoe UI Bold" size="24.0" /></font>
-                                        <VBox.margin><Insets top="5.0" /></VBox.margin>
-                                    </Label>
-                                </children>
-                            </VBox>
-                            <!-- Producto top -->
-                            <VBox prefWidth="220.0" spacing="5"
-                                  style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-border-color: #E5E1DC;">
-                                <children>
-                                    <Label text="PRODUCTO TOP" textFill="#7A6F68">
-                                        <font><Font name="Segoe UI Bold" size="11.0" /></font>
-                                    </Label>
-                                    <Label fx:id="lblProductoTop" text="—" textFill="#4B3832">
-                                        <font><Font name="Segoe UI Bold" size="20.0" /></font>
-                                        <VBox.margin><Insets top="5.0" /></VBox.margin>
-                                    </Label>
-                                </children>
-                            </VBox>
-                            <!-- Stock crítico -->
-                            <VBox prefWidth="220.0" spacing="5"
-                                  style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-border-color: #E5E1DC;">
-                                <children>
-                                    <Label text="STOCK CRÍTICO" textFill="#7A6F68">
-                                        <font><Font name="Segoe UI Bold" size="11.0" /></font>
-                                    </Label>
-                                    <Label fx:id="lblStockCritico" text="—" textFill="#D64545">
-                                        <font><Font name="Segoe UI Bold" size="20.0" /></font>
-                                        <VBox.margin><Insets top="5.0" /></VBox.margin>
-                                    </Label>
-                                </children>
-                            </VBox>
-                        </children>
-                    </HBox>
+                    <!-- CARDS -->
+                    <GridPane hgap="15" vgap="15">
 
-                    <!-- GRÁFICOS FILA 1 -->
-                    <HBox spacing="15">
+                        <padding>
+                            <Insets left="15.0" right="15.0" />
+                        </padding>
+
+                        <!-- CARD 1 -->
+                        <VBox spacing="10" style="-fx-background-color: white;                                      -fx-background-radius: 10;                                      -fx-padding: 20;                                      -fx-border-color: #E5E1DC;                                      -fx-border-radius: 10;" GridPane.columnIndex="0">
+
+                            <children>
+
+                                <Label text="VENTAS DEL MES" textFill="#7A6F68" />
+
+                                <Label text="\$ 12,450.00" textFill="#4B3832">
+
+                                    <font>
+                                        <Font name="Segoe UI Bold" size="28.0" />
+                                    </font>
+
+                                </Label>
+
+                            </children>
+
+                        </VBox>
+
+                        <!-- CARD 2 -->
+                        <VBox spacing="10" style="-fx-background-color: white;                                      -fx-background-radius: 10;                                      -fx-padding: 20;                                      -fx-border-color: #E5E1DC;                                      -fx-border-radius: 10;" GridPane.columnIndex="1">
+
+                            <children>
+
+                                <Label text="GANANCIA NETA" textFill="#7A6F68" />
+
+                                <Label text="\$ 5,380.00" textFill="#4B3832">
+
+                                    <font>
+                                        <Font name="Segoe UI Bold" size="28.0" />
+                                    </font>
+
+                                </Label>
+
+                            </children>
+
+                        </VBox>
+
+                        <!-- CARD 3 -->
+                        <VBox spacing="10" style="-fx-background-color: white;                                      -fx-background-radius: 10;                                      -fx-padding: 20;                                      -fx-border-color: #E5E1DC;                                      -fx-border-radius: 10;" GridPane.columnIndex="2">
+
+                            <children>
+
+                                <Label text="PRODUCTO TOP" textFill="#7A6F68" />
+
+                                <Label text="Croissant" textFill="#4B3832">
+
+                                    <font>
+                                        <Font name="Segoe UI Bold" size="24.0" />
+                                    </font>
+
+                                </Label>
+
+                            </children>
+
+                        </VBox>
+
+                        <!-- CARD 4 -->
+                        <VBox spacing="10" style="-fx-background-color: white;                                      -fx-background-radius: 10;                                      -fx-padding: 20;                                      -fx-border-color: #E5E1DC;                                      -fx-border-radius: 10;" GridPane.columnIndex="3">
+
+                            <children>
+
+                                <Label text="STOCK CRÍTICO" textFill="#7A6F68" />
+
+                                <Label text="5 ingredientes" textFill="#D64545">
+
+                                    <font>
+                                        <Font name="Segoe UI Bold" size="24.0" />
+                                    </font>
+
+                                </Label>
+
+                            </children>
+
+                        </VBox>
+                  <columnConstraints>
+                     <ColumnConstraints />
+                     <ColumnConstraints />
+                     <ColumnConstraints />
+                     <ColumnConstraints />
+                  </columnConstraints>
+                  <rowConstraints>
+                     <RowConstraints />
+                  </rowConstraints>
+
+                    </GridPane>
+
+                    <!-- GRAFICOS -->
+                    <HBox spacing="15" VBox.vgrow="ALWAYS">
+
+                        <padding>
+                            <Insets left="15.0" right="15.0" />
+                        </padding>
+
                         <children>
-                            <!-- Line chart: Ventas por día -->
-                            <VBox prefWidth="600.0" spacing="8"
-                                  style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-border-color: #E5E1DC;"
-                                  HBox.hgrow="ALWAYS">
+
+                            <!-- LINE CHART -->
+                            <VBox spacing="10" style="-fx-background-color: white;                                          -fx-padding: 15;                                          -fx-background-radius: 10;                                          -fx-border-color: #E5E1DC;                                          -fx-border-radius: 10;" HBox.hgrow="ALWAYS">
+
                                 <children>
+
                                     <Label text="Ventas por Día" textFill="#4B3832">
-                                        <font><Font name="Segoe UI Bold" size="16.0" /></font>
+
+                                        <font>
+                                            <Font name="Segoe UI Bold" size="18.0" />
+                                        </font>
+
                                     </Label>
-                                    <LineChart fx:id="chartVentasDia" prefHeight="300.0" VBox.vgrow="ALWAYS">
-                                        <xAxis><CategoryAxis label="Fecha" /></xAxis>
-                                        <yAxis><NumberAxis label="Total $" /></yAxis>
+
+                                    <LineChart prefHeight="350.0">
+
+                                        <xAxis>
+                                            <CategoryAxis label="Día" />
+                                        </xAxis>
+
+                                        <yAxis>
+                                            <NumberAxis label="Ventas" />
+                                        </yAxis>
+
                                     </LineChart>
+
                                 </children>
+
                             </VBox>
-                            <!-- Pie chart: Distribución -->
-                            <VBox prefWidth="400.0" spacing="8"
-                                  style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-border-color: #E5E1DC;"
-                                  HBox.hgrow="ALWAYS">
+
+                            <!-- PIE -->
+                            <VBox prefWidth="350.0" spacing="10" style="-fx-background-color: white;                                          -fx-padding: 15;                                          -fx-background-radius: 10;                                          -fx-border-color: #E5E1DC;                                          -fx-border-radius: 10;">
+
                                 <children>
+
                                     <Label text="Distribución de Ventas" textFill="#4B3832">
-                                        <font><Font name="Segoe UI Bold" size="16.0" /></font>
+
+                                        <font>
+                                            <Font name="Segoe UI Bold" size="18.0" />
+                                        </font>
+
                                     </Label>
-                                    <PieChart fx:id="chartDistribucion" prefHeight="300.0" VBox.vgrow="ALWAYS" />
+
+                                    <PieChart prefHeight="350.0" />
+
                                 </children>
+
                             </VBox>
+
                         </children>
+
                     </HBox>
 
-                    <!-- GRÁFICO FILA 2: Bar chart productos -->
-                    <VBox spacing="8"
-                          style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-border-color: #E5E1DC;">
+                    <!-- BARCHART -->
+                    <VBox spacing="10" style="-fx-background-color: white;                                  -fx-padding: 15;                                  -fx-background-radius: 10;                                  -fx-border-color: #E5E1DC;                                  -fx-border-radius: 10;">
+
+                        <padding>
+                            <Insets left="15.0" right="15.0" />
+                        </padding>
+
                         <children>
+
                             <Label text="Productos Más Vendidos" textFill="#4B3832">
-                                <font><Font name="Segoe UI Bold" size="16.0" /></font>
+
+                                <font>
+                                    <Font name="Segoe UI Bold" size="18.0" />
+                                </font>
+
                             </Label>
-                            <BarChart fx:id="chartProductos" prefHeight="300.0">
-                                <xAxis><CategoryAxis label="Producto" /></xAxis>
-                                <yAxis><NumberAxis label="Unidades" /></yAxis>
+
+                            <BarChart prefHeight="350.0">
+
+                                <xAxis>
+                                    <CategoryAxis label="Productos" />
+                                </xAxis>
+
+                                <yAxis>
+                                    <NumberAxis label="Cantidad" />
+                                </yAxis>
+
                             </BarChart>
+
                         </children>
+                  <VBox.margin>
+                     <Insets left="15.0" right="15.0" />
+                  </VBox.margin>
+
                     </VBox>
 
-                    <!-- TABLAS FILA 3 -->
+                    <!-- TABLAS -->
                     <HBox spacing="15">
+
+                        <padding>
+                            <Insets bottom="15.0" left="15.0" right="15.0" />
+                        </padding>
+
                         <children>
-                            <!-- Últimas ventas -->
-                            <VBox spacing="8"
-                                  style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-border-color: #E5E1DC;"
-                                  HBox.hgrow="ALWAYS">
+
+                            <!-- TABLA VENTAS -->
+                            <VBox spacing="10" style="-fx-background-color: white;                                          -fx-padding: 15;                                          -fx-background-radius: 10;                                          -fx-border-color: #E5E1DC;                                          -fx-border-radius: 10;" HBox.hgrow="ALWAYS">
+
                                 <children>
+
                                     <Label text="Últimas Ventas" textFill="#4B3832">
-                                        <font><Font name="Segoe UI Bold" size="16.0" /></font>
+
+                                        <font>
+                                            <Font name="Segoe UI Bold" size="18.0" />
+                                        </font>
+
                                     </Label>
-                                    <TableView fx:id="tablaUltimasVentas" prefHeight="250.0" VBox.vgrow="ALWAYS">
+
+                                    <TableView prefHeight="300.0" VBox.vgrow="ALWAYS">
+
                                         <columns>
-                                            <TableColumn fx:id="colFactura" prefWidth="80.0" text="ID" />
-                                            <TableColumn fx:id="colClienteRep" prefWidth="180.0" text="Cliente" />
-                                            <TableColumn fx:id="colFechaRep" prefWidth="120.0" text="Fecha" />
-                                            <TableColumn fx:id="colTotalRep" prefWidth="120.0" text="Total" />
+
+                                            <TableColumn prefWidth="120.0" text="Factura" />
+
+                                            <TableColumn prefWidth="180.0" text="Cliente" />
+
+                                            <TableColumn prefWidth="120.0" text="Fecha" />
+
+                                            <TableColumn prefWidth="120.0" text="Total" />
+
                                         </columns>
+
                                     </TableView>
+
                                 </children>
+
                             </VBox>
 
-                            <!-- Stock crítico -->
-                            <VBox spacing="8"
-                                  style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 15; -fx-border-color: #E5E1DC;"
-                                  HBox.hgrow="ALWAYS">
+                            <!-- TABLA STOCK -->
+                            <VBox prefWidth="420.0" spacing="10" style="-fx-background-color: white;                                          -fx-padding: 15;                                          -fx-background-radius: 10;                                          -fx-border-color: #E5E1DC;                                          -fx-border-radius: 10;">
+
                                 <children>
+
                                     <Label text="Stock Crítico" textFill="#4B3832">
-                                        <font><Font name="Segoe UI Bold" size="16.0" /></font>
+
+                                        <font>
+                                            <Font name="Segoe UI Bold" size="18.0" />
+                                        </font>
+
                                     </Label>
-                                    <TableView fx:id="tablaStockCritico" prefHeight="250.0" VBox.vgrow="ALWAYS">
+
+                                    <TableView prefHeight="300.0">
+
                                         <columns>
-                                            <TableColumn fx:id="colIngredienteRep" prefWidth="180.0" text="Ingrediente" />
-                                            <TableColumn fx:id="colStockRep" prefWidth="100.0" text="Stock (g)" />
-                                            <TableColumn fx:id="colEstadoRep" prefWidth="100.0" text="Estado" />
+
+                                            <TableColumn prefWidth="180.0" text="Ingrediente" />
+
+                                            <TableColumn prefWidth="100.0" text="Stock" />
+
+                                            <TableColumn prefWidth="100.0" text="Estado" />
+
                                         </columns>
+
                                     </TableView>
+
                                 </children>
+
                             </VBox>
+
                         </children>
+                  <VBox.margin>
+                     <Insets />
+                  </VBox.margin>
+
                     </HBox>
 
                 </VBox>
+
             </content>
+
         </ScrollPane>
+
     </center>
+
 </BorderPane>

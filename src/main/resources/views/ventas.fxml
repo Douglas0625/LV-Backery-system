@@ -17,90 +17,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: #F0EFEB;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane style="-fx-background-color: #F0EFEB;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="controller.VentasController">
 
     <!-- ===================== SIDEBAR ===================== -->
     <!-- NO TOCADO -->
-    <left>
-
-        <VBox prefWidth="223.0" style="-fx-background-color: #4B3832; -fx-spacing: 15;">
-
-            <padding>
-                <Insets bottom="10" left="10" right="10" top="25" />
-            </padding>
-
-            <children>
-
-                <Label text="LV BAKERY" textFill="WHITE">
-
-                    <font>
-                        <Font name="Segoe UI Bold" size="28" />
-                    </font>
-
-                </Label>
-
-                <Label text="Inventory &amp; management" textFill="#f4d764">
-
-                    <font>
-                        <Font size="12" />
-                    </font>
-
-                </Label>
-
-                <!-- DASHBOARD -->
-                <Button alignment="CENTER_LEFT" graphicTextGap="12" prefHeight="45" prefWidth="200" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15;" text="Dashboard" textFill="WHITE">
-
-                    <graphic>
-                        <ImageView fitHeight="28" fitWidth="28" preserveRatio="true">
-
-                            <image>
-                                <Image url="@../img/panel.png" />
-                            </image>
-
-                        </ImageView>
-                    </graphic>
-
-                    <cursor>
-                        <Cursor fx:constant="HAND" />
-                    </cursor>
-
-                </Button>
-
-                <!-- ORDENES -->
-                <Button alignment="CENTER_LEFT" graphicTextGap="12" prefHeight="45" prefWidth="200" style="-fx-background-color: transparent;                                -fx-background-radius: 10;                                -fx-padding: 10 15;" text="Ordenes" textFill="WHITE">
-
-                    <graphic>
-                        <ImageView fitHeight="28" fitWidth="28" preserveRatio="true">
-
-                            <image>
-                                <Image url="@../img/carrito-de-compras.png" />
-                            </image>
-
-                        </ImageView>
-                    </graphic>
-
-                </Button>
-
-                <!-- VENTAS -->
-                <Button alignment="CENTER_LEFT" graphicTextGap="12" prefHeight="45" prefWidth="200" style="-fx-background-color: #6B4F4F;                                -fx-background-radius: 10;                                -fx-padding: 10 15;" text="Ventas" textFill="WHITE">
-
-                    <graphic>
-                        <ImageView fitHeight="28" fitWidth="28" preserveRatio="true">
-
-                            <image>
-                                <Image url="@../img/dinero.png" />
-                            </image>
-
-                        </ImageView>
-                    </graphic>
-
-                </Button>
-
-            </children>
-
-        </VBox>
-
-    </left>
 
     <!-- ===================== CONTENIDO ===================== -->
     <center>
@@ -108,33 +29,6 @@
         <VBox spacing="25">
 
             <children>
-            <HBox alignment="CENTER" prefHeight="55.0" style="-fx-border-color: #4B3832;                                      -fx-border-width: 2;                                      -fx-background-color: #F5F3EF;">
-               <children>
-                  <Label text="Bakery Manager" textFill="#4b3832">
-                     <font>
-                        <Font name="System Bold" size="18" />
-                     </font>
-                     <padding>
-                        <Insets left="5" />
-                     </padding>
-                  </Label>
-                  <Region HBox.hgrow="ALWAYS" />
-                  <Label text="Admin" textFill="#4b3832">
-                     <font>
-                        <Font name="Segoe UI" size="12" />
-                     </font>
-                  </Label>
-                  <Button style="-fx-background-color: transparent;">
-                     <graphic>
-                        <ImageView fitHeight="23" fitWidth="25" preserveRatio="true">
-                           <image>
-                              <Image url="@../img/avatar.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-               </children>
-            </HBox>
 
                 <!-- HEADER -->
                 <HBox alignment="CENTER_LEFT">

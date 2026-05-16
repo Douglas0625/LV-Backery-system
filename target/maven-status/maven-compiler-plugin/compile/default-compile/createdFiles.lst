@@ -1,5 +1,5 @@
 controller\DashboardCajeroController.class
-controller\DashboardAdminController$1.class
+controller\HomeCajeroController.class
+controller\HomeAdminController.class
 controller\DashboardAdminController.class
-controller\DashboardCajeroController$1.class
 controller\ReportesController.class

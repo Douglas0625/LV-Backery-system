@@ -13,7 +13,7 @@ public class IngredienteDAO {
     public List<Ingrediente> listarTodos() {
         List<Ingrediente> lista = new ArrayList<>();
         String sql = "SELECT id_ingrediente, nombre_ingrediente, stock_actual_gramos, costo_por_gramo " +
-                "FROM ingrediente ORDER BY nombre_ingrediente";
+                     "FROM ingrediente ORDER BY nombre_ingrediente";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -24,7 +24,7 @@ public class IngredienteDAO {
 
     public Ingrediente buscarPorId(int id) {
         String sql = "SELECT id_ingrediente, nombre_ingrediente, stock_actual_gramos, costo_por_gramo " +
-                "FROM ingrediente WHERE id_ingrediente = ?";
+                     "FROM ingrediente WHERE id_ingrediente = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);

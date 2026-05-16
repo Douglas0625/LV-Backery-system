@@ -15,7 +15,7 @@ public class RecetaDAO {
     public List<Receta> listarTodas() {
         List<Receta> lista = new ArrayList<>();
         String sql = "SELECT r.id_receta, r.id_producto, r.nombre_receta, r.rendimiento_total " +
-                "FROM receta r ORDER BY r.nombre_receta";
+                     "FROM receta r ORDER BY r.nombre_receta";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -46,7 +46,7 @@ public class RecetaDAO {
     public List<DetalleReceta> listarDetalles(int idReceta) {
         List<DetalleReceta> detalles = new ArrayList<>();
         String sql = "SELECT dr.id_detalle_receta, dr.id_receta, dr.id_ingrediente, dr.cantidad_gramos " +
-                "FROM detalle_receta dr WHERE dr.id_receta = ?";
+                     "FROM detalle_receta dr WHERE dr.id_receta = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idReceta);

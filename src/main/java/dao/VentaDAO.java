@@ -72,13 +72,13 @@ public class VentaDAO {
     /** Guarda venta con detalles y descuenta ingredientes por receta. */
     public int guardarVenta(Venta venta, RecetaDAO recetaDAO) {
         String sqlVenta = "INSERT INTO venta (id_pedido, id_cliente, fecha_venta, total_venta, " +
-                "tipo_venta, metodo_pago, numero_comprobante) VALUES (?,?,CURRENT_DATE,?,?,?,?)";
+                          "tipo_venta, metodo_pago, numero_comprobante) VALUES (?,?,CURRENT_DATE,?,?,?,?)";
         String sqlDetalle = "INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario, subtotal) " +
-                "VALUES (?,?,?,?,?)";
+                            "VALUES (?,?,?,?,?)";
         String sqlMov = "INSERT INTO movimiento_inventario " +
-                "(id_ingrediente, id_tipo_movimiento, fecha_movimiento, cantidad_gramos, descripcion, referencia) " +
-                "VALUES (?, (SELECT id_tipo_movimiento FROM tipo_movimiento WHERE nombre_tipo='Producción'), " +
-                "CURRENT_DATE, ?, 'Descuento por venta', ?)";
+                        "(id_ingrediente, id_tipo_movimiento, fecha_movimiento, cantidad_gramos, descripcion, referencia) " +
+                        "VALUES (?, (SELECT id_tipo_movimiento FROM tipo_movimiento WHERE nombre_tipo='Producción'), " +
+                        "CURRENT_DATE, ?, 'Descuento por venta', ?)";
         String sqlStock = "UPDATE ingrediente SET stock_actual_gramos = stock_actual_gramos - ? WHERE id_ingrediente = ?";
 
         try (Connection conn = DatabaseConnection.getConnection()) {

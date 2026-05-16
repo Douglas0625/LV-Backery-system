@@ -1,73 +1,107 @@
 package controller;
 
-import dao.PedidoDAO;
-import dao.VentaDAO;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import utils.Sesion;
 
-import java.math.BigDecimal;
+import java.io.IOException;
 
 public class DashboardCajeroController {
 
-    @FXML private Label lblTotalVentasHoy;
-    @FXML private Label lblCantidadVentasHoy;
-    @FXML private Label lblPedidosPendientes;
-    @FXML private Label lblNombreUsuario;
+    @FXML private Button btnDashboard;
+    @FXML private Button btnPedidos;
+    @FXML private Button btnVentas;
 
-    private final VentaDAO  ventaDAO  = new VentaDAO();
-    private final PedidoDAO pedidoDAO = new PedidoDAO();
+    @FXML private Label lblTituloModulo;
+    @FXML private Label lblNombreUsuario;
+    @FXML private StackPane contenedorPrincipal;
+
+    private Button botonActivo;
+
+    private static final String ESTILO_ACTIVO   = "-fx-background-color: #6B4F4F; -fx-background-radius: 8; -fx-padding: 10 15 10 15;";
+    private static final String ESTILO_INACTIVO = "-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;";
 
     @FXML
     public void initialize() {
-        if (lblNombreUsuario != null && Sesion.getUsuarioLogueado() != null)
+        if (Sesion.getUsuarioLogueado() != null) {
             lblNombreUsuario.setText(Sesion.getUsuarioLogueado().getNombre());
-
-        if (lblTotalVentasHoy != null)
-            lblTotalVentasHoy.setText("$" + ventaDAO.totalVentasHoy().setScale(2, java.math.RoundingMode.HALF_UP));
-
-        if (lblCantidadVentasHoy != null)
-            lblCantidadVentasHoy.setText(String.valueOf(ventaDAO.cantidadVentasHoy()));
-
-        if (lblPedidosPendientes != null)
-            lblPedidosPendientes.setText(String.valueOf(pedidoDAO.contarPendientes()));
+        }
+        cargarVista("/views/home_cajero.fxml", "Dashboard", btnDashboard);
     }
-
-    @FXML public void irPedidos() { abrirVentana("/views/pedidos.fxml", "Pedidos"); }
-    @FXML public void irVentas()  { abrirVentana("/views/ventas.fxml",  "Ventas");  }
 
     @FXML
-    public void cerrarSesion() {
-        Sesion.cerrarSesion();
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("LV Bakery System");
-            stage.setScene(new Scene(root));
-            stage.show();
-            if (lblNombreUsuario != null)
-                ((Stage) lblNombreUsuario.getScene().getWindow()).close();
-        } catch (Exception e) { e.printStackTrace(); }
+    public void mostrarDashboardHome(ActionEvent e) {
+        cargarVista("/views/home_cajero.fxml", "Dashboard", btnDashboard);
     }
 
-    private void abrirVentana(String fxml, String titulo) {
+    @FXML
+    public void mostrarPedidos(ActionEvent e) {
+        cargarVista("/views/pedidos.fxml", "Pedidos", btnPedidos);
+    }
+
+    @FXML
+    public void mostrarVentas(ActionEvent e) {
+        cargarVista("/views/ventas.fxml", "Ventas", btnVentas);
+    }
+
+    @FXML
+    public void cerrarSesion(ActionEvent e) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "¿Deseas cerrar la sesión?", ButtonType.YES, ButtonType.NO);
+        confirm.setTitle("Cerrar sesión");
+        confirm.setHeaderText(null);
+        confirm.showAndWait().ifPresent(btn -> {
+            if (btn == ButtonType.YES) {
+                Sesion.cerrarSesion();
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
+                    javafx.scene.Parent root = loader.load();
+                    Stage stage = new Stage();
+                    stage.setTitle("LV Bakery System");
+                    stage.setScene(new javafx.scene.Scene(root));
+                    stage.setMaximized(true);
+                    stage.show();
+                    Stage actual = (Stage) contenedorPrincipal.getScene().getWindow();
+                    actual.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public void cargarVista(String fxmlPath, String titulo, Button boton) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("LV Bakery - " + titulo);
-            stage.setScene(new Scene(root));
-            stage.setMaximized(true);
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "No se pudo abrir: " + titulo, ButtonType.OK)
-            {{ setHeaderText(null); }}.showAndWait();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Node vista = loader.load();
+
+            Object controller = loader.getController();
+            if (controller instanceof HomeCajeroController) {
+                ((HomeCajeroController) controller).setDashboard(this);
+            }
+
+            contenedorPrincipal.getChildren().setAll(vista);
+            lblTituloModulo.setText(titulo);
+            actualizarBotonActivo(boton);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            new Alert(Alert.AlertType.ERROR,
+                    "No se pudo cargar: " + fxmlPath, ButtonType.OK).showAndWait();
         }
+    }
+
+    private void actualizarBotonActivo(Button nuevo) {
+        if (botonActivo != null) botonActivo.setStyle(ESTILO_INACTIVO);
+        if (nuevo != null)       nuevo.setStyle(ESTILO_ACTIVO);
+        botonActivo = nuevo;
     }
 }

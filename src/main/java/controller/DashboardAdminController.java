@@ -1,151 +1,163 @@
 package controller;
 
-import dao.PedidoDAO;
-import dao.VentaDAO;
-import dao.IngredienteDAO;
-import dao.MovimientoInventarioDAO;
-import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import model.MovimientoInventario;
-import model.Pedido;
 import utils.Sesion;
 
-import java.math.BigDecimal;
-import java.util.List;
+import java.io.IOException;
 
 public class DashboardAdminController {
 
-    // ── Métricas ──────────────────────────────────────────────────────────────
-    @FXML private Label lblTotalVentasHoy;
-    @FXML private Label lblCantidadVentasHoy;
-    @FXML private Label lblPedidosPendientes;
-    @FXML private Label lblStockCritico;
+    // Sidebar buttons
+    @FXML private Button btnDashboard;
+    @FXML private Button btnPedidos;
+    @FXML private Button btnVentas;
+    @FXML private Button btnRecetas;
+    @FXML private Button btnReportes;
+    @FXML private Button btnInventario;
+    @FXML private Button btnUsuarios;
+
+    // Navbar
+    @FXML private Label lblTituloModulo;
     @FXML private Label lblNombreUsuario;
 
-    // ── Tabla últimos movimientos ─────────────────────────────────────────────
-    @FXML private TableView<MovimientoInventario>           tablaMovimientos;
-    @FXML private TableColumn<MovimientoInventario, String> colFechaMov;
-    @FXML private TableColumn<MovimientoInventario, String> colIngredienteMov;
-    @FXML private TableColumn<MovimientoInventario, String> colTipoMov;
+    // Contenedor dinámico
+    @FXML private StackPane contenedorPrincipal;
 
-    // ── Tabla pedidos recientes ───────────────────────────────────────────────
-    @FXML private TableView<Pedido>               tablaPedidosRecientes;
-    @FXML private TableColumn<Pedido, Integer>    colIdPedidoD;
-    @FXML private TableColumn<Pedido, String>     colClienteD;
-    @FXML private TableColumn<Pedido, String>     colEstadoD;
-    @FXML private TableColumn<Pedido, BigDecimal> colTotalD;
+    // Botón activo actual
+    private Button botonActivo;
 
-    private final VentaDAO    ventaDAO    = new VentaDAO();
-    private final PedidoDAO   pedidoDAO   = new PedidoDAO();
-    private final IngredienteDAO ingredienteDAO = new IngredienteDAO();
-    private final MovimientoInventarioDAO movDAO = new MovimientoInventarioDAO();
+    // Estilos sidebar
+    private static final String ESTILO_ACTIVO      = "-fx-background-color: #6B4F4F; -fx-background-radius: 8; -fx-padding: 10 15 10 15;";
+    private static final String ESTILO_INACTIVO    = "-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;";
 
     @FXML
     public void initialize() {
-        cargarMetricas();
-        configurarTablas();
-        cargarDatos();
-    }
-
-    private void cargarMetricas() {
-        if (lblNombreUsuario != null && Sesion.getUsuarioLogueado() != null)
+        // Mostrar nombre del usuario logueado
+        if (Sesion.getUsuarioLogueado() != null) {
             lblNombreUsuario.setText(Sesion.getUsuarioLogueado().getNombre());
-
-        if (lblTotalVentasHoy != null)
-            lblTotalVentasHoy.setText("$" + ventaDAO.totalVentasHoy().setScale(2, java.math.RoundingMode.HALF_UP));
-
-        if (lblCantidadVentasHoy != null)
-            lblCantidadVentasHoy.setText(String.valueOf(ventaDAO.cantidadVentasHoy()));
-
-        if (lblPedidosPendientes != null)
-            lblPedidosPendientes.setText(String.valueOf(pedidoDAO.contarPendientes()));
-
-        if (lblStockCritico != null) {
-            long criticos = ingredienteDAO.listarTodos().stream()
-                    .filter(i -> i.getStockActualGramos().compareTo(BigDecimal.valueOf(500)) < 0)
-                    .count();
-            lblStockCritico.setText(criticos + " ingredientes");
         }
+
+        // Cargar home por defecto
+        cargarVista("/views/home_admin.fxml", "Dashboard", btnDashboard);
     }
 
-    private void configurarTablas() {
-        if (tablaMovimientos != null) {
-            colFechaMov.setCellValueFactory(d ->
-                    new javafx.beans.property.SimpleStringProperty(
-                            d.getValue().getFechaMovimiento() != null ? d.getValue().getFechaMovimiento().toString() : ""));
-            colIngredienteMov.setCellValueFactory(d ->
-                    new javafx.beans.property.SimpleStringProperty(d.getValue().getNombreIngrediente()));
-            colTipoMov.setCellValueFactory(d ->
-                    new javafx.beans.property.SimpleStringProperty(d.getValue().getTipoMovimiento()));
-        }
-
-        if (tablaPedidosRecientes != null) {
-            colIdPedidoD.setCellValueFactory(new PropertyValueFactory<>("idPedido"));
-            colClienteD.setCellValueFactory(d ->
-                    new javafx.beans.property.SimpleStringProperty(d.getValue().getNombreCliente()));
-            colEstadoD.setCellValueFactory(d ->
-                    new javafx.beans.property.SimpleStringProperty(d.getValue().getNombreEstado()));
-            colTotalD.setCellValueFactory(new PropertyValueFactory<>("totalPedido"));
-        }
-    }
-
-    private void cargarDatos() {
-        if (tablaMovimientos != null)
-            tablaMovimientos.setItems(FXCollections.observableArrayList(movDAO.listarRecientes(10)));
-
-        if (tablaPedidosRecientes != null) {
-            List<Pedido> pendientes = pedidoDAO.listarPendientes();
-            tablaPedidosRecientes.setItems(FXCollections.observableArrayList(
-                    pendientes.subList(0, Math.min(10, pendientes.size()))));
-        }
-    }
-
-    // ── Navegación ───────────────────────────────────────────────────────────
-
-    @FXML public void irPedidos()    { abrirVentana("/views/pedidos.fxml",    "Pedidos");    }
-    @FXML public void irVentas()     { abrirVentana("/views/ventas.fxml",     "Ventas");     }
-    @FXML public void irRecetas()    { abrirVentana("/views/recetas.fxml",    "Recetas");    }
-    @FXML public void irReportes()   { abrirVentana("/views/reportes.fxml",   "Reportes");   }
-    @FXML public void irInventario() { abrirVentana("/views/inventario.fxml", "Inventario"); }
-    @FXML public void irUsuarios()   { abrirVentana("/views/usuarios.fxml",   "Usuarios");   }
+    // ===== ACCIONES DEL SIDEBAR =====
 
     @FXML
-    public void cerrarSesion() {
-        Sesion.cerrarSesion();
+    public void mostrarDashboardHome(ActionEvent e) {
+        cargarVista("/views/home_admin.fxml", "Dashboard", btnDashboard);
+    }
+
+    @FXML
+    public void mostrarPedidos(ActionEvent e) {
+        cargarVista("/views/pedidos.fxml", "Pedidos", btnPedidos);
+    }
+
+    @FXML
+    public void mostrarVentas(ActionEvent e) {
+        cargarVista("/views/ventas.fxml", "Ventas", btnVentas);
+    }
+
+    @FXML
+    public void mostrarRecetas(ActionEvent e) {
+        cargarVista("/views/recetas.fxml", "Recetas", btnRecetas);
+    }
+
+    @FXML
+    public void mostrarReportes(ActionEvent e) {
+        cargarVista("/views/reportes.fxml", "Reportes", btnReportes);
+    }
+
+    @FXML
+    public void mostrarInventario(ActionEvent e) {
+        cargarVista("/views/inventario.fxml", "Inventario", btnInventario);
+    }
+
+    @FXML
+    public void mostrarUsuarios(ActionEvent e) {
+        cargarVista("/views/usuarios.fxml", "Usuarios", btnUsuarios);
+    }
+
+    @FXML
+    public void cerrarSesion(ActionEvent e) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+                "¿Deseas cerrar la sesión?", ButtonType.YES, ButtonType.NO);
+        confirm.setTitle("Cerrar sesión");
+        confirm.setHeaderText(null);
+        confirm.showAndWait().ifPresent(btn -> {
+            if (btn == ButtonType.YES) {
+                Sesion.cerrarSesion();
+                try {
+                    javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                            getClass().getResource("/views/login.fxml"));
+                    javafx.scene.Parent root = loader.load();
+                    Stage stage = new Stage();
+                    stage.setTitle("LV Bakery System");
+                    stage.setScene(new javafx.scene.Scene(root));
+                    stage.setMaximized(true);
+                    stage.show();
+                    // Cerrar ventana actual
+                    Stage actual = (Stage) contenedorPrincipal.getScene().getWindow();
+                    actual.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+    }
+
+    // ===== MÉTODO CENTRAL DE NAVEGACIÓN =====
+
+    /**
+     * Carga un FXML dentro del contenedorPrincipal.
+     * Actualiza título navbar y estado visual del botón.
+     */
+    public void cargarVista(String fxmlPath, String titulo, Button boton) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("LV Bakery System");
-            stage.setScene(new Scene(root));
-            stage.show();
-            // Cerrar la ventana actual
-            if (lblTotalVentasHoy != null)
-                ((Stage) lblTotalVentasHoy.getScene().getWindow()).close();
-        } catch (Exception e) {
-            e.printStackTrace();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Node vista = loader.load();
+
+            // Inyectar referencia al dashboard en controllers que lo necesiten
+            Object controller = loader.getController();
+            if (controller instanceof HomeAdminController) {
+                ((HomeAdminController) controller).setDashboard(this);
+            }
+
+            // Reemplazar contenido
+            contenedorPrincipal.getChildren().setAll(vista);
+
+            // Actualizar navbar
+            lblTituloModulo.setText(titulo);
+
+            // Actualizar estado visual del sidebar
+            actualizarBotonActivo(boton);
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            new Alert(Alert.AlertType.ERROR,
+                    "No se pudo cargar: " + fxmlPath, ButtonType.OK)
+                    .showAndWait();
         }
     }
 
-    private void abrirVentana(String fxml, String titulo) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setTitle("LV Bakery - " + titulo);
-            stage.setScene(new Scene(root));
-            stage.setMaximized(true);
-            stage.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, "No se pudo abrir: " + titulo, ButtonType.OK)
-            {{ setHeaderText(null); }}.showAndWait();
+    private void actualizarBotonActivo(Button nuevo) {
+        // Desactivar botón anterior
+        if (botonActivo != null) {
+            botonActivo.setStyle(ESTILO_INACTIVO);
         }
+        // Activar nuevo
+        if (nuevo != null) {
+            nuevo.setStyle(ESTILO_ACTIVO);
+        }
+        botonActivo = nuevo;
     }
 }
