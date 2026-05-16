@@ -115,7 +115,7 @@ public class DashboardAdminController {
         });
     }
 
-    // ===== MÉTODO CENTRAL DE NAVEGACIÓN =====
+    // ===== METODO CENTRAL DE NAVEGACIÓN =====
 
     /**
      * Carga un FXML dentro del contenedorPrincipal.
