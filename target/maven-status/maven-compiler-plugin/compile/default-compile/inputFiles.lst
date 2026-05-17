@@ -2,18 +2,22 @@ C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\application\TestConnection.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\config\DatabaseConnection.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\config\EnvConfig.java
+C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\controller\CompraModalController.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\controller\DashboardAdminController.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\controller\DashboardCajeroController.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\controller\HomeAdminController.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\controller\HomeCajeroController.java
+C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\controller\IngredienteModalController.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\controller\InventarioController.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\controller\LoginController.java
+C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\controller\MovimientoModalController.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\controller\PedidosController.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\controller\RecetasController.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\controller\ReportesController.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\controller\UsuariosController.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\controller\VentasController.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\dao\ClienteDAO.java
+C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\dao\CompraDAO.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\dao\IngredienteDAO.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\dao\LoginDAO.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\dao\MovimientoInventarioDAO.java
@@ -24,6 +28,8 @@ C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\dao\UsuarioDAO.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\dao\VentaDAO.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\model\Cliente.java
+C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\model\Compra.java
+C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\model\DetalleCompra.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\model\DetallePedido.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\model\DetalleReceta.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\model\DetalleVenta.java
@@ -38,4 +44,5 @@ C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\model\Rol.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\model\Usuario.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\model\Venta.java
+C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\utils\ModalUtil.java
 C:\Users\dougl\OneDrive\Escritorio\IntelliJ\repo\LV-Backery-system\src\main\java\utils\Sesion.java

@@ -11,9 +11,30 @@ import java.util.List;
 public class IngredienteDAO {
 
     public List<Ingrediente> listarTodos() {
+        return listar("ORDER BY nombre_ingrediente");
+    }
+
+    public List<Ingrediente> listarStockBajo(BigDecimal umbral) {
+        return listar("WHERE stock_actual_gramos < " + umbral + " ORDER BY stock_actual_gramos ASC");
+    }
+
+    public List<Ingrediente> buscar(String texto) {
         List<Ingrediente> lista = new ArrayList<>();
         String sql = "SELECT id_ingrediente, nombre_ingrediente, stock_actual_gramos, costo_por_gramo " +
-                     "FROM ingrediente ORDER BY nombre_ingrediente";
+                     "FROM ingrediente WHERE LOWER(nombre_ingrediente) LIKE LOWER(?) ORDER BY nombre_ingrediente";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, "%" + texto + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) lista.add(mapear(rs));
+        } catch (Exception e) { e.printStackTrace(); }
+        return lista;
+    }
+
+    private List<Ingrediente> listar(String filtro) {
+        List<Ingrediente> lista = new ArrayList<>();
+        String sql = "SELECT id_ingrediente, nombre_ingrediente, stock_actual_gramos, costo_por_gramo " +
+                     "FROM ingrediente " + filtro;
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -39,8 +60,8 @@ public class IngredienteDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, i.getNombreIngrediente());
-            ps.setBigDecimal(2, i.getStockActualGramos());
-            ps.setBigDecimal(3, i.getCostoPorGramo());
+            ps.setBigDecimal(2, i.getStockActualGramos() != null ? i.getStockActualGramos() : BigDecimal.ZERO);
+            ps.setBigDecimal(3, i.getCostoPorGramo() != null ? i.getCostoPorGramo() : BigDecimal.ZERO);
             return ps.executeUpdate() > 0;
         } catch (Exception e) { e.printStackTrace(); return false; }
     }
@@ -56,16 +77,14 @@ public class IngredienteDAO {
         } catch (Exception e) { e.printStackTrace(); return false; }
     }
 
-    /**
-     * Actualiza el stock sumando o restando gramos.
-     * delta positivo = entrada, negativo = salida.
-     */
+    /** delta positivo = entrada, negativo = salida */
     public boolean actualizarStock(Connection conn, int idIngrediente, BigDecimal delta) throws SQLException {
         String sql = "UPDATE ingrediente SET stock_actual_gramos = stock_actual_gramos + ? WHERE id_ingrediente = ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setBigDecimal(1, delta);
-        ps.setInt(2, idIngrediente);
-        return ps.executeUpdate() > 0;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setBigDecimal(1, delta);
+            ps.setInt(2, idIngrediente);
+            return ps.executeUpdate() > 0;
+        }
     }
 
     public boolean eliminar(int id) {
