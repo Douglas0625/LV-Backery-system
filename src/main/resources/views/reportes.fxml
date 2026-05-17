@@ -65,10 +65,10 @@
 
                             <Region HBox.hgrow="ALWAYS" />
 
-                            <DatePicker promptText="Fecha inicio" />
+                            <DatePicker fx:id="dpFechaInicio" promptText="Fecha inicio" />
 
-                            <DatePicker promptText="Fecha fin" />
-                     <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #4b3832;" text="Filtrar" textFill="WHITE">
+                            <DatePicker fx:id="dpFechaFin" promptText="Fecha fin" />
+                     <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #4b3832;" text="Filtrar" textFill="WHITE" onAction="#onFiltrar">
                         <cursor>
                            <Cursor fx:constant="HAND" />
                         </cursor>
@@ -95,7 +95,7 @@
 
                                 <Label text="VENTAS DEL MES" textFill="#7A6F68" />
 
-                                <Label text="\$ 12,450.00" textFill="#4B3832">
+                                <Label fx:id="lblTotalVentasMes" text="Cargando..." textFill="#4B3832">
 
                                     <font>
                                         <Font name="Segoe UI Bold" size="28.0" />
@@ -114,7 +114,7 @@
 
                                 <Label text="GANANCIA NETA" textFill="#7A6F68" />
 
-                                <Label text="\$ 5,380.00" textFill="#4B3832">
+                                <Label fx:id="lblGananciaNeta" text="Cargando..." textFill="#4B3832">
 
                                     <font>
                                         <Font name="Segoe UI Bold" size="28.0" />
@@ -133,7 +133,7 @@
 
                                 <Label text="PRODUCTO TOP" textFill="#7A6F68" />
 
-                                <Label text="Croissant" textFill="#4B3832">
+                                <Label fx:id="lblProductoTop" text="Cargando..." textFill="#4B3832">
 
                                     <font>
                                         <Font name="Segoe UI Bold" size="24.0" />
@@ -152,7 +152,7 @@
 
                                 <Label text="STOCK CRÍTICO" textFill="#7A6F68" />
 
-                                <Label text="5 ingredientes" textFill="#D64545">
+                                <Label fx:id="lblStockCritico" text="Cargando..." textFill="#D64545">
 
                                     <font>
                                         <Font name="Segoe UI Bold" size="24.0" />
@@ -197,7 +197,7 @@
 
                                     </Label>
 
-                                    <LineChart prefHeight="350.0">
+                                    <LineChart fx:id="graficoVentasDia" prefHeight="350.0">
 
                                         <xAxis>
                                             <CategoryAxis label="Día" />
@@ -226,7 +226,7 @@
 
                                     </Label>
 
-                                    <PieChart prefHeight="350.0" />
+                                    <PieChart fx:id="graficoDistribucion" prefHeight="350.0" />
 
                                 </children>
 
@@ -253,7 +253,7 @@
 
                             </Label>
 
-                            <BarChart prefHeight="350.0">
+                            <BarChart fx:id="graficoProductos" prefHeight="350.0">
 
                                 <xAxis>
                                     <CategoryAxis label="Productos" />
@@ -294,20 +294,13 @@
 
                                     </Label>
 
-                                    <TableView prefHeight="300.0" VBox.vgrow="ALWAYS">
-
+                                    <TableView fx:id="tablaUltimasVentas" prefHeight="300.0" VBox.vgrow="ALWAYS">
                                         <columns>
-
-                                            <TableColumn prefWidth="120.0" text="Factura" />
-
-                                            <TableColumn prefWidth="180.0" text="Cliente" />
-
-                                            <TableColumn prefWidth="120.0" text="Fecha" />
-
-                                            <TableColumn prefWidth="120.0" text="Total" />
-
+                                            <TableColumn fx:id="colVentaId"      prefWidth="80.0"  text="ID" />
+                                            <TableColumn fx:id="colVentaCliente" prefWidth="180.0" text="Cliente" />
+                                            <TableColumn fx:id="colVentaFecha"   prefWidth="120.0" text="Fecha" />
+                                            <TableColumn fx:id="colVentaTotal"   prefWidth="120.0" text="Total" />
                                         </columns>
-
                                     </TableView>
 
                                 </children>
@@ -327,18 +320,12 @@
 
                                     </Label>
 
-                                    <TableView prefHeight="300.0">
-
+                                    <TableView fx:id="tablaStockCritico" prefHeight="300.0">
                                         <columns>
-
-                                            <TableColumn prefWidth="180.0" text="Ingrediente" />
-
-                                            <TableColumn prefWidth="100.0" text="Stock" />
-
-                                            <TableColumn prefWidth="100.0" text="Estado" />
-
+                                            <TableColumn fx:id="colIngNombre" prefWidth="180.0" text="Ingrediente" />
+                                            <TableColumn fx:id="colIngStock"  prefWidth="100.0" text="Stock (g)" />
+                                            <TableColumn fx:id="colIngEstado" prefWidth="100.0" text="Estado" />
                                         </columns>
-
                                     </TableView>
 
                                 </children>

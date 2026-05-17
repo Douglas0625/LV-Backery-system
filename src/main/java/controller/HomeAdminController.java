@@ -91,9 +91,15 @@ public class HomeAdminController {
         List<Pedido> pedidos = pedidoDAO.listarPendientes();
         tablaUltimosPedidos.getItems().setAll(pedidos.subList(0, Math.min(10, pedidos.size())));
 
-        // Producto top (placeholder — requeriría query adicional)
-        lblProductoTop.setText("—");
-        lblProductoTopVentas.setText("Consulta en Reportes");
+        // Producto top real
+        List<String[]> tops = ventaDAO.productosMasVendidos(1);
+        if (!tops.isEmpty()) {
+            lblProductoTop.setText(tops.get(0)[0]);
+            lblProductoTopVentas.setText(tops.get(0)[1] + " unidades vendidas");
+        } else {
+            lblProductoTop.setText("Sin ventas aún");
+            lblProductoTopVentas.setText("");
+        }
     }
 
     private void cargarMovimientos() {
