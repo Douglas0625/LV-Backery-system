@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PedidosController">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PedidosController">
     <center>
         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background:#F9F7F5; -fx-background-color:#F9F7F5;">
         <content>
@@ -25,32 +25,29 @@
             <padding><Insets bottom="25" left="25" right="25" top="20" /></padding>
 
             <!-- ══════════════════════ FILTROS ══════════════════════ -->
-            <VBox spacing="12" style="-fx-background-color:white; -fx-border-color:#D9CBC5;                          -fx-border-radius:8; -fx-background-radius:8;">
+            <VBox spacing="12" style="-fx-background-color:white; -fx-border-color:#D9CBC5; -fx-border-radius:8; -fx-background-radius:8;">
                 <padding><Insets bottom="18" left="18" right="18" top="18" /></padding>
 
                 <HBox alignment="CENTER_LEFT" spacing="18">
 
                     <VBox spacing="6">
                         <Label style="-fx-font-size:14px; -fx-font-family:'Segoe UI Semibold';" text="Cliente">
-                           <font>
-                              <Font name="Segoe UI Bold" size="12.0" />
-                           </font></Label>
+                           <font><Font name="Segoe UI Bold" size="12.0" /></font>
+                        </Label>
                         <TextField fx:id="txtBuscarCliente" prefHeight="38" prefWidth="240" promptText="Buscar cliente..." style="-fx-font-size: 13px; -fx-font-family: 'Segoe UI'; -fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8;" />
                     </VBox>
 
                     <VBox spacing="6">
                         <Label style="-fx-font-size:14px; -fx-font-family:'Segoe UI Semibold';" text="Fecha">
-                           <font>
-                              <Font name="Segoe UI Bold" size="12.0" />
-                           </font></Label>
+                           <font><Font name="Segoe UI Bold" size="12.0" /></font>
+                        </Label>
                         <DatePicker fx:id="dpFechaFiltro" prefHeight="38" prefWidth="200" style="-fx-font-size: 13px; -fx-background-color: #F0EFEB;" />
                     </VBox>
 
                     <VBox spacing="6">
                         <Label style="-fx-font-size:14px; -fx-font-family:'Segoe UI Semibold';" text="Estado">
-                           <font>
-                              <Font name="Segoe UI Bold" size="12.0" />
-                           </font></Label>
+                           <font><Font name="Segoe UI Bold" size="12.0" /></font>
+                        </Label>
                         <ComboBox fx:id="cbEstadoFiltro" prefHeight="38" prefWidth="220" promptText="Todos los estados" style="-fx-font-size: 13px; -fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8;" />
                     </VBox>
 
@@ -58,17 +55,15 @@
 
                     <VBox alignment="BOTTOM_CENTER" spacing="6">
                         <HBox spacing="10">
-                            <Button fx:id="btnLimpiar" onAction="#limpiarFiltros" prefHeight="40" prefWidth="110" style="-fx-background-color: white; -fx-border-color: #D0C2BB; -fx-border-radius: 5;" text="Limpiar">
+                            <Button fx:id="btnLimpiar" onAction="#limpiarFiltros" prefHeight="40" prefWidth="110"
+                                    style="-fx-background-color: white; -fx-border-color: #D0C2BB; -fx-border-radius: 5;" text="Limpiar">
                                 <cursor><Cursor fx:constant="HAND" /></cursor>
-                              <font>
-                                 <Font name="Segoe UI Bold" size="14.0" />
-                              </font>
+                                <font><Font name="Segoe UI Bold" size="14.0" /></font>
                             </Button>
-                            <Button fx:id="btnNuevoPedido" onAction="#prepararNuevoPedido" prefHeight="40" prefWidth="170" style="-fx-background-color: #5C3B2E; -fx-background-radius: 5;" text="Nuevo Pedido" textFill="WHITE">
+                            <Button fx:id="btnNuevoPedido" onAction="#prepararNuevoPedido" prefHeight="40" prefWidth="170"
+                                    style="-fx-background-color: #5C3B2E; -fx-background-radius: 5;" text="Nuevo Pedido" textFill="WHITE">
                                 <cursor><Cursor fx:constant="HAND" /></cursor>
-                              <font>
-                                 <Font name="Segoe UI Bold" size="14.0" />
-                              </font>
+                                <font><Font name="Segoe UI Bold" size="14.0" /></font>
                             </Button>
                         </HBox>
                     </VBox>
@@ -80,36 +75,37 @@
             <HBox spacing="20" VBox.vgrow="ALWAYS">
 
                 <!-- ══════════════ TABLA PEDIDOS ══════════════ -->
-                <VBox prefWidth="900" spacing="12" style="-fx-background-color:white; -fx-border-color:#D9CBC5;                              -fx-border-radius:8; -fx-background-radius:8;" HBox.hgrow="ALWAYS">
+                <VBox prefWidth="900" spacing="12"
+                      style="-fx-background-color:white; -fx-border-color:#D9CBC5; -fx-border-radius:8; -fx-background-radius:8;"
+                      HBox.hgrow="ALWAYS">
                     <padding><Insets bottom="18" left="18" right="18" top="18" /></padding>
 
                     <HBox alignment="CENTER_LEFT">
                         <Label style="-fx-font-size:20px; -fx-font-family:'Segoe UI Semibold';" text="Listado de Pedidos" />
                         <Pane HBox.hgrow="ALWAYS" />
-                        <!-- Acciones de tabla -->
                         <HBox spacing="10">
-                            <Button onAction="#cambiarEstado" prefHeight="34" prefWidth="134.0" style="-fx-background-color: #E5E1D8; -fx-text-fill: black; -fx-background-radius: 5; -fx-border-color: #E5E1D8; -fx-border-radius: 5;" text="Cambiar Estado">
+                            <Button onAction="#cambiarEstado" prefHeight="34" prefWidth="134.0"
+                                    style="-fx-background-color: #E5E1D8; -fx-text-fill: black; -fx-background-radius: 5; -fx-border-color: #E5E1D8; -fx-border-radius: 5;"
+                                    text="Cambiar Estado">
                                 <cursor><Cursor fx:constant="HAND" /></cursor>
-                              <font>
-                                 <Font name="Segoe UI Bold" size="14.0" />
-                              </font>
+                                <font><Font name="Segoe UI Bold" size="14.0" /></font>
                             </Button>
-                            <Button onAction="#eliminarPedido" prefHeight="34" prefWidth="94.0" style="-fx-background-color: #5C3B2E; -fx-text-fill: white; -fx-background-radius: 5;" text="Eliminar" textFill="WHITE">
+                            <Button onAction="#eliminarPedido" prefHeight="34" prefWidth="94.0"
+                                    style="-fx-background-color: #5C3B2E; -fx-text-fill: white; -fx-background-radius: 5;"
+                                    text="Eliminar" textFill="WHITE">
                                 <cursor><Cursor fx:constant="HAND" /></cursor>
-                              <font>
-                                 <Font name="Segoe UI Bold" size="14.0" />
-                              </font>
+                                <font><Font name="Segoe UI Bold" size="14.0" /></font>
                             </Button>
                         </HBox>
                     </HBox>
 
                     <TableView fx:id="tablePedidos" prefHeight="460" VBox.vgrow="ALWAYS">
                         <columns>
-                            <TableColumn fx:id="colIdPedido" prefWidth="80" text="ID" />
-                            <TableColumn fx:id="colCliente" prefWidth="200" text="CLIENTE" />
-                            <TableColumn fx:id="colFechaPedido" prefWidth="130" text="FECHA PEDIDO" />
+                            <TableColumn fx:id="colIdPedido"     prefWidth="80"  text="ID" />
+                            <TableColumn fx:id="colCliente"      prefWidth="200" text="CLIENTE" />
+                            <TableColumn fx:id="colFechaPedido"  prefWidth="130" text="FECHA PEDIDO" />
                             <TableColumn fx:id="colFechaEntrega" prefWidth="130" text="FECHA ENTREGA" />
-                            <TableColumn fx:id="colTotalPedido" prefWidth="110" text="TOTAL" />
+                            <TableColumn fx:id="colTotalPedido"  prefWidth="110" text="TOTAL" />
                             <TableColumn fx:id="colEstadoPedido" prefWidth="145" text="ESTADO" />
                         </columns>
                     </TableView>
@@ -117,37 +113,36 @@
                 </VBox>
 
                 <!-- ══════════════ FORMULARIO PEDIDO ══════════════ -->
-                <VBox minWidth="360" prefWidth="400" spacing="14" style="-fx-background-color:white; -fx-border-color:#D9CBC5;                              -fx-border-radius:8; -fx-background-radius:8;">
+                <VBox minWidth="360" prefWidth="400" spacing="14"
+                      style="-fx-background-color:white; -fx-border-color:#D9CBC5; -fx-border-radius:8; -fx-background-radius:8;">
                     <padding><Insets bottom="18" left="18" right="18" top="18" /></padding>
 
                     <Label style="-fx-text-fill: #7A4B34;" text="Tomar Pedido">
-                        <font>
-                           <Font name="Segoe UI Bold" size="24.0" />
-                        </font></Label>
+                        <font><Font name="Segoe UI Bold" size="24.0" /></font>
+                    </Label>
 
                     <!-- CLIENTE -->
                     <VBox spacing="5">
                         <Label text="Cliente">
-                           <font>
-                              <Font name="Segoe UI Bold" size="13.0" />
-                           </font></Label>
-                        <ComboBox fx:id="cbCliente" maxWidth="Infinity" prefHeight="38" promptText="Seleccionar cliente..." style="-fx-font-size: 13px; -fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8;" />
+                           <font><Font name="Segoe UI Bold" size="13.0" /></font>
+                        </Label>
+                        <ComboBox fx:id="cbCliente" maxWidth="Infinity" prefHeight="38"
+                                  promptText="Seleccionar cliente..."
+                                  style="-fx-font-size: 13px; -fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8;" />
                     </VBox>
 
                     <!-- FECHAS -->
                     <HBox spacing="12">
                         <VBox spacing="5" HBox.hgrow="ALWAYS">
                             <Label text="Fecha Pedido">
-                              <font>
-                                 <Font name="Segoe UI Bold" size="13.0" />
-                              </font></Label>
+                              <font><Font name="Segoe UI Bold" size="13.0" /></font>
+                            </Label>
                             <DatePicker fx:id="dpFechaPedido" maxWidth="Infinity" prefHeight="38" />
                         </VBox>
                         <VBox spacing="5" HBox.hgrow="ALWAYS">
                             <Label text="Fecha Entrega">
-                              <font>
-                                 <Font name="Segoe UI Bold" size="13.0" />
-                              </font></Label>
+                              <font><Font name="Segoe UI Bold" size="13.0" /></font>
+                            </Label>
                             <DatePicker fx:id="dpFechaEntrega" maxWidth="Infinity" prefHeight="38" />
                         </VBox>
                     </HBox>
@@ -155,33 +150,36 @@
                     <!-- ESTADO -->
                     <VBox spacing="5">
                         <Label text="Estado">
-                           <font>
-                              <Font name="Segoe UI Bold" size="13.0" />
-                           </font></Label>
-                        <ComboBox fx:id="cbEstadoPedido" maxWidth="Infinity" prefHeight="38" promptText="Seleccionar estado" style="-fx-font-size: 13px; -fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8;" />
+                           <font><Font name="Segoe UI Bold" size="13.0" /></font>
+                        </Label>
+                        <ComboBox fx:id="cbEstadoPedido" maxWidth="Infinity" prefHeight="38"
+                                  promptText="Seleccionar estado"
+                                  style="-fx-font-size: 13px; -fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8;" />
                     </VBox>
 
                     <!-- DESCRIPCION -->
                     <VBox spacing="5">
                         <Label text="Notas de Producción">
-                           <font>
-                              <Font name="Segoe UI Bold" size="13.0" />
-                           </font></Label>
-                        <TextArea fx:id="txtDescripcionPedido" prefHeight="80" promptText="Notas de producción..." style="-fx-font-size: 13px; -fx-background-color: #F0EFEB; -fx-border-color: sfsefsf;" wrapText="true" />
+                           <font><Font name="Segoe UI Bold" size="13.0" /></font>
+                        </Label>
+                        <!-- CORRECCIÓN: se eliminó -fx-border-color:sfsefsf (valor inválido) -->
+                        <TextArea fx:id="txtDescripcionPedido" prefHeight="80"
+                                  promptText="Notas de producción..."
+                                  style="-fx-font-size: 13px; -fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8;"
+                                  wrapText="true" />
                     </VBox>
 
                     <!-- LÍNEAS DE PEDIDO -->
                     <HBox alignment="CENTER_LEFT">
                         <Label text="Líneas de Pedido">
-                           <font>
-                              <Font name="Segoe UI Bold" size="14.0" />
-                           </font></Label>
+                           <font><Font name="Segoe UI Bold" size="14.0" /></font>
+                        </Label>
                         <Pane HBox.hgrow="ALWAYS" />
-                        <Button fx:id="btnAgregarItem" style="-fx-background-color: transparent; -fx-text-fill: #A65A37;" text="+ Añadir Item">
+                        <Button fx:id="btnAgregarItem"
+                                style="-fx-background-color: transparent; -fx-text-fill: #A65A37;"
+                                text="+ Añadir Item">
                             <cursor><Cursor fx:constant="HAND" /></cursor>
-                           <font>
-                              <Font name="Segoe UI Bold" size="13.0" />
-                           </font>
+                           <font><Font name="Segoe UI Bold" size="13.0" /></font>
                         </Button>
                     </HBox>
 
@@ -189,30 +187,28 @@
                     <TableView fx:id="tableDetallePedido" prefHeight="200">
                         <columns>
                             <TableColumn fx:id="colProductoDetalle" prefWidth="160" text="PRODUCTO" />
-                            <TableColumn fx:id="colCantidadDetalle" prefWidth="65" text="CANT." />
-                            <TableColumn fx:id="colPrecioDetalle" prefWidth="90" text="P.UNIT" />
-                            <TableColumn fx:id="colSubtotalDetalle" prefWidth="95" text="SUBTOTAL" />
+                            <TableColumn fx:id="colCantidadDetalle" prefWidth="65"  text="CANT." />
+                            <TableColumn fx:id="colPrecioDetalle"   prefWidth="90"  text="P.UNIT" />
+                            <TableColumn fx:id="colSubtotalDetalle" prefWidth="95"  text="SUBTOTAL" />
                         </columns>
                     </TableView>
 
                     <!-- TOTAL -->
                     <HBox alignment="CENTER_RIGHT" spacing="12">
                         <Label text="TOTAL:">
-                           <font>
-                              <Font name="Segoe UI Bold" size="20.0" />
-                           </font></Label>
+                           <font><Font name="Segoe UI Bold" size="20.0" /></font>
+                        </Label>
                         <Label fx:id="lblTotalPedido" style="-fx-text-fill: #A65A37;" text="\$0.00">
-                           <font>
-                              <Font name="Segoe UI Bold" size="20.0" />
-                           </font></Label>
+                           <font><Font name="Segoe UI Bold" size="20.0" /></font>
+                        </Label>
                     </HBox>
 
                     <!-- BOTÓN GUARDAR -->
-                    <Button fx:id="btnGuardarPedido" maxWidth="Infinity" prefHeight="44" style="-fx-background-color: #9A5B39; -fx-text-fill: white; -fx-background-radius: 6;" text="Crear Nuevo Pedido">
+                    <Button fx:id="btnGuardarPedido" maxWidth="Infinity" prefHeight="44"
+                            style="-fx-background-color: #9A5B39; -fx-text-fill: white; -fx-background-radius: 6;"
+                            text="Crear Nuevo Pedido">
                         <cursor><Cursor fx:constant="HAND" /></cursor>
-                        <font>
-                           <Font name="Segoe UI Bold" size="18.0" />
-                        </font>
+                        <font><Font name="Segoe UI Bold" size="18.0" /></font>
                     </Button>
 
                 </VBox>
@@ -220,13 +216,13 @@
             </HBox>
 
             <!-- ═════════════ DETALLE PEDIDO SELECCIONADO ═════════════ -->
-            <VBox spacing="14" style="-fx-background-color:white; -fx-border-color:#D9CBC5;                          -fx-border-radius:8; -fx-background-radius:8;">
+            <VBox spacing="14"
+                  style="-fx-background-color:white; -fx-border-color:#D9CBC5; -fx-border-radius:8; -fx-background-radius:8;">
                 <padding><Insets bottom="18" left="18" right="18" top="18" /></padding>
 
                 <Label style="-fx-text-fill: #7A4B34;" text="Detalle de Pedido Seleccionado">
-                     <font>
-                        <Font name="Segoe UI Bold" size="24.0" />
-                     </font></Label>
+                     <font><Font name="Segoe UI Bold" size="24.0" /></font>
+                </Label>
 
                 <HBox spacing="40">
 
@@ -235,43 +231,40 @@
 
                         <VBox spacing="4">
                             <Label style="-fx-text-fill: #7B7B7B;" text="Orden #">
-                              <font>
-                                 <Font name="Segoe UI" size="13.0" />
-                              </font></Label>
+                              <font><Font name="Segoe UI" size="13.0" /></font>
+                            </Label>
                             <Label fx:id="lblDetalleIdPedido" text="ORD-0000">
-                              <font>
-                                 <Font name="Segoe UI Bold" size="20.0" />
-                              </font></Label>
+                              <font><Font name="Segoe UI Bold" size="20.0" /></font>
+                            </Label>
                         </VBox>
 
                         <VBox spacing="4">
                             <Label style="-fx-text-fill: #7B7B7B;" text="Fecha Entrega">
-                              <font>
-                                 <Font name="Segoe UI" size="13.0" />
-                              </font></Label>
+                              <font><Font name="Segoe UI" size="13.0" /></font>
+                            </Label>
                             <Label fx:id="lblDetalleFecha" style="-fx-font-size:16px;" text="—" />
                         </VBox>
 
-                        <VBox spacing="8" style="-fx-border-color:#D9CBC5; -fx-border-radius:5;                                      -fx-background-radius:5; -fx-padding:14;                                      -fx-background-color:#FAFAF8;">
+                        <VBox spacing="8"
+                              style="-fx-border-color:#D9CBC5; -fx-border-radius:5; -fx-background-radius:5; -fx-padding:14; -fx-background-color:#FAFAF8;">
                             <Label style="-fx-font-size:14px; -fx-font-family:'Segoe UI Semibold';" text="Notas de Producción" />
                             <Label fx:id="lblNotasProduccion" text="Sin notas" wrapText="true">
-                              <font>
-                                 <Font size="13.0" />
-                              </font></Label>
+                              <font><Font size="13.0" /></font>
+                            </Label>
                         </VBox>
 
                         <HBox spacing="10">
-                            <Button fx:id="btnModificar" prefHeight="38" prefWidth="150" style="-fx-background-color: #3B2A25; -fx-text-fill: white; -fx-background-radius: 5;" text="✏ Modificar">
+                            <Button fx:id="btnModificar" prefHeight="38" prefWidth="150"
+                                    style="-fx-background-color: #3B2A25; -fx-text-fill: white; -fx-background-radius: 5;"
+                                    text="✏ Modificar">
                                 <cursor><Cursor fx:constant="HAND" /></cursor>
-                              <font>
-                                 <Font name="Segoe UI Bold" size="14.0" />
-                              </font>
+                              <font><Font name="Segoe UI Bold" size="14.0" /></font>
                             </Button>
-                            <Button fx:id="btnImprimir" prefHeight="38" prefWidth="130" style="-fx-background-color: white; -fx-border-color: #9A5B39; -fx-text-fill: #9A5B39; -fx-border-radius: 5;" text="🖨 Imprimir">
+                            <Button fx:id="btnImprimir" prefHeight="38" prefWidth="130"
+                                    style="-fx-background-color: white; -fx-border-color: #9A5B39; -fx-text-fill: #9A5B39; -fx-border-radius: 5;"
+                                    text="🖨 Imprimir">
                                 <cursor><Cursor fx:constant="HAND" /></cursor>
-                              <font>
-                                 <Font name="Segoe UI Bold" size="14.0" />
-                              </font>
+                              <font><Font name="Segoe UI Bold" size="14.0" /></font>
                             </Button>
                         </HBox>
 
@@ -283,8 +276,8 @@
                         <TableView fx:id="tableDetalleSeleccionado" prefHeight="220" VBox.vgrow="ALWAYS">
                             <columns>
                                 <TableColumn fx:id="colDetalleProducto" prefWidth="320" text="PRODUCTO" />
-                                <TableColumn fx:id="colDetalleCantidad" prefWidth="90" text="CANT" />
-                                <TableColumn fx:id="colDetallePrecio" prefWidth="120" text="P.UNIT" />
+                                <TableColumn fx:id="colDetalleCantidad" prefWidth="90"  text="CANT" />
+                                <TableColumn fx:id="colDetallePrecio"   prefWidth="120" text="P.UNIT" />
                                 <TableColumn fx:id="colDetalleSubtotal" prefWidth="140" text="SUBTOTAL" />
                             </columns>
                         </TableView>

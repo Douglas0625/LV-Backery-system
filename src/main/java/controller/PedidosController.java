@@ -8,13 +8,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import model.*;
 
 import java.math.BigDecimal;
@@ -22,7 +21,6 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class PedidosController {
 
@@ -34,13 +32,13 @@ public class PedidosController {
     @FXML private Button                 btnLimpiar;
 
     // ── TABLA PRINCIPAL ───────────────────────────────────────────
-    @FXML private TableView<Pedido>              tablePedidos;
-    @FXML private TableColumn<Pedido, Integer>   colIdPedido;
-    @FXML private TableColumn<Pedido, String>    colCliente;
-    @FXML private TableColumn<Pedido, String>    colFechaPedido;
-    @FXML private TableColumn<Pedido, String>    colFechaEntrega;
+    @FXML private TableView<Pedido>               tablePedidos;
+    @FXML private TableColumn<Pedido, Integer>    colIdPedido;
+    @FXML private TableColumn<Pedido, String>     colCliente;
+    @FXML private TableColumn<Pedido, String>     colFechaPedido;
+    @FXML private TableColumn<Pedido, String>     colFechaEntrega;
     @FXML private TableColumn<Pedido, BigDecimal> colTotalPedido;
-    @FXML private TableColumn<Pedido, String>    colEstadoPedido;
+    @FXML private TableColumn<Pedido, String>     colEstadoPedido;
 
     // ── FORMULARIO DERECHO ────────────────────────────────────────
     @FXML private ComboBox<Cliente>      cbCliente;
@@ -60,26 +58,27 @@ public class PedidosController {
     @FXML private TableColumn<DetallePedido, BigDecimal> colSubtotalDetalle;
 
     // ── PANEL DETALLE SELECCIONADO ────────────────────────────────
-    @FXML private Label                                  lblDetalleIdPedido;
-    @FXML private Label                                  lblDetalleFecha;
-    @FXML private Label                                  lblNotasProduccion;
-    @FXML private Button                                 btnImprimir;
-    @FXML private Button                                 btnModificar;
-    @FXML private TableView<DetallePedido>               tableDetalleSeleccionado;
+    @FXML private Label                              lblDetalleIdPedido;
+    @FXML private Label                              lblDetalleFecha;
+    @FXML private Label                              lblNotasProduccion;
+    @FXML private Button                             btnImprimir;
+    @FXML private Button                             btnModificar;
+    @FXML private TableView<DetallePedido>           tableDetalleSeleccionado;
     @FXML private TableColumn<DetallePedido, String>     colDetalleProducto;
     @FXML private TableColumn<DetallePedido, Integer>    colDetalleCantidad;
     @FXML private TableColumn<DetallePedido, BigDecimal> colDetallePrecio;
     @FXML private TableColumn<DetallePedido, BigDecimal> colDetalleSubtotal;
 
     // ── DAOs ──────────────────────────────────────────────────────
-    private final PedidoDAO   pedidoDAO  = new PedidoDAO();
-    private final ClienteDAO  clienteDAO = new ClienteDAO();
+    private final PedidoDAO   pedidoDAO   = new PedidoDAO();
+    private final ClienteDAO  clienteDAO  = new ClienteDAO();
     private final ProductoDAO productoDAO = new ProductoDAO();
 
     // ── ESTADO INTERNO ────────────────────────────────────────────
-    private final ObservableList<Pedido>       listaPedidos  = FXCollections.observableArrayList();
+    private final ObservableList<Pedido>        listaPedidos = FXCollections.observableArrayList();
     private final ObservableList<DetallePedido> detalleForm  = FXCollections.observableArrayList();
-    private Pedido pedidoEditando = null;   // null = modo crear, != null = modo editar
+    /** null = modo crear, != null = modo editar */
+    private Pedido pedidoEditando = null;
 
     // ─────────────────────────────────────────────────────────────
     @FXML
@@ -98,19 +97,23 @@ public class PedidosController {
     }
 
     // ── CONFIGURACIÓN ─────────────────────────────────────────────
+
     private void configurarTablaPrincipal() {
         colIdPedido.setCellValueFactory(new PropertyValueFactory<>("idPedido"));
-        colCliente.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNombreCliente()));
-        colFechaPedido.setCellValueFactory(d -> new SimpleStringProperty(
-                fmt(d.getValue().getFechaPedido())));
-        colFechaEntrega.setCellValueFactory(d -> new SimpleStringProperty(
-                fmt(d.getValue().getFechaEntrega())));
+        colCliente.setCellValueFactory(d ->
+                new SimpleStringProperty(d.getValue().getNombreCliente()));
+        colFechaPedido.setCellValueFactory(d ->
+                new SimpleStringProperty(fmt(d.getValue().getFechaPedido())));
+        colFechaEntrega.setCellValueFactory(d ->
+                new SimpleStringProperty(fmt(d.getValue().getFechaEntrega())));
         colTotalPedido.setCellValueFactory(new PropertyValueFactory<>("totalPedido"));
-        colEstadoPedido.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNombreEstado()));
+        colEstadoPedido.setCellValueFactory(d ->
+                new SimpleStringProperty(d.getValue().getNombreEstado()));
 
         // Color por estado
         colEstadoPedido.setCellFactory(col -> new TableCell<>() {
-            @Override protected void updateItem(String v, boolean empty) {
+            @Override
+            protected void updateItem(String v, boolean empty) {
                 super.updateItem(v, empty);
                 if (empty || v == null) { setText(null); setStyle(""); return; }
                 setText(v);
@@ -131,7 +134,8 @@ public class PedidosController {
 
     private void configurarTablaDetalle() {
         colProductoDetalle.setCellValueFactory(d -> new SimpleStringProperty(
-                d.getValue().getProducto() != null ? d.getValue().getProducto().getNombreProducto() : ""));
+                d.getValue().getProducto() != null
+                        ? d.getValue().getProducto().getNombreProducto() : ""));
         colCantidadDetalle.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
         colPrecioDetalle.setCellValueFactory(new PropertyValueFactory<>("precioUnitario"));
         colSubtotalDetalle.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
@@ -144,23 +148,35 @@ public class PedidosController {
     }
 
     private void configurarTablaDetalleSeleccionado() {
-        if (colDetalleProducto  != null) colDetalleProducto.setCellValueFactory(d ->
-                new SimpleStringProperty(d.getValue().getProducto() != null
-                        ? d.getValue().getProducto().getNombreProducto() : ""));
-        if (colDetalleCantidad  != null) colDetalleCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
-        if (colDetallePrecio    != null) colDetallePrecio.setCellValueFactory(new PropertyValueFactory<>("precioUnitario"));
-        if (colDetalleSubtotal  != null) colDetalleSubtotal.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
+        if (colDetalleProducto != null)
+            colDetalleProducto.setCellValueFactory(d -> new SimpleStringProperty(
+                    d.getValue().getProducto() != null
+                            ? d.getValue().getProducto().getNombreProducto() : ""));
+        if (colDetalleCantidad != null)
+            colDetalleCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        if (colDetallePrecio != null)
+            colDetallePrecio.setCellValueFactory(new PropertyValueFactory<>("precioUnitario"));
+        if (colDetalleSubtotal != null)
+            colDetalleSubtotal.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
     }
 
     private void cargarCombos() {
+        // Clientes
         cbCliente.setItems(FXCollections.observableArrayList(clienteDAO.listarTodos()));
-        cbEstadoPedido.setItems(FXCollections.observableArrayList(pedidoDAO.listarEstados()));
+
+        // Estado formulario: excluye Entregado y Cancelado (solo se cambian por botón)
+        List<EstadoPedido> estadosForm = pedidoDAO.listarEstadosFormulario();
+        cbEstadoPedido.setItems(FXCollections.observableArrayList(estadosForm));
+
+        // Estado filtro: todos los estados
         cbEstadoFiltro.setItems(FXCollections.observableArrayList(pedidoDAO.listarEstados()));
         cbEstadoFiltro.setPromptText("Todos los estados");
-        // Estado por defecto en form = Pendiente
-        pedidoDAO.listarEstados().stream()
+
+        // Estado por defecto en formulario = Pendiente
+        estadosForm.stream()
                 .filter(e -> e.getNombreEstado().equalsIgnoreCase("Pendiente"))
-                .findFirst().ifPresent(cbEstadoPedido::setValue);
+                .findFirst()
+                .ifPresent(cbEstadoPedido::setValue);
     }
 
     private void cargarPedidos() {
@@ -174,9 +190,10 @@ public class PedidosController {
     }
 
     private void configurarSeleccionTabla() {
-        tablePedidos.getSelectionModel().selectedItemProperty().addListener((o, old, sel) -> {
-            if (sel != null) mostrarDetallePedido(sel);
-        });
+        tablePedidos.getSelectionModel().selectedItemProperty()
+                .addListener((o, old, sel) -> {
+                    if (sel != null) mostrarDetallePedido(sel);
+                });
     }
 
     private void configurarBotones() {
@@ -188,17 +205,21 @@ public class PedidosController {
     }
 
     // ── FILTROS ───────────────────────────────────────────────────
+
     private void aplicarFiltros() {
         String texto = txtBuscarCliente.getText().trim().toLowerCase();
         EstadoPedido estadoFil = cbEstadoFiltro.getValue();
-        LocalDate fechaFil = dpFechaFiltro.getValue();
+        LocalDate    fechaFil  = dpFechaFiltro.getValue();
 
-        List<Pedido> todos = pedidoDAO.listarTodos();
+        List<Pedido> todos    = pedidoDAO.listarTodos();
         List<Pedido> filtrados = todos.stream().filter(p -> {
             boolean ok = true;
-            if (!texto.isEmpty()) ok = p.getNombreCliente().toLowerCase().contains(texto);
-            if (estadoFil != null) ok = ok && p.getEstadoPedido().getIdEstadoPedido() == estadoFil.getIdEstadoPedido();
-            if (fechaFil  != null) ok = ok && p.getFechaPedido().equals(fechaFil);
+            if (!texto.isEmpty())
+                ok = p.getNombreCliente().toLowerCase().contains(texto);
+            if (estadoFil != null)
+                ok = ok && p.getEstadoPedido().getIdEstadoPedido() == estadoFil.getIdEstadoPedido();
+            if (fechaFil != null)
+                ok = ok && p.getFechaPedido().equals(fechaFil);
             return ok;
         }).toList();
         listaPedidos.setAll(filtrados);
@@ -213,30 +234,48 @@ public class PedidosController {
     }
 
     // ── CREAR / EDITAR ────────────────────────────────────────────
+
     @FXML
     public void prepararNuevoPedido() {
         pedidoEditando = null;
         limpiarFormulario();
+        habilitarFormulario(true);
         btnGuardarPedido.setText("Crear Nuevo Pedido");
     }
 
     private void cargarPedidoEnFormulario() {
         Pedido sel = tablePedidos.getSelectionModel().getSelectedItem();
-        if (sel == null) { alerta("Selecciona un pedido de la tabla primero."); return; }
+        if (sel == null) {
+            alerta("Selecciona un pedido de la tabla primero.");
+            return;
+        }
+
+        // Bloquear edición de pedidos terminados
+        String estado = sel.getNombreEstado();
+        if ("Entregado".equals(estado) || "Cancelado".equals(estado)) {
+            alerta("El pedido #" + sel.getIdPedido() + " está en estado \"" + estado +
+                    "\" y no puede modificarse.\nUsa el botón \"Cambiar Estado\" si necesitas actualizarlo.");
+            return;
+        }
 
         pedidoEditando = sel;
+
         cbCliente.getItems().stream()
                 .filter(c -> c.getIdCliente() == sel.getCliente().getIdCliente())
                 .findFirst().ifPresent(cbCliente::setValue);
+
         dpFechaPedido.setValue(sel.getFechaPedido());
         dpFechaEntrega.setValue(sel.getFechaEntrega());
+
+        // Solo estados del formulario (sin Entregado/Cancelado)
         cbEstadoPedido.getItems().stream()
                 .filter(e -> e.getIdEstadoPedido() == sel.getEstadoPedido().getIdEstadoPedido())
                 .findFirst().ifPresent(cbEstadoPedido::setValue);
-        txtDescripcionPedido.setText(sel.getDescripcionPedido());
 
+        txtDescripcionPedido.setText(sel.getDescripcionPedido());
         detalleForm.setAll(pedidoDAO.listarDetalles(sel.getIdPedido()));
         actualizarTotal();
+        habilitarFormulario(true);
         btnGuardarPedido.setText("Guardar Cambios");
     }
 
@@ -255,65 +294,118 @@ public class PedidosController {
 
         if (pedidoEditando == null) {
             int id = pedidoDAO.insertar(p);
-            if (id > 0) { exito("Pedido #" + id + " creado correctamente."); limpiarFormulario(); }
-            else          alerta("No se pudo crear el pedido.");
+            if (id > 0) {
+                exito("Pedido #" + id + " creado correctamente.");
+                limpiarFormulario();
+            } else {
+                alerta("No se pudo crear el pedido. Revise la conexión con la base de datos.");
+            }
         } else {
             p.setIdPedido(pedidoEditando.getIdPedido());
-            if (pedidoDAO.actualizar(p)) { exito("Pedido actualizado correctamente."); limpiarFormulario(); pedidoEditando = null; btnGuardarPedido.setText("Crear Nuevo Pedido"); }
-            else                          alerta("No se pudo actualizar el pedido.");
+            if (pedidoDAO.actualizar(p)) {
+                exito("Pedido actualizado correctamente.");
+                limpiarFormulario();
+                pedidoEditando = null;
+                btnGuardarPedido.setText("Crear Nuevo Pedido");
+            } else {
+                alerta("No se pudo actualizar el pedido. Revise la conexión con la base de datos.");
+            }
         }
         cargarPedidos();
     }
 
     // ── ELIMINAR ──────────────────────────────────────────────────
+
     @FXML
     public void eliminarPedido() {
         Pedido sel = tablePedidos.getSelectionModel().getSelectedItem();
-        if (sel == null) { alerta("Selecciona un pedido para eliminar."); return; }
+        if (sel == null) {
+            alerta("Selecciona un pedido para eliminar.");
+            return;
+        }
+
+        // Regla 3: bloquear eliminación de pedidos finalizados
+        String estadoSel = sel.getNombreEstado();
+        if ("Entregado".equals(estadoSel) || "Cancelado".equals(estadoSel)) {
+            alerta("No se pueden eliminar pedidos finalizados.");
+            return;
+        }
 
         Alert conf = new Alert(Alert.AlertType.CONFIRMATION,
-                "¿Eliminar el pedido #" + sel.getIdPedido() + " de " + sel.getNombreCliente() + "?",
+                "¿Eliminar el pedido #" + sel.getIdPedido() +
+                        " de " + sel.getNombreCliente() + "?\n\nEsta acción no se puede deshacer.",
                 ButtonType.YES, ButtonType.NO);
-        conf.setTitle("Confirmar eliminación"); conf.setHeaderText(null);
+        conf.setTitle("Confirmar eliminación");
+        conf.setHeaderText(null);
         conf.showAndWait().filter(b -> b == ButtonType.YES).ifPresent(b -> {
             if (pedidoDAO.eliminar(sel.getIdPedido())) {
                 exito("Pedido eliminado.");
                 limpiarDetallePanelInferior();
+                // Si el pedido eliminado era el que se estaba editando, limpiar formulario
+                if (pedidoEditando != null && pedidoEditando.getIdPedido() == sel.getIdPedido()) {
+                    limpiarFormulario();
+                }
                 cargarPedidos();
-            } else alerta("No se pudo eliminar el pedido.");
+            } else {
+                alerta("No se pudo eliminar el pedido.");
+            }
         });
     }
 
     // ── CAMBIAR ESTADO ────────────────────────────────────────────
+
+    /**
+     * Permite cambiar a CUALQUIER estado, incluyendo Entregado y Cancelado.
+     * NO afecta inventario.
+     */
     @FXML
     public void cambiarEstado() {
         Pedido sel = tablePedidos.getSelectionModel().getSelectedItem();
-        if (sel == null) { alerta("Selecciona un pedido primero."); return; }
+        if (sel == null) {
+            alerta("Selecciona un pedido primero.");
+            return;
+        }
 
         List<EstadoPedido> estados = pedidoDAO.listarEstados();
-        ChoiceDialog<EstadoPedido> dlg = new ChoiceDialog<>(sel.getEstadoPedido(), estados);
+        // Selección actual en el dialog
+        EstadoPedido actual = estados.stream()
+                .filter(e -> e.getIdEstadoPedido() == sel.getEstadoPedido().getIdEstadoPedido())
+                .findFirst().orElse(estados.isEmpty() ? null : estados.get(0));
+
+        ChoiceDialog<EstadoPedido> dlg = new ChoiceDialog<>(actual, estados);
         dlg.setTitle("Cambiar Estado");
         dlg.setHeaderText("Pedido #" + sel.getIdPedido() + " — " + sel.getNombreCliente());
         dlg.setContentText("Nuevo estado:");
         dlg.showAndWait().ifPresent(nuevo -> {
+            if (nuevo.getIdEstadoPedido() == sel.getEstadoPedido().getIdEstadoPedido()) return; // sin cambio
             if (pedidoDAO.actualizarEstado(sel.getIdPedido(), nuevo.getIdEstadoPedido())) {
                 exito("Estado actualizado a: " + nuevo.getNombreEstado());
                 cargarPedidos();
-            } else alerta("No se pudo cambiar el estado.");
+                // Refrescar panel inferior si este pedido está seleccionado
+                mostrarDetallePedido(pedidoDAO.listarTodos().stream()
+                        .filter(p -> p.getIdPedido() == sel.getIdPedido())
+                        .findFirst().orElse(sel));
+            } else {
+                alerta("No se pudo cambiar el estado.");
+            }
         });
     }
 
     // ── DETALLE INFERIOR ─────────────────────────────────────────
+
     private void mostrarDetallePedido(Pedido p) {
-        if (lblDetalleIdPedido != null) lblDetalleIdPedido.setText("ORD-" + String.format("%04d", p.getIdPedido()));
-        if (lblDetalleFecha    != null) lblDetalleFecha.setText(fmt(p.getFechaEntrega()));
-        if (lblNotasProduccion != null) lblNotasProduccion.setText(
-                p.getDescripcionPedido() != null && !p.getDescripcionPedido().isBlank()
-                        ? p.getDescripcionPedido() : "Sin notas");
+        if (lblDetalleIdPedido != null)
+            lblDetalleIdPedido.setText("ORD-" + String.format("%04d", p.getIdPedido()));
+        if (lblDetalleFecha != null)
+            lblDetalleFecha.setText(fmt(p.getFechaEntrega()));
+        if (lblNotasProduccion != null)
+            lblNotasProduccion.setText(
+                    p.getDescripcionPedido() != null && !p.getDescripcionPedido().isBlank()
+                            ? p.getDescripcionPedido() : "Sin notas");
 
         List<DetallePedido> det = pedidoDAO.listarDetalles(p.getIdPedido());
-        if (tableDetalleSeleccionado != null) tableDetalleSeleccionado.setItems(
-                FXCollections.observableArrayList(det));
+        if (tableDetalleSeleccionado != null)
+            tableDetalleSeleccionado.setItems(FXCollections.observableArrayList(det));
     }
 
     private void limpiarDetallePanelInferior() {
@@ -324,6 +416,7 @@ public class PedidosController {
     }
 
     // ── AGREGAR ITEM ─────────────────────────────────────────────
+
     private void abrirDialogoAgregarItem() {
         Dialog<DetallePedido> dlg = new Dialog<>();
         dlg.setTitle("Añadir Producto al Pedido");
@@ -339,25 +432,25 @@ public class PedidosController {
         Label lblPrecio   = new Label("Precio: $0.00");
         Label lblSub      = new Label("Subtotal: $0.00");
 
-        cbProd.valueProperty().addListener((o, old, prod) -> {
-            if (prod != null) lblPrecio.setText("Precio: $" + prod.getPrecioVenta());
-        });
-
         Runnable recalc = () -> {
+            Producto prod = cbProd.getValue();
+            if (prod == null) return;
             try {
                 int c = Integer.parseInt(txtCant.getText().trim());
-                if (cbProd.getValue() != null) {
-                    BigDecimal sub = cbProd.getValue().getPrecioVenta()
-                            .multiply(BigDecimal.valueOf(c));
-                    lblSub.setText("Subtotal: $" + sub.setScale(2, RoundingMode.HALF_UP));
-                }
+                if (c < 1) c = 1;
+                lblPrecio.setText("Precio: $" + prod.getPrecioVenta().setScale(2, RoundingMode.HALF_UP));
+                BigDecimal sub = prod.getPrecioVenta().multiply(BigDecimal.valueOf(c))
+                        .setScale(2, RoundingMode.HALF_UP);
+                lblSub.setText("Subtotal: $" + sub);
             } catch (NumberFormatException ignored) {}
         };
-        txtCant.textProperty().addListener((o, old, v) -> recalc.run());
+
         cbProd.valueProperty().addListener((o, old, v) -> recalc.run());
+        txtCant.textProperty().addListener((o, old, v) -> recalc.run());
 
         GridPane grid = new GridPane();
-        grid.setHgap(12); grid.setVgap(10);
+        grid.setHgap(12);
+        grid.setVgap(10);
         grid.setPadding(new Insets(15));
         grid.addRow(0, new Label("Producto:"), cbProd);
         grid.addRow(1, new Label("Cantidad:"), txtCant);
@@ -368,28 +461,28 @@ public class PedidosController {
         dlg.getDialogPane().setContent(grid);
         dlg.getDialogPane().setPrefWidth(420);
 
-        // Habilitar OK solo si hay producto
+        // Habilitar OK solo si hay producto seleccionado
         Button okBtn = (Button) dlg.getDialogPane().lookupButton(ButtonType.OK);
         okBtn.setDisable(true);
         cbProd.valueProperty().addListener((o, old, v) -> okBtn.setDisable(v == null));
 
         dlg.setResultConverter(bt -> {
-            if (bt == ButtonType.OK && cbProd.getValue() != null) {
-                try {
-                    int cant = Math.max(1, Integer.parseInt(txtCant.getText().trim()));
-                    DetallePedido dp = new DetallePedido();
-                    dp.setProducto(cbProd.getValue());
-                    dp.setCantidad(cant);
-                    dp.setPrecioUnitario(cbProd.getValue().getPrecioVenta());
-                    dp.calcularSubtotal();
-                    return dp;
-                } catch (NumberFormatException ex) { return null; }
+            if (bt != ButtonType.OK || cbProd.getValue() == null) return null;
+            try {
+                int cant = Math.max(1, Integer.parseInt(txtCant.getText().trim()));
+                DetallePedido dp = new DetallePedido();
+                dp.setProducto(cbProd.getValue());
+                dp.setCantidad(cant);
+                dp.setPrecioUnitario(cbProd.getValue().getPrecioVenta());
+                dp.calcularSubtotal();
+                return dp;
+            } catch (NumberFormatException ex) {
+                return null;
             }
-            return null;
         });
 
         dlg.showAndWait().ifPresent(dp -> {
-            // Si ya existe el producto, sumar cantidad
+            // Si ya existe el producto, sumar cantidad en lugar de duplicar
             detalleForm.stream()
                     .filter(d -> d.getProducto().getIdProducto() == dp.getProducto().getIdProducto())
                     .findFirst()
@@ -404,10 +497,14 @@ public class PedidosController {
 
     private void eliminarItemDetalle() {
         DetallePedido sel = tableDetallePedido.getSelectionModel().getSelectedItem();
-        if (sel != null) { detalleForm.remove(sel); actualizarTotal(); }
+        if (sel != null) {
+            detalleForm.remove(sel);
+            actualizarTotal();
+        }
     }
 
     // ── TOTAL ─────────────────────────────────────────────────────
+
     private void actualizarTotal() {
         BigDecimal total = calcularTotal();
         lblTotalPedido.setText("$" + total.setScale(2, RoundingMode.HALF_UP));
@@ -420,13 +517,16 @@ public class PedidosController {
     }
 
     // ── FORMULARIO ────────────────────────────────────────────────
+
     private void limpiarFormulario() {
         cbCliente.setValue(null);
         dpFechaPedido.setValue(LocalDate.now());
         dpFechaEntrega.setValue(null);
-        pedidoDAO.listarEstados().stream()
+        // Resetear a Pendiente
+        cbEstadoPedido.getItems().stream()
                 .filter(e -> e.getNombreEstado().equalsIgnoreCase("Pendiente"))
-                .findFirst().ifPresent(cbEstadoPedido::setValue);
+                .findFirst()
+                .ifPresent(cbEstadoPedido::setValue);
         txtDescripcionPedido.clear();
         detalleForm.clear();
         actualizarTotal();
@@ -434,9 +534,26 @@ public class PedidosController {
         btnGuardarPedido.setText("Crear Nuevo Pedido");
     }
 
+    /**
+     * Habilita o deshabilita los controles del formulario.
+     * Se podría usar para bloquear visualmente al seleccionar pedidos terminados.
+     */
+    private void habilitarFormulario(boolean habilitar) {
+        cbCliente.setDisable(!habilitar);
+        dpFechaPedido.setDisable(!habilitar);
+        dpFechaEntrega.setDisable(!habilitar);
+        cbEstadoPedido.setDisable(!habilitar);
+        txtDescripcionPedido.setDisable(!habilitar);
+        btnAgregarItem.setDisable(!habilitar);
+        btnGuardarPedido.setDisable(!habilitar);
+        tableDetallePedido.setDisable(!habilitar);
+    }
+
     // ── VALIDACIÓN ────────────────────────────────────────────────
+
     private boolean validarFormulario() {
         List<String> errores = new ArrayList<>();
+
         if (cbCliente.getValue()      == null) errores.add("• Selecciona un cliente.");
         if (dpFechaPedido.getValue()  == null) errores.add("• Ingresa la fecha del pedido.");
         if (dpFechaEntrega.getValue() == null) errores.add("• Ingresa la fecha de entrega.");
@@ -455,17 +572,24 @@ public class PedidosController {
     }
 
     // ── HELPERS ───────────────────────────────────────────────────
-    private String fmt(java.time.LocalDate d) {
+
+    private String fmt(LocalDate d) {
         return d != null ? d.toString() : "";
     }
 
     private void alerta(String msg) {
         Alert a = new Alert(Alert.AlertType.WARNING);
-        a.setTitle("Atención"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
+        a.setTitle("Atención");
+        a.setHeaderText(null);
+        a.setContentText(msg);
+        a.showAndWait();
     }
 
     private void exito(String msg) {
         Alert a = new Alert(Alert.AlertType.INFORMATION);
-        a.setTitle("Éxito"); a.setHeaderText(null); a.setContentText(msg); a.showAndWait();
+        a.setTitle("Éxito");
+        a.setHeaderText(null);
+        a.setContentText(msg);
+        a.showAndWait();
     }
 }

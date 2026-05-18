@@ -1,6 +1,7 @@
 package model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class DetallePedido {
 
@@ -31,9 +32,12 @@ public class DetallePedido {
     public BigDecimal getSubtotal() { return subtotal; }
     public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
 
+    /** Calcula subtotal = precioUnitario × cantidad, redondeado a 2 decimales. */
     public void calcularSubtotal() {
         if (precioUnitario != null) {
-            this.subtotal = precioUnitario.multiply(BigDecimal.valueOf(cantidad));
+            this.subtotal = precioUnitario
+                    .multiply(BigDecimal.valueOf(cantidad))
+                    .setScale(2, RoundingMode.HALF_UP);
         }
     }
 }

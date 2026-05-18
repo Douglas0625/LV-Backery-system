@@ -2,7 +2,7 @@ package controller;
 
 import dao.IngredienteDAO;
 import dao.MovimientoInventarioDAO;
-import dao.ProveedorDAO;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,225 +11,240 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Ingrediente;
 import model.MovimientoInventario;
-import model.Proveedor;
+import utils.ModalUtil;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class InventarioController {
 
-    // Tabla ingredientes
-    @FXML private TableView<Ingrediente> tablaIngredientes;
+    // ── TABLA INGREDIENTES ────────────────────────────────────────
+    @FXML private TextField                          txtBuscar;
+    @FXML private TableView<Ingrediente>             tablaIngredientes;
     @FXML private TableColumn<Ingrediente, String>     colNombreIng;
     @FXML private TableColumn<Ingrediente, BigDecimal> colStockIng;
     @FXML private TableColumn<Ingrediente, BigDecimal> colCostoIng;
+    @FXML private TableColumn<Ingrediente, BigDecimal> colValorIng;
     @FXML private TableColumn<Ingrediente, String>     colEstadoIng;
 
-    // Tabla movimientos
-    @FXML private TableView<MovimientoInventario> tablaMovimientos;
+    // ── TABLA HISTORIAL ───────────────────────────────────────────
+    @FXML private TableView<MovimientoInventario>             tablaMovimientos;
     @FXML private TableColumn<MovimientoInventario, String>     colFechaMov;
     @FXML private TableColumn<MovimientoInventario, String>     colIngredienteMov;
     @FXML private TableColumn<MovimientoInventario, String>     colTipoMov;
     @FXML private TableColumn<MovimientoInventario, BigDecimal> colCantidadMov;
+    @FXML private TableColumn<MovimientoInventario, String>     colReferencaMov;
     @FXML private TableColumn<MovimientoInventario, String>     colMotivo;
 
-    // Formulario compra
-    @FXML private ComboBox<Proveedor>   cbProveedor;
-    @FXML private ComboBox<Ingrediente> cbIngredienteCompra;
-    @FXML private TextField             txtCantidadCompra;
-    @FXML private TextField             txtCostoGramo;
+    // ── CARDS ─────────────────────────────────────────────────────
+    @FXML private Label lblTotalIngredientes;
+    @FXML private Label lblStockBajoCount;
+    @FXML private Label lblValorTotal;
 
-    // Formulario ajuste
-    @FXML private ComboBox<Ingrediente> cbIngredienteAjuste;
-    @FXML private ComboBox<String>      cbTipoAjuste;
-    @FXML private TextField             txtCantidadAjuste;
-    @FXML private TextArea              txtMotivoAjuste;
+    // ── UMBRAL STOCK BAJO (gramos) ────────────────────────────────
+    private static final BigDecimal UMBRAL_STOCK_BAJO = BigDecimal.valueOf(500);
 
-    private final IngredienteDAO ingredienteDAO         = new IngredienteDAO();
-    private final MovimientoInventarioDAO movimientoDAO = new MovimientoInventarioDAO();
-    private final ProveedorDAO proveedorDAO             = new ProveedorDAO();
+    private final IngredienteDAO         ingredienteDAO = new IngredienteDAO();
+    private final MovimientoInventarioDAO movDAO        = new MovimientoInventarioDAO();
 
-    private final ObservableList<Ingrediente>         listaIngredientes  = FXCollections.observableArrayList();
-    private final ObservableList<MovimientoInventario> listaMovimientos  = FXCollections.observableArrayList();
+    private final ObservableList<Ingrediente>          listaIng = FXCollections.observableArrayList();
+    private final ObservableList<MovimientoInventario> listaMov = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
         configurarTablaIngredientes();
         configurarTablaMovimientos();
-        cargarCombos();
+        configurarBusqueda();
         cargarDatos();
     }
 
+    // ── CONFIGURACIÓN TABLAS ──────────────────────────────────────
     private void configurarTablaIngredientes() {
-        if (tablaIngredientes == null) return;
         colNombreIng.setCellValueFactory(new PropertyValueFactory<>("nombreIngrediente"));
         colStockIng.setCellValueFactory(new PropertyValueFactory<>("stockActualGramos"));
         colCostoIng.setCellValueFactory(new PropertyValueFactory<>("costoPorGramo"));
-        colEstadoIng.setCellValueFactory(data -> {
-            BigDecimal stock = data.getValue().getStockActualGramos();
-            String estado = stock.compareTo(BigDecimal.valueOf(500)) < 0 ? "⚠ Stock Bajo" : "✓ Normal";
-            return new SimpleStringProperty(estado);
+
+        colValorIng.setCellValueFactory(d -> {
+            BigDecimal valor = d.getValue().getStockActualGramos()
+                    .multiply(d.getValue().getCostoPorGramo())
+                    .setScale(2, RoundingMode.HALF_UP);
+            return new SimpleObjectProperty<>(valor);
         });
-        tablaIngredientes.setItems(listaIngredientes);
+
+        colEstadoIng.setCellValueFactory(d -> {
+            BigDecimal stock = d.getValue().getStockActualGramos();
+            return new SimpleStringProperty(
+                    stock.compareTo(UMBRAL_STOCK_BAJO) < 0 ? "⚠ Stock Bajo" : "✓ Normal");
+        });
+
+        // Color estado
+        colEstadoIng.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(String v, boolean empty) {
+                super.updateItem(v, empty);
+                if (empty || v == null) { setText(null); setStyle(""); return; }
+                setText(v);
+                setStyle(v.startsWith("⚠")
+                        ? "-fx-text-fill:#C0392B; -fx-font-weight:bold;"
+                        : "-fx-text-fill:#27AE60; -fx-font-weight:bold;");
+            }
+        });
+
+        tablaIngredientes.setItems(listaIng);
     }
 
     private void configurarTablaMovimientos() {
-        if (tablaMovimientos == null) return;
-        colFechaMov.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getFechaMovimiento() != null
-                        ? data.getValue().getFechaMovimiento().toString() : ""));
-        colIngredienteMov.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getNombreIngrediente()));
-        colTipoMov.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getTipoMovimiento()));
+        colFechaMov.setCellValueFactory(d -> new SimpleStringProperty(
+                d.getValue().getFechaMovimiento() != null ? d.getValue().getFechaMovimiento().toString() : ""));
+        colIngredienteMov.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNombreIngrediente()));
+        colTipoMov.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getTipoMovimiento()));
         colCantidadMov.setCellValueFactory(new PropertyValueFactory<>("cantidadGramos"));
-        colMotivo.setCellValueFactory(data ->
-                new SimpleStringProperty(data.getValue().getDescripcion() != null
-                        ? data.getValue().getDescripcion() : ""));
-        tablaMovimientos.setItems(listaMovimientos);
+
+        if (colReferencaMov != null)
+            colReferencaMov.setCellValueFactory(d -> new SimpleStringProperty(
+                    d.getValue().getReferencia() != null ? d.getValue().getReferencia() : ""));
+        colMotivo.setCellValueFactory(d -> new SimpleStringProperty(
+                d.getValue().getDescripcion() != null ? d.getValue().getDescripcion() : ""));
+
+        // Color tipo
+        colTipoMov.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(String v, boolean empty) {
+                super.updateItem(v, empty);
+                if (empty || v == null) { setText(null); setStyle(""); return; }
+                setText(v);
+                String color = switch (v) {
+                    case "Compra"        -> "#27AE60";
+                    case "Ajuste entrada"-> "#2980B9";
+                    case "Ajuste salida" -> "#E67E22";
+                    case "Merma"         -> "#C0392B";
+                    case "Producción"    -> "#8E44AD";
+                    default              -> "#4B3832";
+                };
+                setStyle("-fx-text-fill:" + color + "; -fx-font-weight:bold;");
+            }
+        });
+
+        tablaMovimientos.setItems(listaMov);
     }
 
-    private void cargarCombos() {
-        ObservableList<Ingrediente> ingredientes = FXCollections.observableArrayList(ingredienteDAO.listarTodos());
-        ObservableList<Proveedor>   proveedores  = FXCollections.observableArrayList(proveedorDAO.listarTodos());
-
-        if (cbProveedor != null)          cbProveedor.setItems(proveedores);
-        if (cbIngredienteCompra != null)  cbIngredienteCompra.setItems(ingredientes);
-        if (cbIngredienteAjuste != null)  cbIngredienteAjuste.setItems(FXCollections.observableArrayList(ingredienteDAO.listarTodos()));
-        if (cbTipoAjuste != null)
-            cbTipoAjuste.setItems(FXCollections.observableArrayList("Ajuste entrada", "Ajuste salida", "Merma"));
+    private void configurarBusqueda() {
+        if (txtBuscar == null) return;
+        txtBuscar.textProperty().addListener((o, old, v) -> {
+            if (v == null || v.isBlank()) listaIng.setAll(ingredienteDAO.listarTodos());
+            else listaIng.setAll(ingredienteDAO.buscar(v.trim()));
+        });
     }
 
+    // ── CARGA DE DATOS ────────────────────────────────────────────
     private void cargarDatos() {
-        listaIngredientes.setAll(ingredienteDAO.listarTodos());
-        listaMovimientos.setAll(movimientoDAO.listarTodos());
+        listaIng.setAll(ingredienteDAO.listarTodos());
+        listaMov.setAll(movDAO.listarTodos());
+        actualizarCards();
     }
 
+    private void actualizarCards() {
+        int total    = listaIng.size();
+        long bajo    = listaIng.stream()
+                .filter(i -> i.getStockActualGramos().compareTo(UMBRAL_STOCK_BAJO) < 0).count();
+        BigDecimal valor = listaIng.stream()
+                .map(i -> i.getStockActualGramos().multiply(i.getCostoPorGramo()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
+
+        if (lblTotalIngredientes != null) lblTotalIngredientes.setText(String.valueOf(total));
+        if (lblStockBajoCount    != null) lblStockBajoCount.setText(String.valueOf(bajo));
+        if (lblValorTotal        != null) lblValorTotal.setText("$" + valor);
+    }
+
+    // ── ACCIONES BOTONES ──────────────────────────────────────────
+
+    /** Abre modal para crear ingrediente nuevo */
     @FXML
-    public void registrarCompra() {
-        Ingrediente ingrediente = cbIngredienteCompra != null ? cbIngredienteCompra.getValue() : null;
-        String cantStr  = txtCantidadCompra != null ? txtCantidadCompra.getText().trim() : "";
-        String costoStr = txtCostoGramo     != null ? txtCostoGramo.getText().trim()     : "";
-
-        if (ingrediente == null || cantStr.isEmpty() || costoStr.isEmpty()) {
-            alerta("Campos vacíos", "Selecciona ingrediente, cantidad y costo por gramo.");
-            return;
-        }
-
-        try {
-            BigDecimal cantidad = new BigDecimal(cantStr);
-            BigDecimal costo    = new BigDecimal(costoStr);
-
-            Proveedor prov = cbProveedor != null ? cbProveedor.getValue() : null;
-            String ref = prov != null ? "Proveedor: " + prov.getNombreProveedor() : "Compra directa";
-
-            boolean ok = movimientoDAO.registrarMovimiento(
-                    ingrediente.getIdIngrediente(), "Compra",
-                    cantidad, "Compra de ingrediente", ref, cantidad);
-
-            if (ok) {
-                // Actualizar también el costo por gramo
-                ingrediente.setCostoPorGramo(costo);
-                ingredienteDAO.actualizar(ingrediente);
-                info("Éxito", "Compra registrada. Stock actualizado.");
-                limpiarCompra();
-                cargarDatos();
-            } else {
-                alerta("Error", "No se pudo registrar la compra.");
-            }
-        } catch (NumberFormatException e) {
-            alerta("Formato inválido", "Ingresa valores numéricos válidos.");
+    public void abrirModalNuevoIngrediente() {
+        IngredienteModalController ctrl = ModalUtil.abrir(
+                "/views/agregar_ingrediente_inventario_modal.fxml",
+                "Nuevo Ingrediente",
+                tablaIngredientes.getScene().getWindow());
+        if (ctrl != null && ctrl.isGuardado()) {
+            Ingrediente nuevo = ctrl.getResultado();
+            if (ingredienteDAO.insertar(nuevo)) { exito("Ingrediente creado."); cargarDatos(); }
+            else alerta("No se pudo crear. El nombre puede ya existir.");
         }
     }
 
+    /** Abre modal para editar ingrediente seleccionado */
     @FXML
-    public void registrarAjuste() {
-        Ingrediente ingrediente = cbIngredienteAjuste != null ? cbIngredienteAjuste.getValue() : null;
-        String tipo    = cbTipoAjuste       != null ? cbTipoAjuste.getValue()              : null;
-        String cantStr = txtCantidadAjuste  != null ? txtCantidadAjuste.getText().trim()   : "";
-        String motivo  = txtMotivoAjuste    != null ? txtMotivoAjuste.getText().trim()      : "";
+    public void editarIngrediente() {
+        Ingrediente sel = tablaIngredientes.getSelectionModel().getSelectedItem();
+        if (sel == null) { alerta("Selecciona un ingrediente de la tabla."); return; }
 
-        if (ingrediente == null || tipo == null || cantStr.isEmpty()) {
-            alerta("Campos vacíos", "Completa ingrediente, tipo y cantidad.");
-            return;
-        }
+        IngredienteModalController ctrl = ModalUtil.abrir(
+                "/views/agregar_ingrediente_inventario_modal.fxml",
+                "Editar Ingrediente",
+                tablaIngredientes.getScene().getWindow(),
+                c -> c.setIngrediente(sel));
 
-        try {
-            BigDecimal cantidad = new BigDecimal(cantStr);
-            BigDecimal delta = tipo.equals("Ajuste entrada") ? cantidad : cantidad.negate();
-
-            boolean ok = movimientoDAO.registrarMovimiento(
-                    ingrediente.getIdIngrediente(), tipo, cantidad, motivo, null, delta);
-
-            if (ok) {
-                info("Éxito", "Ajuste registrado correctamente.");
-                limpiarAjuste();
-                cargarDatos();
-            } else {
-                alerta("Error", "No se pudo registrar el ajuste.");
-            }
-        } catch (NumberFormatException e) {
-            alerta("Formato inválido", "Ingresa una cantidad numérica válida.");
+        if (ctrl != null && ctrl.isGuardado()) {
+            if (ingredienteDAO.actualizar(ctrl.getResultado())) { exito("Ingrediente actualizado."); cargarDatos(); }
+            else alerta("No se pudo actualizar.");
         }
     }
 
+    /** Eliminar con confirmación */
     @FXML
-    public void agregarIngrediente() {
-        // Diálogo simple para añadir ingrediente nuevo
-        Dialog<Ingrediente> dialog = new Dialog<>();
-        dialog.setTitle("Nuevo Ingrediente");
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+    public void eliminarIngrediente() {
+        Ingrediente sel = tablaIngredientes.getSelectionModel().getSelectedItem();
+        if (sel == null) { alerta("Selecciona un ingrediente."); return; }
 
-        TextField nombre = new TextField(); nombre.setPromptText("Nombre del ingrediente");
-        TextField costo  = new TextField(); costo.setPromptText("Costo por gramo (ej: 0.0025)");
-
-        javafx.scene.layout.VBox box = new javafx.scene.layout.VBox(10, new Label("Nombre:"), nombre, new Label("Costo/gramo:"), costo);
-        box.setPadding(new javafx.geometry.Insets(10));
-        dialog.getDialogPane().setContent(box);
-
-        dialog.setResultConverter(btn -> {
-            if (btn == ButtonType.OK) {
-                Ingrediente i = new Ingrediente();
-                i.setNombreIngrediente(nombre.getText().trim());
-                i.setStockActualGramos(BigDecimal.ZERO);
-                try { i.setCostoPorGramo(new BigDecimal(costo.getText().trim())); }
-                catch (Exception ex) { i.setCostoPorGramo(BigDecimal.ZERO); }
-                return i;
-            }
-            return null;
-        });
-
-        dialog.showAndWait().ifPresent(i -> {
-            if (!i.getNombreIngrediente().isEmpty()) {
-                if (ingredienteDAO.insertar(i)) {
-                    info("Éxito", "Ingrediente agregado.");
-                    cargarDatos();
-                    cargarCombos();
-                } else {
-                    alerta("Error", "No se pudo agregar el ingrediente. Puede que ya exista.");
-                }
-            }
+        Alert conf = new Alert(Alert.AlertType.CONFIRMATION,
+                "¿Eliminar \"" + sel.getNombreIngrediente() + "\"?\nEsta acción no se puede deshacer.",
+                ButtonType.YES, ButtonType.NO);
+        conf.setTitle("Confirmar eliminación"); conf.setHeaderText(null);
+        conf.showAndWait().filter(b -> b == ButtonType.YES).ifPresent(b -> {
+            if (ingredienteDAO.eliminar(sel.getIdIngrediente())) { exito("Ingrediente eliminado."); cargarDatos(); }
+            else alerta("No se pudo eliminar. Puede estar en uso en recetas o movimientos.");
         });
     }
 
-    private void limpiarCompra() {
-        if (cbIngredienteCompra != null) cbIngredienteCompra.setValue(null);
-        if (txtCantidadCompra   != null) txtCantidadCompra.clear();
-        if (txtCostoGramo       != null) txtCostoGramo.clear();
-        if (cbProveedor         != null) cbProveedor.setValue(null);
+    /** Abre modal de compra */
+    @FXML
+    public void abrirModalCompra() {
+        CompraModalController ctrl = ModalUtil.abrir(
+                "/views/modal_compra.fxml",
+                "Registrar Compra",
+                tablaIngredientes.getScene().getWindow());
+        if (ctrl != null && ctrl.isGuardado()) { exito("Compra registrada. Stock actualizado."); cargarDatos(); }
     }
 
-    private void limpiarAjuste() {
-        if (cbIngredienteAjuste != null) cbIngredienteAjuste.setValue(null);
-        if (cbTipoAjuste        != null) cbTipoAjuste.setValue(null);
-        if (txtCantidadAjuste   != null) txtCantidadAjuste.clear();
-        if (txtMotivoAjuste     != null) txtMotivoAjuste.clear();
+    /** Abre modal de movimiento (ajuste/merma) */
+    @FXML
+    public void abrirModalMovimiento() {
+        MovimientoModalController ctrl = ModalUtil.abrir(
+                "/views/modal_movimiento.fxml",
+                "Registrar Movimiento",
+                tablaIngredientes.getScene().getWindow());
+        if (ctrl != null && ctrl.isGuardado()) { exito("Movimiento registrado."); cargarDatos(); }
     }
 
-    private void alerta(String titulo, String msg) {
-        new Alert(Alert.AlertType.ERROR, msg, ButtonType.OK) {{ setTitle(titulo); setHeaderText(null); }}.showAndWait();
+    /** Filtro rápido stock bajo */
+    @FXML
+    public void filtrarStockBajo() {
+        listaIng.setAll(ingredienteDAO.listarStockBajo(UMBRAL_STOCK_BAJO));
     }
 
-    private void info(String titulo, String msg) {
-        new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK) {{ setTitle(titulo); setHeaderText(null); }}.showAndWait();
+    @FXML
+    public void quitarFiltro() {
+        if (txtBuscar != null) txtBuscar.clear();
+        cargarDatos();
+    }
+
+    // ── HELPERS ───────────────────────────────────────────────────
+    private void alerta(String msg) {
+        new Alert(Alert.AlertType.WARNING, msg, ButtonType.OK)
+        {{ setTitle("Atención"); setHeaderText(null); }}.showAndWait();
+    }
+
+    private void exito(String msg) {
+        new Alert(Alert.AlertType.INFORMATION, msg, ButtonType.OK)
+        {{ setTitle("Éxito"); setHeaderText(null); }}.showAndWait();
     }
 }
