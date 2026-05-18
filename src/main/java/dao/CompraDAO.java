@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CompraDAO {
 
-    /** Guarda compra + detalles + actualiza stock + registra movimiento, todo en 1 transacción. */
+    /** Guarda compra + detalles + actualiza stock + registra movimiento odo en 1 transacción. */
     public int registrarCompra(Compra compra) {
         String sqlCompra  = "INSERT INTO compra (fecha_compra, id_proveedor, total_compra) VALUES (CURRENT_DATE,?,?)";
         String sqlDetalle = "INSERT INTO detalle_compra (id_compra, id_ingrediente, cantidad_gramos, costo_unitario_gramo, subtotal) VALUES (?,?,?,?,?)";
