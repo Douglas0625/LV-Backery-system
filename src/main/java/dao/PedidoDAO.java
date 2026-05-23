@@ -3,6 +3,7 @@ package dao;
 import config.DatabaseConnection;
 import model.*;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,91 @@ public class PedidoDAO {
     public List<Pedido> listarPendientes() {
         return listarConFiltro(
                 "WHERE e.nombre_estado NOT IN ('Entregado','Cancelado') ORDER BY p.fecha_entrega ASC");
+    }
+
+
+    public List<Pedido> listarListosPorTipo(boolean esVitrina) {
+        String condVitrina = esVitrina
+                ? "AND UPPER(c.nombre) = 'VITRINA'"
+                : "AND UPPER(c.nombre) != 'VITRINA'";
+        return listarConFiltro("WHERE e.nombre_estado = 'Listo' " + condVitrina + " ORDER BY p.fecha_entrega ASC");
+    }
+
+    /** Detalle de pedido incluyendo cantidad_restante (para venta directa VITRINA). */
+    public List<DetallePedido> listarDetallesConRestante(int idPedido) {
+        List<DetallePedido> lista = new ArrayList<>();
+        String sql = "SELECT id_detalle_pedido, id_pedido, id_producto, cantidad, " +
+                "COALESCE(cantidad_restante, cantidad) AS cantidad_restante, precio_unitario, subtotal " +
+                "FROM detalle_pedido WHERE id_pedido = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idPedido);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    DetallePedido d = new DetallePedido();
+                    d.setIdDetallePedido(rs.getInt("id_detalle_pedido"));
+                    d.setIdPedido(rs.getInt("id_pedido"));
+                    d.setProducto(productoDAO.buscarPorId(rs.getInt("id_producto")));
+                    d.setCantidad(rs.getInt("cantidad_restante")); // usamos restante como "disponible"
+                    d.setPrecioUnitario(rs.getBigDecimal("precio_unitario"));
+                    d.setSubtotal(rs.getBigDecimal("subtotal"));
+                    lista.add(d);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+    /**
+     * Descuenta cantidad_restante de detalle_pedido. Lanza excepción si insuficiente.
+     * Si tras el descuento TODOS los detalles del pedido quedan en cantidad_restante = 0,
+     * marca el pedido como Entregado automáticamente.
+     */
+    public void descontarRestante(Connection conn, int idDetallePedido, int cantidadVendida) throws SQLException {
+        // Obtener disponible e id_pedido
+        int disponible;
+        int idPedido;
+        try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT id_pedido, COALESCE(cantidad_restante, cantidad) FROM detalle_pedido WHERE id_detalle_pedido=?")) {
+            ps.setInt(1, idDetallePedido);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) throw new SQLException("Detalle de pedido no encontrado.");
+                idPedido    = rs.getInt(1);
+                disponible  = rs.getInt(2);
+            }
+        }
+        if (cantidadVendida > disponible)
+            throw new SQLException("Cantidad solicitada (" + cantidadVendida + ") supera la disponible (" + disponible + ").");
+
+        // Descontar
+        try (PreparedStatement ps = conn.prepareStatement(
+                "UPDATE detalle_pedido SET cantidad_restante = COALESCE(cantidad_restante, cantidad) - ? WHERE id_detalle_pedido=?")) {
+            ps.setInt(1, cantidadVendida);
+            ps.setInt(2, idDetallePedido);
+            ps.executeUpdate();
+        }
+
+        //Si_todo el pedido quedó en 0 → marcar Entregado
+        int totalRestante;
+        try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT COALESCE(SUM(COALESCE(cantidad_restante, cantidad)), 0) FROM detalle_pedido WHERE id_pedido=?")) {
+            ps.setInt(1, idPedido);
+            try (ResultSet rs = ps.executeQuery()) {
+                rs.next();
+                totalRestante = rs.getInt(1);
+            }
+        }
+        if (totalRestante == 0) {
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE pedido SET id_estado_pedido = " +
+                            "(SELECT id_estado_pedido FROM estado_pedido WHERE nombre_estado = 'Entregado') " +
+                            "WHERE id_pedido = ?")) {
+                ps.setInt(1, idPedido);
+                ps.executeUpdate();
+            }
+        }
     }
 
     private List<Pedido> listarConFiltro(String filtro) {
@@ -96,7 +182,6 @@ public class PedidoDAO {
 
     // ── ESTADOS ─────────────────────────────────────────────────
 
-    /** Todos los estados (para filtros y cambio de estado desde botón). */
     public List<EstadoPedido> listarEstados() {
         List<EstadoPedido> lista = new ArrayList<>();
         String sql = "SELECT id_estado_pedido, nombre_estado FROM estado_pedido ORDER BY id_estado_pedido";
@@ -111,10 +196,6 @@ public class PedidoDAO {
         return lista;
     }
 
-    /**
-     * Estados permitidos al CREAR o EDITAR un pedido desde el formulario.
-     * Excluye "Entregado" y "Cancelado" — esos solo se cambian con el botón "Cambiar Estado".
-     */
     public List<EstadoPedido> listarEstadosFormulario() {
         List<EstadoPedido> lista = new ArrayList<>();
         String sql = "SELECT id_estado_pedido, nombre_estado FROM estado_pedido " +
@@ -133,10 +214,6 @@ public class PedidoDAO {
 
     // ── INSERTAR ─────────────────────────────────────────────────
 
-    /**
-     * Inserta el pedido y sus detalles en una única transacción.
-     * @return id generado, o -1 si falla.
-     */
     public int insertar(Pedido pedido) {
         String sql = "INSERT INTO pedido (id_cliente, fecha_pedido, fecha_entrega, id_estado_pedido, " +
                 "descripcion_pedido, total_pedido) VALUES (?,?,?,?,?,?)";
@@ -156,10 +233,7 @@ public class PedidoDAO {
                 ps.executeUpdate();
 
                 try (ResultSet keys = ps.getGeneratedKeys()) {
-                    if (!keys.next()) {
-                        conn.rollback();
-                        return -1;
-                    }
+                    if (!keys.next()) { conn.rollback(); return -1; }
                     idGenerado = keys.getInt(1);
                 }
             }
@@ -173,23 +247,15 @@ public class PedidoDAO {
 
         } catch (Exception e) {
             e.printStackTrace();
-            if (conn != null) {
-                try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
-            }
+            if (conn != null) try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             return -1;
         } finally {
-            if (conn != null) {
-                try { conn.setAutoCommit(true); conn.close(); } catch (SQLException ex) { ex.printStackTrace(); }
-            }
+            if (conn != null) try { conn.setAutoCommit(true); conn.close(); } catch (SQLException ex) { ex.printStackTrace(); }
         }
     }
 
     // ── ACTUALIZAR ───────────────────────────────────────────────
 
-    /**
-     * Actualiza cabecera y reemplaza todos los detalles en una transacción.
-     * No toca inventario — solo registro de planificación.
-     */
     public boolean actualizar(Pedido pedido) {
         String sql = "UPDATE pedido SET id_cliente=?, fecha_pedido=?, fecha_entrega=?, " +
                 "id_estado_pedido=?, descripcion_pedido=?, total_pedido=? WHERE id_pedido=?";
@@ -197,6 +263,12 @@ public class PedidoDAO {
         try {
             conn = DatabaseConnection.getConnection();
             conn.setAutoCommit(false);
+
+            String estadoActual = obtenerNombreEstado(conn, pedido.getIdPedido());
+            if (!"Pendiente".equals(estadoActual)) {
+                conn.rollback();
+                return false;
+            }
 
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setInt(1, pedido.getCliente().getIdCliente());
@@ -219,14 +291,10 @@ public class PedidoDAO {
 
         } catch (Exception e) {
             e.printStackTrace();
-            if (conn != null) {
-                try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
-            }
+            if (conn != null) try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             return false;
         } finally {
-            if (conn != null) {
-                try { conn.setAutoCommit(true); conn.close(); } catch (SQLException ex) { ex.printStackTrace(); }
-            }
+            if (conn != null) try { conn.setAutoCommit(true); conn.close(); } catch (SQLException ex) { ex.printStackTrace(); }
         }
     }
 
@@ -250,34 +318,167 @@ public class PedidoDAO {
 
         } catch (Exception e) {
             e.printStackTrace();
-            if (conn != null) {
-                try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
-            }
+            if (conn != null) try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
             return false;
         } finally {
-            if (conn != null) {
-                try { conn.setAutoCommit(true); conn.close(); } catch (SQLException ex) { ex.printStackTrace(); }
-            }
+            if (conn != null) try { conn.setAutoCommit(true); conn.close(); } catch (SQLException ex) { ex.printStackTrace(); }
         }
     }
 
     // ── CAMBIAR ESTADO ───────────────────────────────────────────
 
     /**
-     * Cambia únicamente el estado del pedido.
-     * NO toca inventario ni crea movimientos.
+     * Cambia el estado del pedido.
+     * Si el nuevo estado es "En producción" y el anterior NO lo era,
+     * valida recetas, valida stock, descuenta ingredientes y registra movimientos.
+     * Todo en una única transacción con rollback completo si algo falla.
+     *
+     * @return null si OK, o mensaje de error si falla.
      */
-    public boolean actualizarEstado(int idPedido, int idEstado) {
-        String sql = "UPDATE pedido SET id_estado_pedido=? WHERE id_pedido=?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, idEstado);
-            ps.setInt(2, idPedido);
-            return ps.executeUpdate() > 0;
+    public String actualizarEstado(int idPedido, int idNuevoEstado) {
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            conn.setAutoCommit(false);
+
+            // 1. Obtener estado actual
+            String estadoActual = obtenerNombreEstado(conn, idPedido);
+            if (estadoActual == null) {
+                conn.rollback();
+                return "No se encontró el pedido #" + idPedido;
+            }
+
+            // 2. Obtener nombre del nuevo estado
+            String nuevoEstado = obtenerNombreEstadoPorId(conn, idNuevoEstado);
+            if (nuevoEstado == null) {
+                conn.rollback();
+                return "Estado no válido.";
+            }
+
+            // 2b. Validar transición
+            if (!transicionValida(estadoActual, nuevoEstado)) {
+                conn.rollback();
+                return "Transición de estado no permitida.";
+            }
+
+            // 3. Si nuevo estado es "En producción" y antes NO lo era => procesar producción
+            if ("En producción".equals(nuevoEstado) && !"En producción".equals(estadoActual)) {
+                String error = procesarProduccionPedido(conn, idPedido);
+                if (error != null) {
+                    conn.rollback();
+                    return error;
+                }
+            }
+
+            // 4. Actualizar estado
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE pedido SET id_estado_pedido=? WHERE id_pedido=?")) {
+                ps.setInt(1, idNuevoEstado);
+                ps.setInt(2, idPedido);
+                ps.executeUpdate();
+            }
+
+            conn.commit();
+            return null; // éxito
+
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            if (conn != null) try { conn.rollback(); } catch (SQLException ex) { ex.printStackTrace(); }
+            return "Error inesperado: " + e.getMessage();
+        } finally {
+            if (conn != null) try { conn.setAutoCommit(true); conn.close(); } catch (SQLException ex) { ex.printStackTrace(); }
         }
+    }
+
+    /**
+     * Método centralizado de producción. Valida recetas, valida stock,
+     * descuenta ingredientes y registra movimientos de inventario.
+     * Usa la conexión con transacción activa del llamador.
+     *
+     * @return null si todo OK, o mensaje de error si falla.
+     */
+    private String procesarProduccionPedido(Connection conn, int idPedido) throws SQLException {
+        List<DetallePedido> detalles = listarDetallesConConn(conn, idPedido);
+
+        if (detalles.isEmpty()) {
+            return "El pedido #" + idPedido + " no tiene productos.";
+        }
+
+        RecetaDAO recetaDAO = new RecetaDAO();
+
+        // Paso 1: Validar que todos los productos tengan receta
+        for (DetallePedido dp : detalles) {
+            int idProducto = dp.getProducto().getIdProducto();
+            Receta receta = recetaDAO.buscarPorProducto(idProducto);
+            if (receta == null || receta.getDetalles().isEmpty()) {
+                return "El producto \"" + dp.getProducto().getNombreProducto() +
+                        "\" no tiene receta registrada. No se puede iniciar producción.";
+            }
+        }
+
+        // Paso 2: Calcular totales de ingredientes requeridos y validar stock
+        // Acumular por ingrediente para validar de una vez
+        java.util.Map<Integer, BigDecimal> requerido = new java.util.LinkedHashMap<>();
+        java.util.Map<Integer, String>     nombresIng = new java.util.LinkedHashMap<>();
+
+        for (DetallePedido dp : detalles) {
+            Receta receta = recetaDAO.buscarPorProducto(dp.getProducto().getIdProducto());
+            for (DetalleReceta dr : receta.getDetalles()) {
+                int idIng = dr.getIngrediente().getIdIngrediente();
+                BigDecimal gramos = dr.getCantidadGramos()
+                        .multiply(BigDecimal.valueOf(dp.getCantidad()))
+                        .divide(BigDecimal.valueOf(receta.getRendimientoTotal()),
+                                4, java.math.RoundingMode.HALF_UP);
+                requerido.merge(idIng, gramos, BigDecimal::add);
+                nombresIng.putIfAbsent(idIng, dr.getIngrediente().getNombreIngrediente());
+            }
+        }
+
+        // Validar stock de cada ingrediente
+        for (java.util.Map.Entry<Integer, BigDecimal> entry : requerido.entrySet()) {
+            int idIng = entry.getKey();
+            BigDecimal necesario = entry.getValue();
+            BigDecimal disponible = obtenerStockIngrediente(conn, idIng);
+            if (disponible == null || disponible.compareTo(necesario) < 0) {
+                String nombre = nombresIng.get(idIng);
+                return "Stock insuficiente para \"" + nombre + "\". " +
+                        "Necesario: " + necesario.setScale(2, java.math.RoundingMode.HALF_UP) +
+                        "g, Disponible: " + (disponible != null ? disponible.setScale(2, java.math.RoundingMode.HALF_UP) : "0") + "g.";
+            }
+        }
+
+        // Paso 3: Descontar stock y registrar movimientos
+        int idTipoProduccion = obtenerIdTipoMovimiento(conn, "Producción");
+        if (idTipoProduccion < 0) {
+            return "No se encontró el tipo de movimiento 'Producción' en la base de datos.";
+        }
+
+        for (java.util.Map.Entry<Integer, BigDecimal> entry : requerido.entrySet()) {
+            int idIng = entry.getKey();
+            BigDecimal gramos = entry.getValue();
+
+            // Descontar stock
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "UPDATE ingrediente SET stock_actual_gramos = stock_actual_gramos - ? WHERE id_ingrediente = ?")) {
+                ps.setBigDecimal(1, gramos);
+                ps.setInt(2, idIng);
+                ps.executeUpdate();
+            }
+
+            // Registrar movimiento
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "INSERT INTO movimiento_inventario " +
+                            "(id_ingrediente, id_tipo_movimiento, fecha_movimiento, cantidad_gramos, descripcion, referencia) " +
+                            "VALUES (?, ?, CURRENT_DATE, ?, 'Descuento por producción', ?)")) {
+                ps.setInt(1, idIng);
+                ps.setInt(2, idTipoProduccion);
+                ps.setBigDecimal(3, gramos);
+                ps.setString(4, "Pedido #" + idPedido);
+                ps.executeUpdate();
+            }
+        }
+
+        return null; // éxito
     }
 
     // ── MÉTRICAS ─────────────────────────────────────────────────
@@ -317,6 +518,80 @@ public class PedidoDAO {
             ps.setInt(1, idPedido);
             ps.executeUpdate();
         }
+    }
+
+    /** Obtiene detalles del pedido usando la conexión activa (para usar dentro de transacciones). */
+    private List<DetallePedido> listarDetallesConConn(Connection conn, int idPedido) throws SQLException {
+        List<DetallePedido> lista = new ArrayList<>();
+        String sql = "SELECT id_detalle_pedido, id_pedido, id_producto, cantidad, precio_unitario, subtotal " +
+                "FROM detalle_pedido WHERE id_pedido = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idPedido);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    DetallePedido d = new DetallePedido();
+                    d.setIdDetallePedido(rs.getInt("id_detalle_pedido"));
+                    d.setIdPedido(rs.getInt("id_pedido"));
+                    d.setProducto(productoDAO.buscarPorId(rs.getInt("id_producto")));
+                    d.setCantidad(rs.getInt("cantidad"));
+                    d.setPrecioUnitario(rs.getBigDecimal("precio_unitario"));
+                    d.setSubtotal(rs.getBigDecimal("subtotal"));
+                    lista.add(d);
+                }
+            }
+        }
+        return lista;
+    }
+
+    private String obtenerNombreEstado(Connection conn, int idPedido) throws SQLException {
+        String sql = "SELECT e.nombre_estado FROM pedido p " +
+                "INNER JOIN estado_pedido e ON p.id_estado_pedido = e.id_estado_pedido " +
+                "WHERE p.id_pedido = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, idPedido);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getString(1) : null;
+            }
+        }
+    }
+
+    private String obtenerNombreEstadoPorId(Connection conn, int idEstado) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT nombre_estado FROM estado_pedido WHERE id_estado_pedido = ?")) {
+            ps.setInt(1, idEstado);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getString(1) : null;
+            }
+        }
+    }
+
+    private BigDecimal obtenerStockIngrediente(Connection conn, int idIngrediente) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT stock_actual_gramos FROM ingrediente WHERE id_ingrediente = ?")) {
+            ps.setInt(1, idIngrediente);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getBigDecimal(1) : null;
+            }
+        }
+    }
+
+    private int obtenerIdTipoMovimiento(Connection conn, String nombre) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT id_tipo_movimiento FROM tipo_movimiento WHERE nombre_tipo = ?")) {
+            ps.setString(1, nombre);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : -1;
+            }
+        }
+    }
+
+    private boolean transicionValida(String actual, String nuevo) {
+        return switch (actual) {
+            case "Pendiente"     -> nuevo.equals("En producción") || nuevo.equals("Cancelado");
+            case "En producción" -> nuevo.equals("Listo") || nuevo.equals("Cancelado");
+            case "Listo"         -> nuevo.equals("Entregado");
+            default -> false;
+        };
     }
 
     private Pedido mapear(ResultSet rs) throws SQLException {

@@ -164,7 +164,7 @@ public class PedidosController {
         // Clientes
         cbCliente.setItems(FXCollections.observableArrayList(clienteDAO.listarTodos()));
 
-        // Estado formulario: excluye Entregado y Cancelado (solo se cambian por botón)
+        // Estado formulario: excluye Entregado y Cancelado
         List<EstadoPedido> estadosForm = pedidoDAO.listarEstadosFormulario();
         cbEstadoPedido.setItems(FXCollections.observableArrayList(estadosForm));
 
@@ -240,6 +240,7 @@ public class PedidosController {
         pedidoEditando = null;
         limpiarFormulario();
         habilitarFormulario(true);
+        cbEstadoPedido.setDisable(false);
         btnGuardarPedido.setText("Crear Nuevo Pedido");
     }
 
@@ -252,9 +253,8 @@ public class PedidosController {
 
         // Bloquear edición de pedidos terminados
         String estado = sel.getNombreEstado();
-        if ("Entregado".equals(estado) || "Cancelado".equals(estado)) {
-            alerta("El pedido #" + sel.getIdPedido() + " está en estado \"" + estado +
-                    "\" y no puede modificarse.\nUsa el botón \"Cambiar Estado\" si necesitas actualizarlo.");
+        if (!"Pendiente".equals(estado)) {
+            alerta("Solo se pueden modificar pedidos en estado 'Pendiente'.");
             return;
         }
 
@@ -267,7 +267,6 @@ public class PedidosController {
         dpFechaPedido.setValue(sel.getFechaPedido());
         dpFechaEntrega.setValue(sel.getFechaEntrega());
 
-        // Solo estados del formulario (sin Entregado/Cancelado)
         cbEstadoPedido.getItems().stream()
                 .filter(e -> e.getIdEstadoPedido() == sel.getEstadoPedido().getIdEstadoPedido())
                 .findFirst().ifPresent(cbEstadoPedido::setValue);
@@ -276,6 +275,7 @@ public class PedidosController {
         detalleForm.setAll(pedidoDAO.listarDetalles(sel.getIdPedido()));
         actualizarTotal();
         habilitarFormulario(true);
+        cbEstadoPedido.setDisable(true);
         btnGuardarPedido.setText("Guardar Cambios");
     }
 
@@ -324,10 +324,9 @@ public class PedidosController {
             return;
         }
 
-        // Regla 3: bloquear eliminación de pedidos finalizados
         String estadoSel = sel.getNombreEstado();
-        if ("Entregado".equals(estadoSel) || "Cancelado".equals(estadoSel)) {
-            alerta("No se pueden eliminar pedidos finalizados.");
+        if (!"Pendiente".equals(estadoSel)) {
+            alerta("No se pueden eliminar pedidos que no estén en estado 'Pendiente'.");
             return;
         }
 
@@ -341,7 +340,6 @@ public class PedidosController {
             if (pedidoDAO.eliminar(sel.getIdPedido())) {
                 exito("Pedido eliminado.");
                 limpiarDetallePanelInferior();
-                // Si el pedido eliminado era el que se estaba editando, limpiar formulario
                 if (pedidoEditando != null && pedidoEditando.getIdPedido() == sel.getIdPedido()) {
                     limpiarFormulario();
                 }
@@ -355,8 +353,10 @@ public class PedidosController {
     // ── CAMBIAR ESTADO ────────────────────────────────────────────
 
     /**
-     * Permite cambiar a CUALQUIER estado, incluyendo Entregado y Cancelado.
-     * NO afecta inventario.
+     * Permite cambiar a cualquier estado.
+     * Si el nuevo estado es "En producción" y el anterior no lo era,
+     * PedidoDAO.actualizarEstado() validará recetas, stock y descontará inventario.
+     * Si algo falla, se muestra el error y NO se cambia el estado.
      */
     @FXML
     public void cambiarEstado() {
@@ -367,7 +367,6 @@ public class PedidosController {
         }
 
         List<EstadoPedido> estados = pedidoDAO.listarEstados();
-        // Selección actual en el dialog
         EstadoPedido actual = estados.stream()
                 .filter(e -> e.getIdEstadoPedido() == sel.getEstadoPedido().getIdEstadoPedido())
                 .findFirst().orElse(estados.isEmpty() ? null : estados.get(0));
@@ -377,16 +376,19 @@ public class PedidosController {
         dlg.setHeaderText("Pedido #" + sel.getIdPedido() + " — " + sel.getNombreCliente());
         dlg.setContentText("Nuevo estado:");
         dlg.showAndWait().ifPresent(nuevo -> {
-            if (nuevo.getIdEstadoPedido() == sel.getEstadoPedido().getIdEstadoPedido()) return; // sin cambio
-            if (pedidoDAO.actualizarEstado(sel.getIdPedido(), nuevo.getIdEstadoPedido())) {
+            if (nuevo.getIdEstadoPedido() == sel.getEstadoPedido().getIdEstadoPedido()) return;
+
+            String error = pedidoDAO.actualizarEstado(sel.getIdPedido(), nuevo.getIdEstadoPedido());
+            if (error == null) {
                 exito("Estado actualizado a: " + nuevo.getNombreEstado());
                 cargarPedidos();
-                // Refrescar panel inferior si este pedido está seleccionado
-                mostrarDetallePedido(pedidoDAO.listarTodos().stream()
+                // Refrescar panel inferior
+                pedidoDAO.listarTodos().stream()
                         .filter(p -> p.getIdPedido() == sel.getIdPedido())
-                        .findFirst().orElse(sel));
+                        .findFirst()
+                        .ifPresent(this::mostrarDetallePedido);
             } else {
-                alerta("No se pudo cambiar el estado.");
+                alerta("No se pudo cambiar el estado:\n\n" + error);
             }
         });
     }
@@ -461,7 +463,6 @@ public class PedidosController {
         dlg.getDialogPane().setContent(grid);
         dlg.getDialogPane().setPrefWidth(420);
 
-        // Habilitar OK solo si hay producto seleccionado
         Button okBtn = (Button) dlg.getDialogPane().lookupButton(ButtonType.OK);
         okBtn.setDisable(true);
         cbProd.valueProperty().addListener((o, old, v) -> okBtn.setDisable(v == null));
@@ -482,7 +483,6 @@ public class PedidosController {
         });
 
         dlg.showAndWait().ifPresent(dp -> {
-            // Si ya existe el producto, sumar cantidad en lugar de duplicar
             detalleForm.stream()
                     .filter(d -> d.getProducto().getIdProducto() == dp.getProducto().getIdProducto())
                     .findFirst()
@@ -522,7 +522,6 @@ public class PedidosController {
         cbCliente.setValue(null);
         dpFechaPedido.setValue(LocalDate.now());
         dpFechaEntrega.setValue(null);
-        // Resetear a Pendiente
         cbEstadoPedido.getItems().stream()
                 .filter(e -> e.getNombreEstado().equalsIgnoreCase("Pendiente"))
                 .findFirst()
@@ -534,10 +533,6 @@ public class PedidosController {
         btnGuardarPedido.setText("Crear Nuevo Pedido");
     }
 
-    /**
-     * Habilita o deshabilita los controles del formulario.
-     * Se podría usar para bloquear visualmente al seleccionar pedidos terminados.
-     */
     private void habilitarFormulario(boolean habilitar) {
         cbCliente.setDisable(!habilitar);
         dpFechaPedido.setDisable(!habilitar);

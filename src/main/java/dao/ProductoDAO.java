@@ -74,6 +74,22 @@ public class ProductoDAO {
         } catch (Exception e) { e.printStackTrace(); return false; }
     }
 
+    // ============================================================
+//  AGREGAR este método dentro de la clase ProductoDAO existente
+//  (antes del método privado mapear() al final del archivo)
+// ============================================================
+
+    /** Cuenta el total de productos registrados en el sistema. */
+    public long contarTodos() {
+        String sql = "SELECT COUNT(*) FROM producto";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getLong(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
     private Producto mapear(ResultSet rs) throws SQLException {
         Producto p = new Producto();
         p.setIdProducto(rs.getInt("id_producto"));

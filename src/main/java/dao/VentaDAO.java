@@ -72,7 +72,6 @@ public class VentaDAO {
         return lista;
     }
 
-    /** Retorna los N productos más vendidos (nombre, cantidad total vendida). */
     public List<String[]> productosMasVendidos(int limite) {
         List<String[]> resultado = new ArrayList<>();
         String sql = """
@@ -93,7 +92,6 @@ public class VentaDAO {
         return resultado;
     }
 
-    /** Retorna el total de ventas del mes actual. */
     public BigDecimal totalVentasMes() {
         String sql = """
         SELECT COALESCE(SUM(total_venta), 0)
@@ -108,7 +106,6 @@ public class VentaDAO {
         return BigDecimal.ZERO;
     }
 
-    /** Ganancia neta del mes (total ventas - costo estimado de productos vendidos). */
     public BigDecimal gananciaNeta() {
         String sql = """
         SELECT COALESCE(SUM(dv.cantidad * p.precio_venta)
@@ -126,7 +123,6 @@ public class VentaDAO {
         return BigDecimal.ZERO;
     }
 
-    /** Retorna las ventas totales por día del mes actual para el gráfico de línea. */
     public List<String[]> ventasPorDiaMesActual() {
         List<String[]> resultado = new ArrayList<>();
         String sql = """
@@ -146,7 +142,6 @@ public class VentaDAO {
         return resultado;
     }
 
-    /** Ventas por tipo para el PieChart (DIRECTA / PEDIDO). */
     public List<String[]> ventasPorTipo() {
         List<String[]> resultado = new ArrayList<>();
         String sql = """
@@ -163,31 +158,6 @@ public class VentaDAO {
         return resultado;
     }
 
-    /** Últimas N ventas para tabla de reportes. */
-    public List<Venta> listarUltimas(int limite) {
-        List<Venta> lista = new ArrayList<>();
-        String sql = """
-        SELECT v.id_venta, v.id_pedido, v.fecha_venta, v.total_venta,
-               v.tipo_venta, v.metodo_pago, v.numero_comprobante,
-               c.id_cliente, c.nombre as nombre_cliente
-        FROM venta v
-        LEFT JOIN cliente c ON v.id_cliente = c.id_cliente
-        ORDER BY v.id_venta DESC
-        LIMIT ?
-        """;
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, limite);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) lista.add(mapear(rs));
-        } catch (Exception e) { e.printStackTrace(); }
-        return lista;
-    }
-
-    /**
-     * Carga el detalle de una venta específica (productos, cantidades, precios).
-     * Se usa al seleccionar una venta del historial para mostrar su contenido.
-     */
     public List<DetalleVenta> listarDetalles(int idVenta) {
         List<DetalleVenta> lista = new ArrayList<>();
         String sql = """
@@ -210,7 +180,6 @@ public class VentaDAO {
                 dv.setCantidad(rs.getInt("cantidad"));
                 dv.setPrecioUnitario(rs.getBigDecimal("precio_unitario"));
                 dv.setSubtotal(rs.getBigDecimal("subtotal"));
-                // Construir producto mínimo (solo lo que necesita la tabla)
                 Producto p = new Producto();
                 p.setIdProducto(rs.getInt("id_producto"));
                 p.setNombreProducto(rs.getString("nombre_producto"));
@@ -234,22 +203,16 @@ public class VentaDAO {
         return BigDecimal.ZERO;
     }
 
-    public long cantidadVentasHoy() {
-        String sql = "SELECT COUNT(*) FROM venta WHERE fecha_venta = CURRENT_DATE";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) return rs.getLong(1);
-        } catch (Exception e) { e.printStackTrace(); }
-        return 0;
-    }
-
     // ── GUARDAR ───────────────────────────────────────────────────
 
     /**
-     * Guarda la venta con todos sus detalles y descuenta ingredientes
-     * del inventario según las recetas de cada producto vendido.
-     * Todo ocurre en una sola transacción: o todo se guarda o nada.
+     * Guarda la venta con todos sus detalles.
+     *
+     * REGLA: Si la venta viene de un pedido (idPedido != null), NO se descuentan
+     * ingredientes del inventario, ya que el descuento ocurrió al pasar el pedido
+     * a estado "En producción".
+     *
+     * Si es venta directa (idPedido == null), descuenta ingredientes según receta.
      */
     public int guardarVenta(Venta venta, RecetaDAO recetaDAO) {
 
@@ -262,89 +225,62 @@ public class VentaDAO {
             INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario, subtotal)
             VALUES (?,?,?,?,?)
             """;
-        String sqlMov = """
-            INSERT INTO movimiento_inventario
-                (id_ingrediente, id_tipo_movimiento, fecha_movimiento,
-                 cantidad_gramos, descripcion, referencia)
-            VALUES (?,
-                    (SELECT id_tipo_movimiento FROM tipo_movimiento WHERE nombre_tipo='Producción'),
-                    CURRENT_DATE, ?, 'Descuento por venta', ?)
-            """;
-        String sqlStock = """
-            UPDATE ingrediente
-            SET stock_actual_gramos = stock_actual_gramos - ?
-            WHERE id_ingrediente = ?
-            """;
+
+        boolean esDesdePedido = venta.getIdPedido() != null;
 
         try (Connection conn = DatabaseConnection.getConnection()) {
             conn.setAutoCommit(false);
+            try {
+                // 1. Insertar venta
+                int idVenta;
+                try (PreparedStatement ps = conn.prepareStatement(sqlVenta, Statement.RETURN_GENERATED_KEYS)) {
+                    if (esDesdePedido)
+                        ps.setInt(1, venta.getIdPedido());
+                    else
+                        ps.setNull(1, Types.INTEGER);
 
-            // 1. Insertar venta y obtener ID generado
-            int idVenta;
-            try (PreparedStatement ps = conn.prepareStatement(sqlVenta, Statement.RETURN_GENERATED_KEYS)) {
-                if (venta.getIdPedido() != null)
-                    ps.setInt(1, venta.getIdPedido());
-                else
-                    ps.setNull(1, Types.INTEGER);
+                    if (venta.getCliente() != null)
+                        ps.setInt(2, venta.getCliente().getIdCliente());
+                    else
+                        ps.setNull(2, Types.INTEGER);
 
-                if (venta.getCliente() != null)
-                    ps.setInt(2, venta.getCliente().getIdCliente());
-                else
-                    ps.setNull(2, Types.INTEGER);
-
-                ps.setDate(3, Date.valueOf(venta.getFechaVenta()));
-                ps.setBigDecimal(4, venta.getTotalVenta());
-                ps.setString(5, venta.getTipoVenta());
-                ps.setString(6, venta.getMetodoPago());
-                ps.setString(7, venta.getNumeroComprobante());
-                ps.executeUpdate();
-
-                ResultSet keys = ps.getGeneratedKeys();
-                keys.next();
-                idVenta = keys.getInt(1);
-            }
-
-            // 2. Insertar cada línea de detalle y descontar inventario
-            for (DetalleVenta dv : venta.getDetalles()) {
-
-                // Insertar detalle
-                try (PreparedStatement ps = conn.prepareStatement(sqlDetalle)) {
-                    ps.setInt(1, idVenta);
-                    ps.setInt(2, dv.getProducto().getIdProducto());
-                    ps.setInt(3, dv.getCantidad());
-                    ps.setBigDecimal(4, dv.getPrecioUnitario());
-                    ps.setBigDecimal(5, dv.getSubtotal());
+                    ps.setDate(3, Date.valueOf(venta.getFechaVenta()));
+                    ps.setBigDecimal(4, venta.getTotalVenta());
+                    ps.setString(5, venta.getTipoVenta());
+                    ps.setString(6, venta.getMetodoPago());
+                    ps.setString(7, venta.getNumeroComprobante());
                     ps.executeUpdate();
+
+                    ResultSet keys = ps.getGeneratedKeys();
+                    keys.next();
+                    idVenta = keys.getInt(1);
                 }
 
-                // Descontar ingredientes según receta
-                Receta receta = recetaDAO.buscarPorProducto(dv.getProducto().getIdProducto());
-                if (receta != null && !receta.getDetalles().isEmpty()) {
-                    for (DetalleReceta dr : receta.getDetalles()) {
-                        // Gramos a descontar proporcional a la cantidad vendida
-                        BigDecimal gramos = dr.getCantidadGramos()
-                                .multiply(BigDecimal.valueOf(dv.getCantidad()))
-                                .divide(BigDecimal.valueOf(receta.getRendimientoTotal()),
-                                        4, java.math.RoundingMode.HALF_UP);
-
-                        try (PreparedStatement ps = conn.prepareStatement(sqlStock)) {
-                            ps.setBigDecimal(1, gramos);
-                            ps.setInt(2, dr.getIngrediente().getIdIngrediente());
-                            ps.executeUpdate();
-                        }
-                        try (PreparedStatement ps = conn.prepareStatement(sqlMov)) {
-                            ps.setInt(1, dr.getIngrediente().getIdIngrediente());
-                            ps.setBigDecimal(2, gramos);
-                            ps.setString(3, "Venta #" + idVenta);
-                            ps.executeUpdate();
-                        }
+                // 2. Insertar detalles
+                for (DetalleVenta dv : venta.getDetalles()) {
+                    try (PreparedStatement ps = conn.prepareStatement(sqlDetalle)) {
+                        ps.setInt(1, idVenta);
+                        ps.setInt(2, dv.getProducto().getIdProducto());
+                        ps.setInt(3, dv.getCantidad());
+                        ps.setBigDecimal(4, dv.getPrecioUnitario());
+                        ps.setBigDecimal(5, dv.getSubtotal());
+                        ps.executeUpdate();
                     }
                 }
+
+                // 3. Descontar inventario SOLO si es venta directa (sin pedido)
+                if (!esDesdePedido) {
+                    descontarIngredientes(conn, venta.getDetalles(), idVenta, recetaDAO);
+                }
+
+                conn.commit();
+                return idVenta;
+
+            } catch (Exception ex) {
+                conn.rollback();
+                ex.printStackTrace();
+                return -1;
             }
-
-            conn.commit();
-            return idVenta;
-
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
@@ -352,9 +288,163 @@ public class VentaDAO {
     }
 
     /**
-     * Total de ventas del mes en curso (o en el rango dado).
-     * Si fechaInicio y fechaFin son null, usa el mes actual.
+     * Venta por PEDIDO (cliente normal, estado Listo → Entregado).
+     * NO descuenta ingredientes.
+     * @return id de venta generado, o -1 si falla.
      */
+    public int registrarVentaPedido(Venta venta, int idEstadoEntregado) {
+        String sqlVenta   = "INSERT INTO venta (id_pedido, id_cliente, fecha_venta, total_venta, tipo_venta, metodo_pago, numero_comprobante) VALUES (?,?,?,?,?,?,?)";
+        String sqlDetalle = "INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario, subtotal) VALUES (?,?,?,?,?)";
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                int idVenta;
+                try (PreparedStatement ps = conn.prepareStatement(sqlVenta, Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setInt(1, venta.getIdPedido());
+                    if (venta.getCliente() != null) ps.setInt(2, venta.getCliente().getIdCliente());
+                    else ps.setNull(2, Types.INTEGER);
+                    ps.setDate(3, Date.valueOf(venta.getFechaVenta()));
+                    ps.setBigDecimal(4, venta.getTotalVenta());
+                    ps.setString(5, "PEDIDO");
+                    ps.setString(6, venta.getMetodoPago());
+                    ps.setString(7, venta.getNumeroComprobante());
+                    ps.executeUpdate();
+                    ResultSet keys = ps.getGeneratedKeys(); keys.next();
+                    idVenta = keys.getInt(1);
+                }
+                for (DetalleVenta dv : venta.getDetalles()) {
+                    try (PreparedStatement ps = conn.prepareStatement(sqlDetalle)) {
+                        ps.setInt(1, idVenta);
+                        ps.setInt(2, dv.getProducto().getIdProducto());
+                        ps.setInt(3, dv.getCantidad());
+                        ps.setBigDecimal(4, dv.getPrecioUnitario());
+                        ps.setBigDecimal(5, dv.getSubtotal());
+                        ps.executeUpdate();
+                    }
+                }
+                // Marcar pedido como Entregado
+                try (PreparedStatement ps = conn.prepareStatement(
+                        "UPDATE pedido SET id_estado_pedido=? WHERE id_pedido=?")) {
+                    ps.setInt(1, idEstadoEntregado);
+                    ps.setInt(2, venta.getIdPedido());
+                    ps.executeUpdate();
+                }
+                conn.commit();
+                return idVenta;
+            } catch (Exception ex) {
+                conn.rollback(); ex.printStackTrace(); return -1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); return -1;
+        }
+    }
+
+    /**
+     * Venta DIRECTA desde pedido VITRINA (estado Listo).
+     * Descuenta cantidad_restante en detalle_pedido. NO descuenta ingredientes.
+     * detallesVitrina: pares {idDetallePedido, cantidadVendida} para descontar restante.
+     */
+    public int registrarVentaDirectaVitrina(Venta venta,
+                                            java.util.Map<Integer, Integer> detallesVitrina,
+                                            PedidoDAO pedidoDAO) {
+        String sqlVenta   = "INSERT INTO venta (id_pedido, id_cliente, fecha_venta, total_venta, tipo_venta, metodo_pago, numero_comprobante) VALUES (?,?,?,?,?,?,?)";
+        String sqlDetalle = "INSERT INTO detalle_venta (id_venta, id_producto, cantidad, precio_unitario, subtotal) VALUES (?,?,?,?,?)";
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                int idVenta;
+                try (PreparedStatement ps = conn.prepareStatement(sqlVenta, Statement.RETURN_GENERATED_KEYS)) {
+                    if (venta.getIdPedido() != null) ps.setInt(1, venta.getIdPedido());
+                    else ps.setNull(1, Types.INTEGER);
+                    if (venta.getCliente() != null) ps.setInt(2, venta.getCliente().getIdCliente());
+                    else ps.setNull(2, Types.INTEGER);
+                    ps.setDate(3, Date.valueOf(venta.getFechaVenta()));
+                    ps.setBigDecimal(4, venta.getTotalVenta());
+                    ps.setString(5, "DIRECTA");
+                    ps.setString(6, venta.getMetodoPago());
+                    ps.setString(7, venta.getNumeroComprobante());
+                    ps.executeUpdate();
+                    ResultSet keys = ps.getGeneratedKeys(); keys.next();
+                    idVenta = keys.getInt(1);
+                }
+                for (DetalleVenta dv : venta.getDetalles()) {
+                    try (PreparedStatement ps = conn.prepareStatement(sqlDetalle)) {
+                        ps.setInt(1, idVenta);
+                        ps.setInt(2, dv.getProducto().getIdProducto());
+                        ps.setInt(3, dv.getCantidad());
+                        ps.setBigDecimal(4, dv.getPrecioUnitario());
+                        ps.setBigDecimal(5, dv.getSubtotal());
+                        ps.executeUpdate();
+                    }
+                }
+                // Descontar cantidad_restante por cada detalle de pedido VITRINA
+                for (java.util.Map.Entry<Integer, Integer> entry : detallesVitrina.entrySet()) {
+                    pedidoDAO.descontarRestante(conn, entry.getKey(), entry.getValue());
+                }
+                conn.commit();
+                return idVenta;
+            } catch (Exception ex) {
+                conn.rollback(); ex.printStackTrace(); return -1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); return -1;
+        }
+    }
+    private void descontarIngredientes(Connection conn, List<DetalleVenta> detalles,
+                                       int idVenta, RecetaDAO recetaDAO) throws SQLException {
+        // Paso 1: acumular ingredientes requeridos
+        java.util.Map<Integer, BigDecimal> requerido  = new java.util.LinkedHashMap<>();
+        java.util.Map<Integer, String>     nombres    = new java.util.LinkedHashMap<>();
+
+        for (DetalleVenta dv : detalles) {
+            Receta receta = recetaDAO.buscarPorProducto(dv.getProducto().getIdProducto());
+            if (receta == null || receta.getDetalles().isEmpty()) continue;
+            for (DetalleReceta dr : receta.getDetalles()) {
+                int id = dr.getIngrediente().getIdIngrediente();
+                BigDecimal gramos = dr.getCantidadGramos()
+                        .multiply(BigDecimal.valueOf(dv.getCantidad()))
+                        .divide(BigDecimal.valueOf(receta.getRendimientoTotal()),
+                                4, java.math.RoundingMode.HALF_UP);
+                requerido.merge(id, gramos, BigDecimal::add);
+                nombres.putIfAbsent(id, dr.getIngrediente().getNombreIngrediente());
+            }
+        }
+
+        // Paso 2: validar stock acumulado
+        for (java.util.Map.Entry<Integer, BigDecimal> e : requerido.entrySet()) {
+            BigDecimal stock = obtenerStockIngrediente(conn, e.getKey());
+            if (stock.compareTo(e.getValue()) < 0)
+                throw new SQLException("Stock insuficiente para: " + nombres.get(e.getKey()));
+        }
+
+        String sqlStock = "UPDATE ingrediente SET stock_actual_gramos = stock_actual_gramos - ? WHERE id_ingrediente = ?";
+        String sqlMov   = "INSERT INTO movimiento_inventario " +
+                "(id_ingrediente, id_tipo_movimiento, fecha_movimiento, cantidad_gramos, descripcion, referencia) " +
+                "VALUES (?, (SELECT id_tipo_movimiento FROM tipo_movimiento WHERE nombre_tipo='Producción'), " +
+                "CURRENT_DATE, ?, 'Descuento por venta directa', ?)";
+
+        // Paso 3: descontar
+        for (java.util.Map.Entry<Integer, BigDecimal> e : requerido.entrySet()) {
+            try (PreparedStatement ps = conn.prepareStatement(sqlStock)) {
+                ps.setBigDecimal(1, e.getValue());
+                ps.setInt(2, e.getKey());
+                ps.executeUpdate();
+            }
+        }
+
+        // Paso 4: registrar movimientos
+        for (java.util.Map.Entry<Integer, BigDecimal> e : requerido.entrySet()) {
+            try (PreparedStatement ps = conn.prepareStatement(sqlMov)) {
+                ps.setInt(1, e.getKey());
+                ps.setBigDecimal(2, e.getValue());
+                ps.setString(3, "Venta #" + idVenta);
+                ps.executeUpdate();
+            }
+        }
+    }
+
+    // ── REPORTES ──────────────────────────────────────────────────
+
     public BigDecimal totalVentasMesReporte() {
         String sql = """
             SELECT COALESCE(SUM(total_venta), 0)
@@ -369,9 +459,6 @@ public class VentaDAO {
         return BigDecimal.ZERO;
     }
 
-    /**
-     * Total de ventas en un rango de fechas.
-     */
     public BigDecimal totalVentasEnRangoReporte(LocalDate desde, LocalDate hasta) {
         String sql = "SELECT COALESCE(SUM(total_venta), 0) FROM venta WHERE fecha_venta BETWEEN ? AND ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -384,31 +471,6 @@ public class VentaDAO {
         return BigDecimal.ZERO;
     }
 
-    /**
-     * Ganancia neta del mes = total ventas del mes - costo estimado de productos vendidos.
-     * Costo = SUM(dv.cantidad * p.costo_estimado_unitario) para ventas del mes.
-     */
-//    public BigDecimal gananciaNetaReporte() {
-//        String sql = """
-//            SELECT
-//                COALESCE(SUM(v.total_venta), 0) -
-//                COALESCE(SUM(dv.cantidad * p.costo_estimado_unitario), 0)
-//            FROM venta v
-//            INNER JOIN detalle_venta dv ON v.id_venta = dv.id_venta
-//            INNER JOIN producto p ON dv.id_producto = p.id_producto
-//            WHERE DATE_TRUNC('month', v.fecha_venta) = DATE_TRUNC('month', CURRENT_DATE)
-//            """;
-//        try (Connection conn = DatabaseConnection.getConnection();
-//             PreparedStatement ps = conn.prepareStatement(sql);
-//             ResultSet rs = ps.executeQuery()) {
-//            if (rs.next()) return rs.getBigDecimal(1);
-//        } catch (Exception e) { e.printStackTrace(); }
-//        return BigDecimal.ZERO;
-//    }
-
-    /**
-     * Ganancia neta en un rango de fechas.
-     */
     public BigDecimal gananciaNetaReporte(LocalDate desde, LocalDate hasta) {
         String sql = """
             SELECT
@@ -429,11 +491,6 @@ public class VentaDAO {
         return BigDecimal.ZERO;
     }
 
-    /**
-     * Productos más vendidos del mes actual.
-     * Retorna List<String[]> donde [0]=nombre_producto, [1]=cantidad_total.
-     * @param limit cuántos productos devolver (ej: 1 para el top, 8 para el gráfico)
-     */
     public List<String[]> productosMasVendidosReporte(int limit) {
         List<String[]> lista = new ArrayList<>();
         String sql = """
@@ -450,16 +507,11 @@ public class VentaDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, limit);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                lista.add(new String[]{ rs.getString(1), rs.getString(2) });
-            }
+            while (rs.next()) lista.add(new String[]{ rs.getString(1), rs.getString(2) });
         } catch (Exception e) { e.printStackTrace(); }
         return lista;
     }
 
-    /**
-     * Productos más vendidos en un rango de fechas.
-     */
     public List<String[]> productosMasVendidosReporte(int limit, LocalDate desde, LocalDate hasta) {
         List<String[]> lista = new ArrayList<>();
         String sql = """
@@ -478,17 +530,11 @@ public class VentaDAO {
             ps.setDate(2, Date.valueOf(hasta));
             ps.setInt(3, limit);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                lista.add(new String[]{ rs.getString(1), rs.getString(2) });
-            }
+            while (rs.next()) lista.add(new String[]{ rs.getString(1), rs.getString(2) });
         } catch (Exception e) { e.printStackTrace(); }
         return lista;
     }
 
-    /**
-     * Ventas agrupadas por día en el mes actual.
-     * Retorna List<String[]> donde [0]=día (yyyy-MM-dd), [1]=total del día.
-     */
     public List<String[]> ventasPorDiaMesActualReporte() {
         List<String[]> lista = new ArrayList<>();
         String sql = """
@@ -502,16 +548,11 @@ public class VentaDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                lista.add(new String[]{ rs.getString(1), rs.getString(2) });
-            }
+            while (rs.next()) lista.add(new String[]{ rs.getString(1), rs.getString(2) });
         } catch (Exception e) { e.printStackTrace(); }
         return lista;
     }
 
-    /**
-     * Ventas agrupadas por día en un rango de fechas.
-     */
     public List<String[]> ventasPorDiaEnRangoReporte(LocalDate desde, LocalDate hasta) {
         List<String[]> lista = new ArrayList<>();
         String sql = """
@@ -527,17 +568,11 @@ public class VentaDAO {
             ps.setDate(1, Date.valueOf(desde));
             ps.setDate(2, Date.valueOf(hasta));
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                lista.add(new String[]{ rs.getString(1), rs.getString(2) });
-            }
+            while (rs.next()) lista.add(new String[]{ rs.getString(1), rs.getString(2) });
         } catch (Exception e) { e.printStackTrace(); }
         return lista;
     }
 
-    /**
-     * Distribución de ventas por tipo (DIRECTA / PEDIDO) del mes actual.
-     * Retorna List<String[]> donde [0]=tipo_venta, [1]=total.
-     */
     public List<String[]> ventasPorTipoReporte() {
         List<String[]> lista = new ArrayList<>();
         String sql = """
@@ -549,16 +584,11 @@ public class VentaDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                lista.add(new String[]{ rs.getString(1), rs.getString(2) });
-            }
+            while (rs.next()) lista.add(new String[]{ rs.getString(1), rs.getString(2) });
         } catch (Exception e) { e.printStackTrace(); }
         return lista;
     }
 
-    /**
-     * Distribución de ventas por tipo en un rango de fechas.
-     */
     public List<String[]> ventasPorTipoReporte(LocalDate desde, LocalDate hasta) {
         List<String[]> lista = new ArrayList<>();
         String sql = """
@@ -572,16 +602,11 @@ public class VentaDAO {
             ps.setDate(1, Date.valueOf(desde));
             ps.setDate(2, Date.valueOf(hasta));
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                lista.add(new String[]{ rs.getString(1), rs.getString(2) });
-            }
+            while (rs.next()) lista.add(new String[]{ rs.getString(1), rs.getString(2) });
         } catch (Exception e) { e.printStackTrace(); }
         return lista;
     }
 
-    /**
-     * Últimas N ventas registradas (para la tabla del reporte).
-     */
     public List<Venta> listarUltimasReporte(int limit) {
         List<Venta> lista = new ArrayList<>();
         String sql = """
@@ -602,9 +627,6 @@ public class VentaDAO {
         return lista;
     }
 
-    /**
-     * Últimas N ventas en un rango de fechas.
-     */
     public List<Venta> listarUltimasEnRangoReporte(int limit, LocalDate desde, LocalDate hasta) {
         List<Venta> lista = new ArrayList<>();
         String sql = """
@@ -626,6 +648,77 @@ public class VentaDAO {
             while (rs.next()) lista.add(mapear(rs));
         } catch (Exception e) { e.printStackTrace(); }
         return lista;
+    }
+
+    public long contarTodas() {
+        String sql = "SELECT COUNT(*) FROM venta";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getLong(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    public BigDecimal totalIngresos() {
+        String sql = "SELECT COALESCE(SUM(total_venta), 0) FROM venta";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getBigDecimal(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return BigDecimal.ZERO;
+    }
+
+    public long cantidadVentasHoy() {
+        String sql = "SELECT COUNT(*) FROM venta WHERE fecha_venta = CURRENT_DATE";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getLong(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    public List<Venta> listarUltimas(int limite) {
+        List<Venta> lista = new ArrayList<>();
+        String sql = """
+            SELECT v.id_venta, v.id_pedido, v.fecha_venta, v.total_venta,
+                   v.tipo_venta, v.metodo_pago, v.numero_comprobante,
+                   c.id_cliente, c.nombre as nombre_cliente
+            FROM venta v
+            LEFT JOIN cliente c ON v.id_cliente = c.id_cliente
+            ORDER BY v.id_venta DESC
+            LIMIT ?
+            """;
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, limite);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) lista.add(mapear(rs));
+        } catch (Exception e) { e.printStackTrace(); }
+        return lista;
+    }
+
+    private BigDecimal obtenerStockIngrediente(Connection conn, int idIngrediente) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(
+                "SELECT stock_actual_gramos FROM ingrediente WHERE id_ingrediente=?")) {
+            ps.setInt(1, idIngrediente);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getBigDecimal(1) : BigDecimal.ZERO;
+            }
+        }
+    }
+
+    public int obtenerIdEstadoPorNombre(String nombre) {
+        String sql = "SELECT id_estado_pedido FROM estado_pedido WHERE nombre_estado = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, nombre);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : -1;
+            }
+        } catch (Exception e) { e.printStackTrace(); return -1; }
     }
 
     // ── MAPEO PRIVADO ─────────────────────────────────────────────
