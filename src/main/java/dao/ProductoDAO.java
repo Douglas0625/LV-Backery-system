@@ -75,8 +75,8 @@ public class ProductoDAO {
     }
 
     // ============================================================
-//  AGREGAR este método dentro de la clase ProductoDAO existente
-//  (antes del método privado mapear() al final del archivo)
+//  AGREGAR este metodo dentro de la clase ProductoDAO existente
+//  (antes del metodo privado mapear() al final del archivo)
 // ============================================================
 
     /** Cuenta el total de productos registrados en el sistema. */

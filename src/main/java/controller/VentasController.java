@@ -32,7 +32,7 @@ public class VentasController {
     @FXML private TextField txtNuevoCliente;
     @FXML private DatePicker dpFechaVenta;
 
-    // Método pago
+    // Metodo pago
     @FXML private Button btnEfectivo;
     @FXML private Button btnTransferencia;
     @FXML private Button btnTarjeta;
@@ -295,7 +295,7 @@ public class VentasController {
         }
     }
 
-    // ── MÉTODO PAGO ──────────────────────────────────────────────
+    // ── MeTODO PAGO ──────────────────────────────────────────────
 
     @FXML
     public void seleccionarMetodoPago(ActionEvent e) {

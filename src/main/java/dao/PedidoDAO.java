@@ -327,14 +327,7 @@ public class PedidoDAO {
 
     // ── CAMBIAR ESTADO ───────────────────────────────────────────
 
-    /**
-     * Cambia el estado del pedido.
-     * Si el nuevo estado es "En producción" y el anterior NO lo era,
-     * valida recetas, valida stock, descuenta ingredientes y registra movimientos.
-     * Todo en una única transacción con rollback completo si algo falla.
-     *
-     * @return null si OK, o mensaje de error si falla.
-     */
+
     public String actualizarEstado(int idPedido, int idNuevoEstado) {
         Connection conn = null;
         try {
@@ -391,11 +384,11 @@ public class PedidoDAO {
     }
 
     /**
-     * Método centralizado de producción. Valida recetas, valida stock,
+     * Metodo centralizado de producción. Valida recetas, valida stock,
      * descuenta ingredientes y registra movimientos de inventario.
      * Usa la conexión con transacción activa del llamador.
      *
-     * @return null si todo OK, o mensaje de error si falla.
+     * @return null sitodo OK, o mensaje de error si falla.
      */
     private String procesarProduccionPedido(Connection conn, int idPedido) throws SQLException {
         List<DetallePedido> detalles = listarDetallesConConn(conn, idPedido);

@@ -91,8 +91,8 @@ public class UsuarioDAO {
     }
 
     // ============================================================
-//  AGREGAR este método dentro de la clase UsuarioDAO existente
-//  (antes del último método al final del archivo)
+//  AGREGAR este metodo dentro de la clase UsuarioDAO existente
+//  (antes del último metodo al final del archivo)
 // ============================================================
 
     /** Cuenta el total de usuarios registrados en el sistema. */
