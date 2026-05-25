@@ -6,7 +6,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -14,146 +13,98 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane
-    xmlns="http://javafx.com/javafx/17"
-    xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="controller.DashboardAdminController"
-    style="-fx-background-color: #F5F3EF;">
+<BorderPane style="-fx-background-color: #F5F3EF;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardAdminController">
 
     <!-- ===== SIDEBAR FIJO ===== -->
     <left>
-        <VBox fx:id="sidebar"
-              prefWidth="220"
-              style="-fx-background-color: #4B3832; -fx-spacing: 12;">
-            <padding><Insets top="25" left="10" right="10" bottom="10"/></padding>
+        <VBox fx:id="sidebar" prefWidth="220" style="-fx-background-color: #4B3832; -fx-spacing: 12;">
+            <padding><Insets bottom="10" left="10" right="10" top="25" /></padding>
             <children>
 
-                <Label text="LV BAKERY" alignment="CENTER"
-                       prefWidth="200" textFill="WHITE" textAlignment="CENTER">
-                    <font><Font name="Segoe UI Bold" size="26"/></font>
+                <Label alignment="CENTER" prefWidth="200" text="LV BAKERY" textAlignment="CENTER" textFill="WHITE">
+                    <font><Font name="Segoe UI Bold" size="26" /></font>
                 </Label>
 
-                <Label text="Inventory &amp; management" alignment="CENTER"
-                       prefWidth="200" textFill="#f4d764" textAlignment="CENTER">
-                    <font><Font name="Segoe UI" size="11"/></font>
+                <Label alignment="CENTER" prefWidth="200" text="Inventory &amp; management" textAlignment="CENTER" textFill="#f4d764">
+                    <font><Font name="Segoe UI" size="13.0" /></font>
                 </Label>
 
                 <!-- SPACER -->
-                <Region prefHeight="10"/>
+                <Region prefHeight="10" />
 
                 <!-- BTN DASHBOARD -->
-                <Button fx:id="btnDashboard"
-                        text="Dashboard" textFill="WHITE"
-                        alignment="CENTER_LEFT" graphicTextGap="12"
-                        maxWidth="Infinity"
-                        prefHeight="44"
-                        onAction="#mostrarDashboardHome"
-                        style="-fx-background-color: #6B4F4F; -fx-background-radius: 8; -fx-padding: 10 15 10 15;">
-                    <graphic><ImageView fitWidth="24" fitHeight="24" preserveRatio="true">
-                        <image><Image url="@../img/panel.png"/></image>
+                <Button fx:id="btnDashboard" alignment="CENTER_LEFT" graphicTextGap="12" maxWidth="Infinity" onAction="#mostrarDashboardHome" prefHeight="44" style="-fx-background-color: #6B4F4F; -fx-background-radius: 8; -fx-padding: 10 15 10 15;" text="Dashboard" textFill="WHITE">
+                    <graphic><ImageView fitHeight="24" fitWidth="24" preserveRatio="true">
+                        <image><Image url="@../img/panel.png" /></image>
                     </ImageView></graphic>
-                    <font><Font name="Segoe UI" size="14"/></font>
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                    <font><Font name="Segoe UI" size="14.0" /></font>
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
                 </Button>
 
                 <!-- BTN PEDIDOS -->
-                <Button fx:id="btnPedidos"
-                        text="Pedidos" textFill="WHITE"
-                        alignment="CENTER_LEFT" graphicTextGap="12"
-                        maxWidth="Infinity" prefHeight="44"
-                        onAction="#mostrarPedidos"
-                        style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;">
-                    <graphic><ImageView fitWidth="24" fitHeight="24" preserveRatio="true">
-                        <image><Image url="@../img/carrito-de-compras.png"/></image>
+                <Button fx:id="btnPedidos" alignment="CENTER_LEFT" graphicTextGap="12" maxWidth="Infinity" onAction="#mostrarPedidos" prefHeight="44" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;" text="Pedidos" textFill="WHITE">
+                    <graphic><ImageView fitHeight="24" fitWidth="24" preserveRatio="true">
+                        <image><Image url="@../img/carrito-de-compras.png" /></image>
                     </ImageView></graphic>
-                    <font><Font name="Segoe UI" size="14"/></font>
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                    <font><Font name="Segoe UI" size="14" /></font>
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
                 </Button>
 
                 <!-- BTN VENTAS -->
-                <Button fx:id="btnVentas"
-                        text="Ventas" textFill="WHITE"
-                        alignment="CENTER_LEFT" graphicTextGap="12"
-                        maxWidth="Infinity" prefHeight="44"
-                        onAction="#mostrarVentas"
-                        style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;">
-                    <graphic><ImageView fitWidth="24" fitHeight="24" preserveRatio="true">
-                        <image><Image url="@../img/dinero.png"/></image>
+                <Button fx:id="btnVentas" alignment="CENTER_LEFT" graphicTextGap="12" maxWidth="Infinity" onAction="#mostrarVentas" prefHeight="44" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;" text="Ventas" textFill="WHITE">
+                    <graphic><ImageView fitHeight="24" fitWidth="24" preserveRatio="true">
+                        <image><Image url="@../img/dinero.png" /></image>
                     </ImageView></graphic>
-                    <font><Font name="Segoe UI" size="14"/></font>
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                    <font><Font name="Segoe UI" size="14" /></font>
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
                 </Button>
 
                 <!-- BTN RECETAS -->
-                <Button fx:id="btnRecetas"
-                        text="Recetas" textFill="WHITE"
-                        alignment="CENTER_LEFT" graphicTextGap="12"
-                        maxWidth="Infinity" prefHeight="44"
-                        onAction="#mostrarRecetas"
-                        style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;">
-                    <graphic><ImageView fitWidth="24" fitHeight="24" preserveRatio="true">
-                        <image><Image url="@../img/libro.png"/></image>
+                <Button fx:id="btnRecetas" alignment="CENTER_LEFT" graphicTextGap="12" maxWidth="Infinity" onAction="#mostrarRecetas" prefHeight="44" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;" text="Recetas" textFill="WHITE">
+                    <graphic><ImageView fitHeight="24" fitWidth="24" preserveRatio="true">
+                        <image><Image url="@../img/libro.png" /></image>
                     </ImageView></graphic>
-                    <font><Font name="Segoe UI" size="14"/></font>
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                    <font><Font name="Segoe UI" size="14" /></font>
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
                 </Button>
 
                 <!-- BTN REPORTES -->
-                <Button fx:id="btnReportes"
-                        text="Reportes" textFill="WHITE"
-                        alignment="CENTER_LEFT" graphicTextGap="12"
-                        maxWidth="Infinity" prefHeight="44"
-                        onAction="#mostrarReportes"
-                        style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;">
-                    <graphic><ImageView fitWidth="24" fitHeight="24" preserveRatio="true">
-                        <image><Image url="@../img/grafico-de-barras.png"/></image>
+                <Button fx:id="btnReportes" alignment="CENTER_LEFT" graphicTextGap="12" maxWidth="Infinity" onAction="#mostrarReportes" prefHeight="44" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;" text="Reportes" textFill="WHITE">
+                    <graphic><ImageView fitHeight="24" fitWidth="24" preserveRatio="true">
+                        <image><Image url="@../img/grafico-de-barras.png" /></image>
                     </ImageView></graphic>
-                    <font><Font name="Segoe UI" size="14"/></font>
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                    <font><Font name="Segoe UI" size="14" /></font>
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
                 </Button>
 
                 <!-- BTN INVENTARIO -->
-                <Button fx:id="btnInventario"
-                        text="Inventario" textFill="WHITE"
-                        alignment="CENTER_LEFT" graphicTextGap="12"
-                        maxWidth="Infinity" prefHeight="44"
-                        onAction="#mostrarInventario"
-                        style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;">
-                    <graphic><ImageView fitWidth="24" fitHeight="24" preserveRatio="true">
-                        <image><Image url="@../img/contenedor-de-comida.png"/></image>
+                <Button fx:id="btnInventario" alignment="CENTER_LEFT" graphicTextGap="12" maxWidth="Infinity" onAction="#mostrarInventario" prefHeight="44" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;" text="Inventario" textFill="WHITE">
+                    <graphic><ImageView fitHeight="24" fitWidth="24" preserveRatio="true">
+                        <image><Image url="@../img/contenedor-de-comida.png" /></image>
                     </ImageView></graphic>
-                    <font><Font name="Segoe UI" size="14"/></font>
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                    <font><Font name="Segoe UI" size="14" /></font>
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
                 </Button>
 
                 <!-- BTN USUARIOS -->
-                <Button fx:id="btnUsuarios"
-                        text="Usuarios" textFill="WHITE"
-                        alignment="CENTER_LEFT" graphicTextGap="12"
-                        maxWidth="Infinity" prefHeight="44"
-                        onAction="#mostrarUsuarios"
-                        style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;">
-                    <graphic><ImageView fitWidth="24" fitHeight="24" preserveRatio="true">
-                        <image><Image url="@../img/usuario.png"/></image>
+                <Button fx:id="btnUsuarios" alignment="CENTER_LEFT" graphicTextGap="12" maxWidth="Infinity" onAction="#mostrarUsuarios" prefHeight="44" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;" text="Usuarios" textFill="WHITE">
+                    <graphic><ImageView fitHeight="24" fitWidth="24" preserveRatio="true">
+                        <image><Image url="@../img/usuario.png" /></image>
                     </ImageView></graphic>
-                    <font><Font name="Segoe UI" size="14"/></font>
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                    <font><Font name="Segoe UI" size="14" /></font>
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
                 </Button>
 
                 <!-- SPACER PUSH DOWN -->
-                <Region VBox.vgrow="ALWAYS"/>
+                <Region VBox.vgrow="ALWAYS" />
 
                 <!-- BTN CERRAR SESION -->
-                <Button text="Cerrar Sesión" textFill="#ffaaaa"
-                        alignment="CENTER_LEFT" graphicTextGap="12"
-                        maxWidth="Infinity" prefHeight="44"
-                        onAction="#cerrarSesion"
-                        style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;">
-                    <graphic><ImageView fitWidth="22" fitHeight="22" preserveRatio="true">
-                        <image><Image url="@../img/cerrar-sesion.png"/></image>
+                <Button alignment="CENTER_LEFT" graphicTextGap="12" maxWidth="Infinity" onAction="#cerrarSesion" prefHeight="44" style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;" text="Cerrar Sesión" textFill="#ffaaaa">
+                    <graphic><ImageView fitHeight="22" fitWidth="22" preserveRatio="true">
+                        <image><Image url="@../img/cerrar-sesion.png" /></image>
                     </ImageView></graphic>
-                    <font><Font name="Segoe UI" size="13"/></font>
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                    <font><Font name="Segoe UI" size="14.0" /></font>
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
                 </Button>
 
             </children>
@@ -165,27 +116,25 @@
         <VBox style="-fx-background-color: #F5F3EF;">
 
             <!-- NAVBAR FIJA -->
-            <HBox fx:id="navbar" alignment="CENTER_LEFT" prefHeight="55" minHeight="55"
-                  style="-fx-background-color: #F5F3EF; -fx-border-color: #4B3832; -fx-border-width: 0 0 2 0;">
-                <padding><Insets left="20" right="15"/></padding>
+            <HBox fx:id="navbar" alignment="CENTER_LEFT" minHeight="55" prefHeight="55" style="-fx-background-color: #F5F3EF; -fx-border-color: #4B3832; -fx-border-width: 0 0 2 0;">
+                <padding><Insets left="20" right="15" /></padding>
                 <children>
                     <Label fx:id="lblTituloModulo" text="Bakery Manager" textFill="#4B3832">
-                        <font><Font name="Segoe UI Bold" size="18"/></font>
+                        <font><Font name="Segoe UI Bold" size="18" /></font>
                     </Label>
-                    <Region HBox.hgrow="ALWAYS"/>
+                    <Region HBox.hgrow="ALWAYS" />
                     <Label fx:id="lblNombreUsuario" text="" textFill="#4B3832">
-                        <font><Font name="Segoe UI" size="12"/></font>
+                        <font><Font name="Segoe UI" size="12" /></font>
                     </Label>
-                    <ImageView fitHeight="22" fitWidth="22" preserveRatio="true">
-                        <HBox.margin><Insets left="10"/></HBox.margin>
-                        <image><Image url="@../img/avatar.png"/></image>
+                    <ImageView fitHeight="28.0" fitWidth="27.0" preserveRatio="true">
+                        <HBox.margin><Insets left="10" /></HBox.margin>
+                        <image><Image url="@../img/avatar.png" /></image>
                     </ImageView>
                 </children>
             </HBox>
 
             <!-- CONTENEDOR DINAMICO — aqui se carga cada modulo -->
-            <StackPane fx:id="contenedorPrincipal" VBox.vgrow="ALWAYS"
-                       style="-fx-background-color: #F5F3EF;">
+            <StackPane fx:id="contenedorPrincipal" style="-fx-background-color: #F5F3EF;" VBox.vgrow="ALWAYS">
                 <!-- El contenido home del dashboard se carga aqui por defecto -->
             </StackPane>
 

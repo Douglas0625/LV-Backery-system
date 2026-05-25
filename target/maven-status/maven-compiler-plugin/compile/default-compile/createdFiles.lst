@@ -10,6 +10,7 @@ utils\ModalUtil.class
 controller\DashboardAdminController.class
 controller\CompraModalController.class
 controller\IngredienteModalController$1.class
+utils\FacturaGenerator.class
 controller\InventarioController$3.class
 controller\ReportesController.class
 dao\CompraDAO.class

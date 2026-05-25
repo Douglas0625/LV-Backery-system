@@ -14,159 +14,135 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.InventarioController">
+<BorderPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.InventarioController">
 <center>
-<ScrollPane fitToWidth="true" hbarPolicy="NEVER"
-            style="-fx-background:#F9F7F5; -fx-background-color:#F9F7F5;">
+<ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background:#F9F7F5; -fx-background-color:#F9F7F5;">
 <content>
 <VBox spacing="20" style="-fx-background-color:#F9F7F5;">
-    <padding><Insets top="20" left="25" right="25" bottom="25"/></padding>
+    <padding><Insets bottom="25" left="25" right="25" top="20" /></padding>
 
     <!-- ══════════════════════ HEADER ══════════════════════ -->
     <HBox alignment="CENTER_LEFT">
         <VBox spacing="3">
             <Label text="Gestión de Inventario" textFill="#4B3832">
-                <font><Font name="Segoe UI Bold" size="22"/></font>
+                <font><Font name="Segoe UI Bold" size="22" /></font>
             </Label>
-            <Label text="Control de stock, compras y movimientos en gramos."
-                   textFill="#7A6F68" style="-fx-font-size:13px;"/>
+            <Label style="-fx-font-size:13px;" text="Control de stock, compras y movimientos en gramos." textFill="#7A6F68" />
         </VBox>
-        <Pane HBox.hgrow="ALWAYS"/>
+        <Pane HBox.hgrow="ALWAYS" />
         <!-- ACCIONES PRINCIPALES -->
         <HBox spacing="10">
-            <Button text="+ Ingrediente" prefHeight="38"
-                    onAction="#abrirModalNuevoIngrediente"
-                    style="-fx-background-color:#4B3832; -fx-text-fill:white;
-                           -fx-background-radius:6; -fx-font-size:13px; -fx-font-weight:bold;">
-                <cursor><Cursor fx:constant="HAND"/></cursor>
+            <Button onAction="#abrirModalNuevoIngrediente" prefHeight="38" style="-fx-background-color:#4B3832; -fx-text-fill:white;                            -fx-background-radius:6; -fx-font-size:13px; -fx-font-weight:bold;" text="+ Ingrediente">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+                        <font>
+                           <Font size="13.0" />
+                        </font>
             </Button>
-            <Button text="🛒 Registrar Compra" prefHeight="38"
-                    onAction="#abrirModalCompra"
-                    style="-fx-background-color:#27AE60; -fx-text-fill:white;
-                           -fx-background-radius:6; -fx-font-size:13px; -fx-font-weight:bold;">
-                <cursor><Cursor fx:constant="HAND"/></cursor>
+            <Button onAction="#abrirModalCompra" prefHeight="38" style="-fx-background-color: #C78A5E; -fx-background-radius: 6; -fx-border-radius: 6; -fx-font-size: 13px; -fx-font-weight: bold;" text="🛒 Registrar Compra" textFill="WHITE">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
-            <Button text="↕ Movimiento" prefHeight="38"
-                    onAction="#abrirModalMovimiento"
-                    style="-fx-background-color:#2980B9; -fx-text-fill:white;
-                           -fx-background-radius:6; -fx-font-size:13px; -fx-font-weight:bold;">
-                <cursor><Cursor fx:constant="HAND"/></cursor>
+            <Button onAction="#abrirModalMovimiento" prefHeight="38" style="-fx-background-color: trasparent; -fx-border-color: #4B3832; -fx-border-radius: 6; -fx-background-radius: 6; -fx-font-size: 13px; -fx-font-weight: bold;" text="↕ Movimiento">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
             </Button>
         </HBox>
     </HBox>
 
     <!-- ══════════════════ CARDS MÉTRICAS ══════════════════ -->
     <HBox spacing="15">
-        <VBox spacing="8" HBox.hgrow="ALWAYS"
-              style="-fx-background-color:white; -fx-border-color:#E5E1DC;
-                     -fx-border-radius:10; -fx-background-radius:10; -fx-padding:18;">
+        <VBox spacing="8" style="-fx-background-color:white; -fx-border-color:#E5E1DC;                      -fx-border-radius:10; -fx-background-radius:10; -fx-padding:18;" HBox.hgrow="ALWAYS">
             <Label text="INGREDIENTES" textFill="#7A6F68">
-                <font><Font name="Segoe UI Bold" size="11"/></font>
+                <font><Font name="Segoe UI Bold" size="11" /></font>
             </Label>
             <Label fx:id="lblTotalIngredientes" text="0" textFill="#4B3832">
-                <font><Font name="Segoe UI Bold" size="36"/></font>
+                <font><Font name="Segoe UI Bold" size="36" /></font>
             </Label>
         </VBox>
-        <VBox spacing="8" HBox.hgrow="ALWAYS"
-              style="-fx-background-color:white; -fx-border-color:#E5E1DC;
-                     -fx-border-radius:10; -fx-background-radius:10; -fx-padding:18;">
+        <VBox spacing="8" style="-fx-background-color:white; -fx-border-color:#E5E1DC;                      -fx-border-radius:10; -fx-background-radius:10; -fx-padding:18;" HBox.hgrow="ALWAYS">
             <Label text="STOCK BAJO (↓500g)" textFill="#7A6F68">
-                <font><Font name="Segoe UI Bold" size="11"/></font>
+                <font><Font name="Segoe UI Bold" size="11" /></font>
             </Label>
             <Label fx:id="lblStockBajoCount" text="0" textFill="#C0392B">
-                <font><Font name="Segoe UI Bold" size="36"/></font>
+                <font><Font name="Segoe UI Bold" size="36" /></font>
             </Label>
         </VBox>
-        <VBox spacing="8" HBox.hgrow="ALWAYS"
-              style="-fx-background-color:white; -fx-border-color:#E5E1DC;
-                     -fx-border-radius:10; -fx-background-radius:10; -fx-padding:18;">
+        <VBox spacing="8" style="-fx-background-color:white; -fx-border-color:#E5E1DC;                      -fx-border-radius:10; -fx-background-radius:10; -fx-padding:18;" HBox.hgrow="ALWAYS">
             <Label text="VALOR INVENTARIO" textFill="#7A6F68">
-                <font><Font name="Segoe UI Bold" size="11"/></font>
+                <font><Font name="Segoe UI Bold" size="11" /></font>
             </Label>
             <Label fx:id="lblValorTotal" text="\$0.00" textFill="#4B3832">
-                <font><Font name="Segoe UI Bold" size="30"/></font>
+                <font><Font name="Segoe UI Bold" size="30" /></font>
             </Label>
         </VBox>
     </HBox>
 
     <!-- ══════════════════ TABLA INGREDIENTES ══════════════════ -->
-    <VBox spacing="12"
-          style="-fx-background-color:white; -fx-border-color:#E5E1DC;
-                 -fx-border-radius:10; -fx-background-radius:10; -fx-padding:18;">
+    <VBox spacing="12" style="-fx-background-color:white; -fx-border-color:#E5E1DC;                  -fx-border-radius:10; -fx-background-radius:10; -fx-padding:18;">
 
         <HBox alignment="CENTER_LEFT" spacing="12">
             <Label text="Ingredientes" textFill="#4B3832">
-                <font><Font name="Segoe UI Bold" size="20"/></font>
+                <font><Font name="Segoe UI Bold" size="20" /></font>
             </Label>
-            <Pane HBox.hgrow="ALWAYS"/>
-            <TextField fx:id="txtBuscar" prefHeight="34" prefWidth="220"
-                       promptText="Buscar ingrediente..."
-                       style="-fx-background-color:#F5F3EF; -fx-border-color:#E5E1D8;
-                              -fx-border-radius:5; -fx-background-radius:5;"/>
-            <Button text="⚠ Stock Bajo" prefHeight="34"
-                    onAction="#filtrarStockBajo"
-                    style="-fx-background-color:#FFF3E0; -fx-text-fill:#E67E22;
-                           -fx-border-color:#E67E22; -fx-border-radius:5;
-                           -fx-background-radius:5; -fx-font-size:12px;">
-                <cursor><Cursor fx:constant="HAND"/></cursor>
+            <Pane HBox.hgrow="ALWAYS" />
+            <TextField fx:id="txtBuscar" prefHeight="34" prefWidth="220" promptText="Buscar ingrediente..." style="-fx-background-color:#F5F3EF; -fx-border-color:#E5E1D8;                               -fx-border-radius:5; -fx-background-radius:5;" />
+            <Button onAction="#filtrarStockBajo" prefHeight="34" style="-fx-background-color: #C78A5E; -fx-border-color: #E67E22; -fx-border-radius: 5; -fx-background-radius: 5;" text="⚠ Stock Bajo" textFill="WHITE">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+                        <font>
+                           <Font name="System Bold" size="13.0" />
+                        </font>
             </Button>
-            <Button text="Ver todos" prefHeight="34"
-                    onAction="#quitarFiltro"
-                    style="-fx-background-color:white; -fx-border-color:#D0C2BB;
-                           -fx-border-radius:5; -fx-font-size:12px;">
-                <cursor><Cursor fx:constant="HAND"/></cursor>
+            <Button onAction="#quitarFiltro" prefHeight="34" style="-fx-background-color: trasparent; -fx-border-color: #4B3832; -fx-border-radius: 5;" text="Ver todos">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+                        <font>
+                           <Font name="Segoe UI Bold" size="13.0" />
+                        </font>
             </Button>
         </HBox>
 
         <TableView fx:id="tablaIngredientes" prefHeight="360" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="colNombreIng" text="INGREDIENTE" prefWidth="260"/>
-                <TableColumn fx:id="colStockIng"  text="STOCK (g)"   prefWidth="120"/>
-                <TableColumn fx:id="colCostoIng"  text="COSTO/g"     prefWidth="110"/>
-                <TableColumn fx:id="colValorIng"  text="VALOR ($)"   prefWidth="120"/>
-                <TableColumn fx:id="colEstadoIng" text="ESTADO"      prefWidth="140"/>
+                <TableColumn fx:id="colNombreIng" prefWidth="260" text="INGREDIENTE" />
+                <TableColumn fx:id="colStockIng" prefWidth="120" text="STOCK (g)" />
+                <TableColumn fx:id="colCostoIng" prefWidth="110" text="COSTO/g" />
+                <TableColumn fx:id="colValorIng" prefWidth="120" text="VALOR ($)" />
+                <TableColumn fx:id="colEstadoIng" prefWidth="140" text="ESTADO" />
             </columns>
         </TableView>
 
         <!-- ACCIONES FILA -->
-        <HBox spacing="10" alignment="CENTER_RIGHT">
-            <Button text="✏ Editar" prefHeight="34"
-                    onAction="#editarIngrediente"
-                    style="-fx-background-color:#3B2A25; -fx-text-fill:white;
-                           -fx-background-radius:6; -fx-font-size:13px;">
-                <cursor><Cursor fx:constant="HAND"/></cursor>
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <Button onAction="#editarIngrediente" prefHeight="34" style="-fx-background-color: #C78A5E; -fx-background-radius: 6;" text="✏ Editar" textFill="WHITE">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+                        <font>
+                           <Font name="Segoe UI Bold" size="13.0" />
+                        </font>
             </Button>
-            <Button text="✕ Eliminar" prefHeight="34"
-                    onAction="#eliminarIngrediente"
-                    style="-fx-background-color:#C0392B; -fx-text-fill:white;
-                           -fx-background-radius:6; -fx-font-size:13px;">
-                <cursor><Cursor fx:constant="HAND"/></cursor>
+            <Button onAction="#eliminarIngrediente" prefHeight="34" style="-fx-background-color: #C0392B; -fx-background-radius: 6;" text="✕ Eliminar" textFill="WHITE">
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+                        <font>
+                           <Font name="Segoe UI Bold" size="13.0" />
+                        </font>
             </Button>
         </HBox>
 
     </VBox>
 
     <!-- ══════════════════ HISTORIAL MOVIMIENTOS ══════════════════ -->
-    <VBox spacing="12"
-          style="-fx-background-color:white; -fx-border-color:#E5E1DC;
-                 -fx-border-radius:10; -fx-background-radius:10; -fx-padding:18;">
+    <VBox spacing="12" style="-fx-background-color:white; -fx-border-color:#E5E1DC;                  -fx-border-radius:10; -fx-background-radius:10; -fx-padding:18;">
 
         <HBox alignment="CENTER_LEFT">
             <Label text="Historial de Movimientos" textFill="#4B3832">
-                <font><Font name="Segoe UI Bold" size="20"/></font>
+                <font><Font name="Segoe UI Bold" size="20" /></font>
             </Label>
         </HBox>
 
         <TableView fx:id="tablaMovimientos" prefHeight="280" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn fx:id="colFechaMov"       text="FECHA"         prefWidth="120"/>
-                <TableColumn fx:id="colIngredienteMov"  text="INGREDIENTE"   prefWidth="200"/>
-                <TableColumn fx:id="colTipoMov"         text="TIPO"          prefWidth="130"/>
-                <TableColumn fx:id="colCantidadMov"     text="GRAMOS"        prefWidth="110"/>
-                <TableColumn fx:id="colReferencaMov"    text="REFERENCIA"    prefWidth="180"/>
-                <TableColumn fx:id="colMotivo"          text="DESCRIPCIÓN"   prefWidth="220"/>
+                <TableColumn fx:id="colFechaMov" prefWidth="120" text="FECHA" />
+                <TableColumn fx:id="colIngredienteMov" prefWidth="200" text="INGREDIENTE" />
+                <TableColumn fx:id="colTipoMov" prefWidth="130" text="TIPO" />
+                <TableColumn fx:id="colCantidadMov" prefWidth="110" text="GRAMOS" />
+                <TableColumn fx:id="colReferencaMov" prefWidth="180" text="REFERENCIA" />
+                <TableColumn fx:id="colMotivo" prefWidth="220" text="DESCRIPCIÓN" />
             </columns>
         </TableView>
 

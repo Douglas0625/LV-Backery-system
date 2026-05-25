@@ -484,6 +484,7 @@ public class VentasController {
             String header,
             List<T> items
     ) {
+        if (items.isEmpty()) return java.util.Optional.empty();
 
         Dialog<T> dialog = new Dialog<>();
 
@@ -501,7 +502,18 @@ public class VentasController {
                         FXCollections.observableArrayList(items)
                 );
 
-        listView.getSelectionModel().selectFirst();
+        listView.setPrefHeight(Math.min(items.size() * 36 + 20, 280));
+
+        // Seleccionar primero SOLO si hay items — fix IndexOutOfBoundsException
+        if (!listView.getItems().isEmpty()) {
+            listView.getSelectionModel().select(0);
+        }
+
+        Button okBtn = (Button) dialog.getDialogPane()
+                .lookupButton(ButtonType.OK);
+        okBtn.setDisable(listView.getSelectionModel().getSelectedItem() == null);
+        listView.getSelectionModel().selectedItemProperty().addListener(
+                (obs, o, n) -> okBtn.setDisable(n == null));
 
         dialog.getDialogPane().setContent(listView);
 
@@ -555,77 +567,80 @@ public class VentasController {
     public void registrarVenta() {
 
         if (detalleActual.isEmpty()) {
-
-            alerta("Sin productos",
-                    "Agrega productos.");
-
+            alerta("Sin productos", "Agrega productos.");
             return;
         }
 
         BigDecimal total =
                 detalleActual.stream()
                         .map(DetalleVenta::getSubtotal)
-                        .reduce(BigDecimal.ZERO,
-                                BigDecimal::add);
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        LocalDate fecha = dpFechaVenta.getValue();
+        String comprobante = txtNumeroComprobante.getText();
+        String tipo = cbTipoVenta.getValue();
 
         Venta venta = new Venta();
-
         venta.setCliente(cbCliente.getValue());
-
-        venta.setFechaVenta(dpFechaVenta.getValue());
-
-        venta.setTipoVenta(cbTipoVenta.getValue());
-
+        venta.setFechaVenta(fecha);
+        venta.setTipoVenta(tipo);
         venta.setMetodoPago(metodoPagoActual);
-
-        venta.setNumeroComprobante(
-                txtNumeroComprobante.getText());
-
+        venta.setNumeroComprobante(comprobante);
         venta.setTotalVenta(total);
-
-        venta.setDetalles(
-                new ArrayList<>(detalleActual));
+        venta.setDetalles(new ArrayList<>(detalleActual));
 
         if (pedidoSeleccionado != null) {
-            venta.setIdPedido(
-                    pedidoSeleccionado.getIdPedido());
+            venta.setIdPedido(pedidoSeleccionado.getIdPedido());
         }
 
         int id;
 
-        if ("PEDIDO".equals(cbTipoVenta.getValue())) {
+        if ("PEDIDO".equals(tipo)) {
 
             int estadoEntregado =
-                    ventaDAO.obtenerIdEstadoPorNombre(
-                            "Entregado");
+                    ventaDAO.obtenerIdEstadoPorNombre("Entregado");
 
-            id = ventaDAO.registrarVentaPedido(
-                    venta,
-                    estadoEntregado
-            );
+            id = ventaDAO.registrarVentaPedido(venta, estadoEntregado);
 
         } else {
 
             id = ventaDAO.registrarVentaDirectaVitrina(
-                    venta,
-                    descontarVitrina,
-                    pedidoDAO
-            );
+                    venta, descontarVitrina, pedidoDAO);
         }
 
         if (id > 0) {
 
-            info("Venta registrada",
-                    "Venta #" + id + " registrada.");
+            // Snapshot para la factura (antes de limpiar)
+            final int idFinal = id;
+            final List<DetalleVenta> detFinal = new ArrayList<>(detalleActual);
+            final Venta ventaFinal = venta;
+            ventaFinal.setIdVenta(idFinal);
 
             limpiarFormulario();
-
             cargarHistorial();
 
-        } else {
+            // Preguntar si abrir factura PDF
+            Alert dlg = new Alert(Alert.AlertType.CONFIRMATION);
+            dlg.setTitle("Venta #" + idFinal + " registrada");
+            dlg.setHeaderText("Total: $" + total.setScale(2, RoundingMode.HALF_UP));
+            dlg.setContentText("¿Deseas abrir la factura en PDF?");
+            dlg.getButtonTypes().setAll(
+                    new ButtonType("Abrir Factura", ButtonBar.ButtonData.YES),
+                    new ButtonType("No, gracias",   ButtonBar.ButtonData.NO)
+            );
+            dlg.showAndWait().ifPresent(btn -> {
+                if (btn.getButtonData() == ButtonBar.ButtonData.YES) {
+                    try {
+                        utils.FacturaGenerator.generarYAbrir(idFinal, ventaFinal, detFinal);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        alerta("Error al generar factura", ex.getMessage());
+                    }
+                }
+            });
 
-            alerta("Error",
-                    "No se pudo registrar.");
+        } else {
+            alerta("Error", "No se pudo registrar.");
         }
     }
 
@@ -670,60 +685,36 @@ public class VentasController {
         BigDecimal subtotal =
                 detalleActual.stream()
                         .map(DetalleVenta::getSubtotal)
-                        .reduce(BigDecimal.ZERO,
-                                BigDecimal::add);
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal iva =
-                subtotal.multiply(
-                        BigDecimal.valueOf(0.13));
+                subtotal.multiply(BigDecimal.valueOf(0.13));
 
         lblSubtotal.setText(
-                "$" + subtotal.setScale(
-                        2,
-                        RoundingMode.HALF_UP
-                ));
+                "$" + subtotal.setScale(2, RoundingMode.HALF_UP));
 
         lblIva.setText(
-                "$" + iva.setScale(
-                        2,
-                        RoundingMode.HALF_UP
-                ));
+                "$" + iva.setScale(2, RoundingMode.HALF_UP));
 
         lblTotalVenta.setText(
-                "$" + subtotal.add(iva)
-                        .setScale(
-                                2,
-                                RoundingMode.HALF_UP
-                        ));
+                "$" + subtotal.add(iva).setScale(2, RoundingMode.HALF_UP));
     }
 
     // ── ALERTAS ──────────────────────────────────────────────────
 
     private void alerta(String titulo, String msg) {
-
-        Alert alert =
-                new Alert(Alert.AlertType.ERROR);
-
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(titulo);
-
         alert.setHeaderText(null);
-
         alert.setContentText(msg);
-
         alert.showAndWait();
     }
 
     private void info(String titulo, String msg) {
-
-        Alert alert =
-                new Alert(Alert.AlertType.INFORMATION);
-
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
-
         alert.setHeaderText(null);
-
         alert.setContentText(msg);
-
         alert.showAndWait();
     }
 }
