@@ -63,8 +63,8 @@ public class MovimientoInventarioDAO {
                                        String referencia, BigDecimal deltaStock) {
         String sqlTipo = "SELECT id_tipo_movimiento FROM tipo_movimiento WHERE nombre_tipo = ?";
         String sqlMov  = "INSERT INTO movimiento_inventario " +
-                "(id_ingrediente, id_tipo_movimiento, fecha_movimiento, cantidad_gramos, descripcion, referencia) " +
-                "VALUES (?,?,CURRENT_DATE,?,?,?)";
+                         "(id_ingrediente, id_tipo_movimiento, fecha_movimiento, cantidad_gramos, descripcion, referencia) " +
+                         "VALUES (?,?,CURRENT_DATE,?,?,?)";
         String sqlStk  = "UPDATE ingrediente SET stock_actual_gramos = stock_actual_gramos + ? WHERE id_ingrediente = ?";
 
         try (Connection conn = DatabaseConnection.getConnection()) {

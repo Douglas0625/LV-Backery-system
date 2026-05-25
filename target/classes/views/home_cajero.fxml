@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="0" style="-fx-background-color: #F5F3EF;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomeCajeroController">
+    <padding><Insets bottom="20" /></padding>
+
+    <!-- BANNER -->
+    <HBox alignment="CENTER_LEFT" prefHeight="90" style="-fx-background-color: white; -fx-border-color: #E5E1DC; -fx-border-width: 0 0 1 0;">
+        <padding><Insets left="25" right="25" /></padding>
+        <children>
+            <VBox spacing="4">
+                <children>
+                    <Label fx:id="lblBienvenida" text="Panel de Control" textFill="#4B3832">
+                        <font><Font name="Segoe UI Bold" size="22" /></font>
+                    </Label>
+                    <Label text="Gestión rápida de pedidos y mostrador" textFill="#7A6F68">
+                        <font><Font name="Segoe UI" size="13" /></font>
+                    </Label>
+                </children>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <Button onAction="#irPedidos" style="-fx-background-color: #4B3832; -fx-background-radius: 8; -fx-padding: 8 18 8 18;" text="+ Nuevo Pedido" textFill="WHITE">
+                <font><Font name="Segoe UI Bold" size="13" /></font>
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+            <Button onAction="#irVentas" style="-fx-background-color: white; -fx-border-color: #4B3832; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 18 8 18;" text="💳 Registrar Venta" textFill="#4B3832">
+                <HBox.margin><Insets left="12" /></HBox.margin>
+                <font><Font name="Segoe UI Bold" size="13" /></font>
+                <cursor><Cursor fx:constant="HAND" /></cursor>
+            </Button>
+        </children>
+    </HBox>
+
+    <!-- CARDS -->
+    <HBox spacing="15">
+        <VBox.margin><Insets left="20" right="20" top="20" /></VBox.margin>
+        <children>
+            <VBox spacing="8" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-border-color: #E5E1DC; -fx-border-radius: 10;" HBox.hgrow="ALWAYS">
+                <children>
+                    <Label text="PEDIDOS HOY" textFill="#7A6F68">
+                        <font><Font name="Segoe UI Bold" size="11" /></font>
+                    </Label>
+                    <Label fx:id="lblPedidosHoy" text="0" textFill="#4B3832">
+                        <font><Font name="Segoe UI Bold" size="36" /></font>
+                    </Label>
+                </children>
+            </VBox>
+            <VBox spacing="8" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-border-color: #E5E1DC; -fx-border-radius: 10;" HBox.hgrow="ALWAYS">
+                <children>
+                    <Label text="VENTAS HOY" textFill="#7A6F68">
+                        <font><Font name="Segoe UI Bold" size="11" /></font>
+                    </Label>
+                    <Label fx:id="lblVentasHoy" text="\$0.00" textFill="#4B3832">
+                        <font><Font name="Segoe UI Bold" size="30" /></font>
+                    </Label>
+                </children>
+            </VBox>
+            <VBox spacing="8" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 20; -fx-border-color: #E5E1DC; -fx-border-radius: 10;" HBox.hgrow="ALWAYS">
+                <children>
+                    <Label text="PENDIENTES" textFill="#7A6F68">
+                        <font><Font name="Segoe UI Bold" size="11" /></font>
+                    </Label>
+                    <Label fx:id="lblPendientes" text="0" textFill="#D64545">
+                        <font><Font name="Segoe UI Bold" size="36" /></font>
+                    </Label>
+                </children>
+            </VBox>
+        </children>
+    </HBox>
+
+    <!-- TABLA PEDIDOS -->
+    <HBox spacing="15" VBox.vgrow="ALWAYS">
+        <VBox.margin><Insets bottom="10" left="20" right="20" top="20" /></VBox.margin>
+        <children>
+            <VBox spacing="12" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 18; -fx-border-color: #E5E1DC; -fx-border-radius: 10;" HBox.hgrow="ALWAYS">
+                <children>
+                    <HBox alignment="CENTER_LEFT">
+                        <children>
+                            <Label text="Últimos Pedidos" textFill="#4B3832">
+                                <font><Font name="Segoe UI Bold" size="18" /></font>
+                            </Label>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button onAction="#irPedidos" style="-fx-background-color: transparent;" text="Ver todo" textFill="#8B5E3C">
+                                <font><Font name="Segoe UI Bold" size="12" /></font>
+                                <cursor><Cursor fx:constant="HAND" /></cursor>
+                            </Button>
+                        </children>
+                    </HBox>
+                    <TableView fx:id="tablaUltimosPedidos" prefHeight="350" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colId" prefWidth="110" text="PEDIDO #" />
+                            <TableColumn fx:id="colCliente" prefWidth="200" text="CLIENTE" />
+                            <TableColumn fx:id="colEntrega" prefWidth="160" text="FECHA ENTREGA" />
+                            <TableColumn fx:id="colEstado" prefWidth="160" text="ESTADO" />
+                            <TableColumn fx:id="colTotal" prefWidth="110" text="TOTAL" />
+                        </columns>
+                    </TableView>
+                </children>
+            </VBox>
+
+            <!-- LOGO CARD -->
+            <VBox alignment="CENTER" minWidth="260" prefWidth="300" spacing="15" style="-fx-background-color: linear-gradient(to bottom, #4B3832, #6B4F4F); -fx-background-radius: 14; -fx-padding: 25;">
+                <children>
+                    <ImageView fitHeight="180" fitWidth="180" preserveRatio="true">
+                        <image><Image url="@../img/LogoLVBakery.jpeg" /></image>
+                    </ImageView>
+                    <Label text="LV Bakery" textFill="WHITE">
+                        <font><Font name="Segoe UI Bold" size="26" /></font>
+                    </Label>
+                    <Label alignment="CENTER" text="Sistema de Gestión de Panaderia" textAlignment="CENTER" textFill="#E5D3B3" wrapText="true">
+                        <font><Font name="Segoe UI Bold" size="14.0" /></font>
+                    </Label>
+                </children>
+            </VBox>
+
+        </children>
+    </HBox>
+
+</VBox>

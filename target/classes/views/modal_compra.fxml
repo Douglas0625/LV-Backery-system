@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="600" prefWidth="560" spacing="14"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.CompraModalController"
+      style="-fx-background-color:white; -fx-padding:25; -fx-background-radius:12;">
+
+    <Label text="Registrar Compra" textFill="#4B3832">
+        <font><Font name="Segoe UI Bold" size="22"/></font>
+    </Label>
+    <Separator/>
+
+    <!-- PROVEEDOR -->
+    <VBox spacing="5">
+        <Label text="Proveedor (opcional)">
+            <font><Font name="Segoe UI Bold" size="12"/></font>
+        </Label>
+        <ComboBox fx:id="cbProveedor" prefHeight="38" maxWidth="Infinity"
+                  promptText="Seleccionar proveedor"/>
+    </VBox>
+
+    <!-- AGREGAR INGREDIENTE A LA COMPRA -->
+    <VBox spacing="8"
+          style="-fx-background-color:#F9F7F5; -fx-border-color:#E5E1DC;
+                 -fx-border-radius:8; -fx-background-radius:8; -fx-padding:14;">
+
+        <Label text="Agregar Ingrediente" textFill="#4B3832">
+            <font><Font name="Segoe UI Bold" size="13"/></font>
+        </Label>
+
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <VBox spacing="4" HBox.hgrow="ALWAYS">
+                <Label text="Ingrediente" style="-fx-font-size:11px; -fx-font-weight:bold;"/>
+                <ComboBox fx:id="cbIngrediente" prefHeight="36" maxWidth="Infinity"
+                          promptText="Seleccionar..."/>
+            </VBox>
+            <VBox spacing="4">
+                <Label text="Gramos" style="-fx-font-size:11px; -fx-font-weight:bold;"/>
+                <TextField fx:id="txtGramos" prefWidth="100" prefHeight="36" promptText="0"
+                           style="-fx-background-color:#F0EFEB; -fx-border-color:#E5E1D8; -fx-border-radius:4; -fx-background-radius:4;"/>
+            </VBox>
+            <VBox spacing="4">
+                <Label text="Costo/gramo" style="-fx-font-size:11px; -fx-font-weight:bold;"/>
+                <TextField fx:id="txtCostoGramo" prefWidth="100" prefHeight="36" promptText="0.0000"
+                           style="-fx-background-color:#F0EFEB; -fx-border-color:#E5E1D8; -fx-border-radius:4; -fx-background-radius:4;"/>
+            </VBox>
+            <VBox spacing="4">
+                <Label text=" " style="-fx-font-size:11px;"/>
+                <Button text="+ Agregar" prefHeight="36" onAction="#agregarLineaCompra"
+                        style="-fx-background-color:#4B3832; -fx-text-fill:white;
+                               -fx-background-radius:6; -fx-font-size:12px;">
+                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                </Button>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="8" alignment="CENTER_LEFT">
+            <Label text="Subtotal:" textFill="#666" style="-fx-font-size:12px;"/>
+            <Label fx:id="lblSubtotalLinea" text="\$0.00" textFill="#4B3832">
+                <font><Font name="Segoe UI Bold" size="12"/></font>
+            </Label>
+        </HBox>
+    </VBox>
+
+    <!-- TABLA DETALLE -->
+    <TableView fx:id="tablaDetalle" prefHeight="200" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colIngredienteCompra" text="INGREDIENTE" prefWidth="200"/>
+            <TableColumn fx:id="colGramosCompra"      text="GRAMOS"      prefWidth="100"/>
+            <TableColumn fx:id="colCostoCompra"       text="COSTO/GR"    prefWidth="100"/>
+            <TableColumn fx:id="colSubtotalCompra"    text="SUBTOTAL"    prefWidth="110"/>
+        </columns>
+    </TableView>
+
+    <!-- TOTAL -->
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <Label text="TOTAL COMPRA:" style="-fx-font-size:15px; -fx-font-weight:bold;"/>
+        <Label fx:id="lblTotalCompra" text="\$0.00" textFill="#9A5B39">
+            <font><Font name="Segoe UI Bold" size="18"/></font>
+        </Label>
+    </HBox>
+
+    <Separator/>
+
+    <!-- BOTONES -->
+    <HBox alignment="CENTER_RIGHT" spacing="12">
+        <Button prefHeight="42" prefWidth="120" text="Cancelar" onAction="#cancelar"
+                style="-fx-background-color:white; -fx-border-color:#4B3832;
+                       -fx-border-radius:8; -fx-background-radius:8; -fx-font-size:13px;">
+            <cursor><Cursor fx:constant="HAND"/></cursor>
+        </Button>
+        <Button prefHeight="42" prefWidth="160" text="Guardar Compra" onAction="#guardarCompra"
+                style="-fx-background-color:#4B3832; -fx-text-fill:white;
+                       -fx-background-radius:8; -fx-font-size:13px; -fx-font-weight:bold;">
+            <cursor><Cursor fx:constant="HAND"/></cursor>
+        </Button>
+    </HBox>
+
+</VBox>

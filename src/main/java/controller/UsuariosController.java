@@ -52,9 +52,9 @@ public class UsuariosController {
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colUsername.setCellValueFactory(new PropertyValueFactory<>("usuario"));
         colRol.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(
-                        data.getValue().getRol() != null ? data.getValue().getRol().getNombreRol() : ""
-                )
+            new javafx.beans.property.SimpleStringProperty(
+                data.getValue().getRol() != null ? data.getValue().getRol().getNombreRol() : ""
+            )
         );
         tablaUsuarios.setItems(datos);
     }
@@ -157,8 +157,8 @@ public class UsuariosController {
         if (txtPasswordEditar != null) txtPasswordEditar.setText(u.getPassword());
         if (cbRolEditar != null && u.getRol() != null) {
             cbRolEditar.getItems().stream()
-                    .filter(r -> r.getIdRol() == u.getRol().getIdRol())
-                    .findFirst().ifPresent(cbRolEditar::setValue);
+                .filter(r -> r.getIdRol() == u.getRol().getIdRol())
+                .findFirst().ifPresent(cbRolEditar::setValue);
         }
     }
 

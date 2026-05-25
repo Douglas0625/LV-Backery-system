@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="430" prefWidth="420" spacing="14"
+      xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.MovimientoModalController"
+      style="-fx-background-color:white; -fx-padding:25; -fx-background-radius:12;">
+
+    <Label text="Registrar Movimiento" textFill="#4B3832">
+        <font><Font name="Segoe UI Bold" size="22"/></font>
+    </Label>
+    <Separator/>
+
+    <!-- INGREDIENTE -->
+    <VBox spacing="5">
+        <Label text="Ingrediente">
+            <font><Font name="Segoe UI Bold" size="12"/></font>
+        </Label>
+        <ComboBox fx:id="cbIngrediente" prefHeight="38" maxWidth="Infinity"
+                  promptText="Seleccionar ingrediente"/>
+    </VBox>
+
+    <!-- TIPO MOVIMIENTO -->
+    <VBox spacing="5">
+        <Label text="Tipo de Movimiento">
+            <font><Font name="Segoe UI Bold" size="12"/></font>
+        </Label>
+        <ComboBox fx:id="cbTipoMovimiento" prefHeight="38" maxWidth="Infinity"
+                  promptText="Seleccionar tipo"/>
+    </VBox>
+
+    <!-- CANTIDAD -->
+    <VBox spacing="5">
+        <Label text="Cantidad (gramos)">
+            <font><Font name="Segoe UI Bold" size="12"/></font>
+        </Label>
+        <TextField fx:id="txtCantidad" prefHeight="38" maxWidth="Infinity"
+                   promptText="0.00"
+                   style="-fx-background-color:#F0EFEB; -fx-border-color:#E5E1D8; -fx-border-radius:4; -fx-background-radius:4;"/>
+    </VBox>
+
+    <!-- INFO STOCK -->
+    <HBox spacing="16"
+          style="-fx-background-color:#F9F7F5; -fx-border-color:#E5E1DC;
+                 -fx-border-radius:8; -fx-background-radius:8; -fx-padding:12;">
+        <VBox spacing="3">
+            <Label text="Stock actual" textFill="#666" style="-fx-font-size:11px;"/>
+            <Label fx:id="lblStockActual" text="—" textFill="#4B3832">
+                <font><Font name="Segoe UI Bold" size="14"/></font>
+            </Label>
+        </VBox>
+        <VBox spacing="3">
+            <Label text="Stock resultante" textFill="#666" style="-fx-font-size:11px;"/>
+            <Label fx:id="lblStockResultante" text="—" textFill="#9A5B39">
+                <font><Font name="Segoe UI Bold" size="14"/></font>
+            </Label>
+        </VBox>
+    </HBox>
+
+    <!-- DESCRIPCION -->
+    <VBox spacing="5">
+        <Label text="Descripción / Motivo">
+            <font><Font name="Segoe UI Bold" size="12"/></font>
+        </Label>
+        <TextArea fx:id="txtDescripcion" prefHeight="80" wrapText="true"
+                  promptText="Describa el motivo del movimiento..."
+                  style="-fx-background-color:#F0EFEB; -fx-border-color:#E5E1D8;"/>
+    </VBox>
+
+    <Region VBox.vgrow="ALWAYS"/>
+
+    <!-- BOTONES -->
+    <HBox alignment="CENTER_RIGHT" spacing="12">
+        <Button prefHeight="42" prefWidth="120" text="Cancelar" onAction="#cancelar"
+                style="-fx-background-color:white; -fx-border-color:#4B3832;
+                       -fx-border-radius:8; -fx-background-radius:8; -fx-font-size:13px;">
+            <cursor><Cursor fx:constant="HAND"/></cursor>
+        </Button>
+        <Button prefHeight="42" prefWidth="160" text="Registrar" onAction="#registrar"
+                style="-fx-background-color:#4B3832; -fx-text-fill:white;
+                       -fx-background-radius:8; -fx-font-size:13px; -fx-font-weight:bold;">
+            <cursor><Cursor fx:constant="HAND"/></cursor>
+        </Button>
+    </HBox>
+
+</VBox>

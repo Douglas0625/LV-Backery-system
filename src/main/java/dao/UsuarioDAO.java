@@ -90,6 +90,22 @@ public class UsuarioDAO {
         } catch (Exception e) { e.printStackTrace(); return false; }
     }
 
+    // ============================================================
+//  AGREGAR este metodo dentro de la clase UsuarioDAO existente
+//  (antes del último metodo al final del archivo)
+// ============================================================
+
+    /** Cuenta el total de usuarios registrados en el sistema. */
+    public long contarTodos() {
+        String sql = "SELECT COUNT(*) FROM usuario";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getLong(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
     public boolean eliminar(int idUsuario) {
         String sql = "DELETE FROM usuario WHERE id_usuario = ?";
         try (Connection conn = DatabaseConnection.getConnection();

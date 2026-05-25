@@ -13,7 +13,7 @@ public class ProductoDAO {
     public List<Producto> listarTodos() {
         List<Producto> lista = new ArrayList<>();
         String sql = "SELECT id_producto, nombre_producto, descripcion, precio_venta, " +
-                "costo_estimado_unitario, unidades_por_presentacion FROM producto ORDER BY nombre_producto";
+                     "costo_estimado_unitario, unidades_por_presentacion FROM producto ORDER BY nombre_producto";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -26,7 +26,7 @@ public class ProductoDAO {
 
     public Producto buscarPorId(int id) {
         String sql = "SELECT id_producto, nombre_producto, descripcion, precio_venta, " +
-                "costo_estimado_unitario, unidades_por_presentacion FROM producto WHERE id_producto = ?";
+                     "costo_estimado_unitario, unidades_por_presentacion FROM producto WHERE id_producto = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -38,7 +38,7 @@ public class ProductoDAO {
 
     public boolean insertar(Producto p) {
         String sql = "INSERT INTO producto (nombre_producto, descripcion, precio_venta, " +
-                "costo_estimado_unitario, unidades_por_presentacion) VALUES (?,?,?,?,?)";
+                     "costo_estimado_unitario, unidades_por_presentacion) VALUES (?,?,?,?,?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, p.getNombreProducto());
@@ -52,7 +52,7 @@ public class ProductoDAO {
 
     public boolean actualizar(Producto p) {
         String sql = "UPDATE producto SET nombre_producto=?, descripcion=?, precio_venta=?, " +
-                "costo_estimado_unitario=?, unidades_por_presentacion=? WHERE id_producto=?";
+                     "costo_estimado_unitario=?, unidades_por_presentacion=? WHERE id_producto=?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, p.getNombreProducto());
@@ -72,6 +72,22 @@ public class ProductoDAO {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
         } catch (Exception e) { e.printStackTrace(); return false; }
+    }
+
+    // ============================================================
+//  AGREGAR este metodo dentro de la clase ProductoDAO existente
+//  (antes del metodo privado mapear() al final del archivo)
+// ============================================================
+
+    /** Cuenta el total de productos registrados en el sistema. */
+    public long contarTodos() {
+        String sql = "SELECT COUNT(*) FROM producto";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) return rs.getLong(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
     }
 
     private Producto mapear(ResultSet rs) throws SQLException {

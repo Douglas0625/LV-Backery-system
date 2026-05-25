@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <title>Factura</title>
+
+    <style type="text/css">
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            color: #2c2c2c;
+            padding: 40px;
+            background: #ffffff;
+        }
+
+        /* CABECERA */
+
+        .header-table {
+            width: 100%;
+            border-bottom: 2px solid #4B3832;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+        }
+
+        .empresa-nombre {
+            font-size: 26px;
+            font-weight: bold;
+            color: #4B3832;
+        }
+
+        .empresa-slogan {
+            font-size: 10px;
+            color: #999999;
+            margin-top: 3px;
+        }
+
+        .empresa-contacto {
+            font-size: 9px;
+            color: #BBBBBB;
+            margin-top: 3px;
+        }
+
+        .factura-titulo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4B3832;
+            text-align: right;
+        }
+
+        .factura-numero {
+            font-size: 14px;
+            font-weight: bold;
+            color: #4B3832;
+            text-align: right;
+        }
+
+        .factura-tipo {
+            font-size: 9px;
+            color: #999999;
+            text-align: right;
+            margin-top: 2px;
+        }
+
+        /* DATOS */
+
+        .datos-table {
+            width: 100%;
+            margin-bottom: 18px;
+        }
+
+        .label {
+            font-size: 8px;
+            color: #AAAAAA;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .valor {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .valor-sm {
+            font-size: 10px;
+            color: #666666;
+            margin-bottom: 3px;
+        }
+
+        /* PRODUCTOS */
+
+        table.productos {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 18px;
+        }
+
+        table.productos thead tr {
+            background-color: #4B3832;
+        }
+
+        table.productos thead th {
+            color: #FFFFFF;
+            padding: 7px 9px;
+            font-size: 10px;
+            font-weight: bold;
+            text-align: left;
+        }
+
+        table.productos thead th.right {
+            text-align: right;
+        }
+
+        table.productos thead th.center {
+            text-align: center;
+        }
+
+        table.productos tbody tr.par {
+            background-color: #F9F5F2;
+        }
+
+        table.productos tbody td {
+            padding: 6px 9px;
+            font-size: 11px;
+            border-bottom: 1px solid #E8DDD8;
+        }
+
+        table.productos tbody td.right {
+            text-align: right;
+        }
+
+        table.productos tbody td.center {
+            text-align: center;
+        }
+
+        /* TOTALES */
+
+        table.totales {
+            width: 45%;
+            margin-left: 55%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }
+
+        table.totales td {
+            padding: 4px 8px;
+            font-size: 11px;
+        }
+
+        table.totales td.right {
+            text-align: right;
+        }
+
+        table.totales tr.total-row td {
+            font-size: 13px;
+            font-weight: bold;
+            color: #4B3832;
+            border-top: 2px solid #4B3832;
+            padding-top: 7px;
+        }
+
+        /* PIE */
+
+        .pie {
+            border-top: 1px solid #DDDDDD;
+            padding-top: 10px;
+            text-align: center;
+            font-size: 10px;
+            color: #BBBBBB;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- CABECERA -->
+
+<table class="header-table" cellpadding="0" cellspacing="0">
+
+    <tr>
+
+        <td style="width:65%; vertical-align:middle;">
+
+            <div class="empresa-nombre">
+                {{empresa_nombre}}
+            </div>
+
+            <div class="empresa-slogan">
+                {{empresa_slogan}}
+            </div>
+
+            <div class="empresa-contacto">
+                {{empresa_telefono}} | {{empresa_email}}
+            </div>
+
+        </td>
+
+        <td style="vertical-align:middle;">
+
+            <div class="factura-titulo">
+                FACTURA
+            </div>
+
+            <div class="factura-numero">
+                #{{id_venta}}
+            </div>
+
+            <div class="factura-tipo">
+                {{tipo_venta}}
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+<!-- DATOS -->
+
+<table class="datos-table" cellpadding="0" cellspacing="0">
+
+    <tr>
+
+        <td style="width:55%; vertical-align:top;">
+
+            <div class="label">
+                Cliente
+            </div>
+
+            <div class="valor">
+                {{cliente_nombre}}
+            </div>
+
+            <div class="label">
+                NIT
+            </div>
+
+            <div class="valor-sm">
+                Consumidor Final
+            </div>
+
+        </td>
+
+        <td style="vertical-align:top; text-align:right;">
+
+            <div class="label">
+                Fecha
+            </div>
+
+            <div class="valor">
+                {{fecha}}
+            </div>
+
+            <div class="valor-sm">
+                Metodo de pago: {{metodo_pago}}
+            </div>
+
+            <div class="valor-sm">
+                Comprobante: {{comprobante}}
+            </div>
+
+            <div class="valor-sm">
+                {{id_pedido}}
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+<!-- PRODUCTOS -->
+
+<table class="productos" cellpadding="0" cellspacing="0">
+
+    <thead>
+
+    <tr>
+
+        <th class="center" style="width:30px;">
+            #
+        </th>
+
+        <th>
+            Producto
+        </th>
+
+        <th class="center" style="width:55px;">
+            Cant.
+        </th>
+
+        <th class="right" style="width:85px;">
+            Precio Unit.
+        </th>
+
+        <th class="right" style="width:85px;">
+            Subtotal
+        </th>
+
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+    {{#productos}}
+
+    <tr class="{{clase_fila}}">
+
+        <td class="center">
+            {{numero}}
+        </td>
+
+        <td>
+            {{producto}}
+        </td>
+
+        <td class="center">
+            {{cantidad}}
+        </td>
+
+        <td class="right">
+            ${{precio_unitario}}
+        </td>
+
+        <td class="right">
+            ${{subtotal_item}}
+        </td>
+
+    </tr>
+
+    {{/productos}}
+
+    </tbody>
+
+</table>
+
+<!-- TOTALES -->
+
+<table class="totales" cellpadding="0" cellspacing="0">
+
+    <tr>
+        <td>Subtotal</td>
+        <td class="right">${{subtotal}}</td>
+    </tr>
+
+    <tr>
+        <td>IVA (13%)</td>
+        <td class="right">${{iva}}</td>
+    </tr>
+
+    <tr class="total-row">
+        <td>TOTAL</td>
+        <td class="right">${{total}}</td>
+    </tr>
+
+</table>
+
+<!-- PIE -->
+
+<div class="pie">
+    Gracias por su compra! &#8212; {{empresa_nombre}} &#8212; {{empresa_slogan}}
+</div>
+
+</body>
+
+</html>

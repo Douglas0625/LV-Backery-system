@@ -45,4 +45,10 @@ public class Pedido {
     // Helpers para la tabla
     public String getNombreCliente() { return cliente != null ? cliente.getNombre() : ""; }
     public String getNombreEstado()  { return estadoPedido != null ? estadoPedido.getNombreEstado() : ""; }
+    @Override
+    public String toString() {
+        return "Pedido #" + idPedido +
+                " - " + cliente.getNombre() +
+                " - " + fechaEntrega;
+    }
 }

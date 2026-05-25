@@ -1,195 +1,720 @@
 package controller;
 
 import dao.ClienteDAO;
+import dao.PedidoDAO;
 import dao.ProductoDAO;
 import dao.RecetaDAO;
 import dao.VentaDAO;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class VentasController {
 
-    // Panel izquierdo: historial
+    // ── HEADER ────────────────────────────────────────────────────
+    @FXML private ComboBox<String> cbTipoVenta;
+
+    // ── PANEL IZQUIERDO ───────────────────────────────────────────
+    @FXML private ComboBox<Cliente> cbCliente;
+    @FXML private TextField txtNuevoCliente;
+    @FXML private DatePicker dpFechaVenta;
+
+    // Metodo pago
+    @FXML private Button btnEfectivo;
+    @FXML private Button btnTransferencia;
+    @FXML private Button btnTarjeta;
+    @FXML private Button btnOtro;
+    @FXML private Label lblMetodoPagoSeleccionado;
+
+    // Comprobante
+    @FXML private ComboBox<String> cbTipoComprobante;
+    @FXML private TextField txtNumeroComprobante;
+
+    // Historial
     @FXML private ComboBox<String> cbFiltroTipo;
 
-    // Panel central: formulario nueva venta
-    @FXML private ComboBox<String>   cbTipoVenta;
-    @FXML private ComboBox<Cliente>  cbCliente;
-    @FXML private ComboBox<String>   cbMetodoPago;
-    @FXML private ComboBox<String>   cbTipoComprobante;
-    @FXML private TextField          txtNumeroComprobante;
-    @FXML private Label              lblTotalVenta;
-
-    // Tabla detalle venta (formulario)
-    @FXML private TableView<DetalleVenta>               tablaDetalleVenta;
-    @FXML private TableColumn<DetalleVenta, String>     colProductoVenta;
-    @FXML private TableColumn<DetalleVenta, Integer>    colCantidadVenta;
-    @FXML private TableColumn<DetalleVenta, BigDecimal> colPrecioVenta;
-    @FXML private TableColumn<DetalleVenta, BigDecimal> colSubtotalVenta;
-
-    // Tabla historial ventas
-    @FXML private TableView<Venta>               tablaVentas;
-    @FXML private TableColumn<Venta, Integer>    colIdVenta;
-    @FXML private TableColumn<Venta, String>     colClienteVenta;
-    @FXML private TableColumn<Venta, String>     colFechaVenta;
-    @FXML private TableColumn<Venta, String>     colTipoVenta2;
+    @FXML private TableView<Venta> tablaVentas;
+    @FXML private TableColumn<Venta, Integer> colIdVenta;
+    @FXML private TableColumn<Venta, String> colClienteVenta;
+    @FXML private TableColumn<Venta, String> colFechaVenta;
+    @FXML private TableColumn<Venta, String> colTipoVenta2;
     @FXML private TableColumn<Venta, BigDecimal> colTotalVenta2;
 
-    private final VentaDAO    ventaDAO    = new VentaDAO();
-    private final ClienteDAO  clienteDAO  = new ClienteDAO();
-    private final ProductoDAO productoDAO = new ProductoDAO();
-    private final RecetaDAO   recetaDAO   = new RecetaDAO();
+    // ── DETALLE ───────────────────────────────────────────────────
+    @FXML private TableView<DetalleVenta> tablaDetalleVenta;
+    @FXML private TableColumn<DetalleVenta, String> colProductoVenta;
+    @FXML private TableColumn<DetalleVenta, Integer> colCantidadVenta;
+    @FXML private TableColumn<DetalleVenta, BigDecimal> colPrecioVenta;
+    @FXML private TableColumn<DetalleVenta, BigDecimal> colSubtotalVenta;
+    @FXML private TableColumn<DetalleVenta, Void> colAccionVenta;
 
-    private final ObservableList<DetalleVenta> detalleActual = FXCollections.observableArrayList();
-    private final ObservableList<Venta>        historial     = FXCollections.observableArrayList();
+    // Totales
+    @FXML private Label lblSubtotal;
+    @FXML private Label lblIva;
+    @FXML private Label lblTotalVenta;
+
+    // ── DAOS ──────────────────────────────────────────────────────
+    private final VentaDAO ventaDAO = new VentaDAO();
+    private final ClienteDAO clienteDAO = new ClienteDAO();
+    private final ProductoDAO productoDAO = new ProductoDAO();
+    private final RecetaDAO recetaDAO = new RecetaDAO();
+    private final PedidoDAO pedidoDAO = new PedidoDAO();
+
+    // ── ESTADO ────────────────────────────────────────────────────
+    private final ObservableList<DetalleVenta> detalleActual =
+            FXCollections.observableArrayList();
+
+    private final ObservableList<Venta> historial =
+            FXCollections.observableArrayList();
+
+    private String metodoPagoActual = "Efectivo";
+
+    private Pedido pedidoSeleccionado = null;
+
+    private final Map<Integer, Integer> descontarVitrina =
+            new LinkedHashMap<>();
+
+    private static final String ESTILO_METODO_ACTIVO =
+            "-fx-background-color: #4B3832; " +
+                    "-fx-text-fill: white; " +
+                    "-fx-background-radius: 10; " +
+                    "-fx-font-weight: bold;";
+
+    private static final String ESTILO_METODO_INACTIVO =
+            "-fx-background-color: white; " +
+                    "-fx-border-color: #4B3832; " +
+                    "-fx-border-radius: 10; " +
+                    "-fx-background-radius: 10; " +
+                    "-fx-font-weight: bold;";
+
+    // ─────────────────────────────────────────────────────────────
 
     @FXML
     public void initialize() {
+
         configurarTablaDetalle();
         configurarTablaHistorial();
+
         cargarCombos();
         cargarHistorial();
-        if (lblTotalVenta != null) lblTotalVenta.setText("$0.00");
+
+        dpFechaVenta.setValue(LocalDate.now());
+
+        actualizarEstiloMetodoPago(btnEfectivo);
+
+        // FILTRO HISTORIAL
+        cbFiltroTipo.valueProperty().addListener((obs, old, val) -> {
+            cargarHistorial();
+        });
+
+        // CLICK HISTORIAL
+        tablaVentas.getSelectionModel().selectedItemProperty().addListener(
+                (obs, old, venta) -> {
+                    if (venta != null) {
+                        mostrarDetalleVenta(venta);
+                    }
+                });
+
+        // CAMBIO TIPO VENTA
+        cbTipoVenta.valueProperty().addListener((obs, old, tipo) -> {
+
+            if (tipo == null) return;
+
+            detalleActual.clear();
+            descontarVitrina.clear();
+            pedidoSeleccionado = null;
+
+            adaptarUIParaTipo(tipo);
+
+            if ("PEDIDO".equals(tipo)) {
+                abrirSelectorPedidoNormal();
+            }
+
+            if ("DIRECTA".equals(tipo)) {
+                abrirSelectorVitrina();
+            }
+
+            actualizarTotales();
+        });
+
+        actualizarTotales();
     }
 
+    // ── CONFIGURAR TABLAS ────────────────────────────────────────
+
     private void configurarTablaDetalle() {
-        if (tablaDetalleVenta == null) return;
-        colProductoVenta.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNombreProducto()));
-        colCantidadVenta.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
-        colPrecioVenta.setCellValueFactory(new PropertyValueFactory<>("precioUnitario"));
-        colSubtotalVenta.setCellValueFactory(new PropertyValueFactory<>("subtotal"));
+
+        colProductoVenta.setCellValueFactory(d ->
+                new SimpleStringProperty(
+                        d.getValue().getNombreProducto()
+                ));
+
+        colCantidadVenta.setCellValueFactory(
+                new PropertyValueFactory<>("cantidad"));
+
+        colPrecioVenta.setCellValueFactory(
+                new PropertyValueFactory<>("precioUnitario"));
+
+        colSubtotalVenta.setCellValueFactory(
+                new PropertyValueFactory<>("subtotal"));
+
+        colAccionVenta.setCellFactory(col -> new TableCell<>() {
+
+            private final Button btnEliminar =
+                    new Button("✕ Quitar");
+
+            {
+                btnEliminar.setStyle(
+                        "-fx-background-color: #C0392B;" +
+                                "-fx-text-fill: white;" +
+                                "-fx-background-radius: 6;"
+                );
+
+                btnEliminar.setOnAction(e -> {
+
+                    DetalleVenta item =
+                            getTableView()
+                                    .getItems()
+                                    .get(getIndex());
+
+                    detalleActual.remove(item);
+
+                    actualizarTotales();
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+
+                setGraphic(empty ? null : btnEliminar);
+            }
+        });
+
         tablaDetalleVenta.setItems(detalleActual);
     }
 
     private void configurarTablaHistorial() {
-        if (tablaVentas == null) return;
-        if (colIdVenta     != null) colIdVenta.setCellValueFactory(new PropertyValueFactory<>("idVenta"));
-        if (colClienteVenta!= null) colClienteVenta.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getNombreCliente()));
-        if (colFechaVenta  != null) colFechaVenta.setCellValueFactory(d -> new SimpleStringProperty(
-                d.getValue().getFechaVenta() != null ? d.getValue().getFechaVenta().toString() : ""));
-        if (colTipoVenta2  != null) colTipoVenta2.setCellValueFactory(new PropertyValueFactory<>("tipoVenta"));
-        if (colTotalVenta2 != null) colTotalVenta2.setCellValueFactory(new PropertyValueFactory<>("totalVenta"));
+
+        colIdVenta.setCellValueFactory(
+                new PropertyValueFactory<>("idVenta"));
+
+        colClienteVenta.setCellValueFactory(d ->
+                new SimpleStringProperty(
+                        d.getValue().getNombreCliente()
+                ));
+
+        colFechaVenta.setCellValueFactory(d ->
+                new SimpleStringProperty(
+                        d.getValue().getFechaVenta().toString()
+                ));
+
+        colTipoVenta2.setCellValueFactory(
+                new PropertyValueFactory<>("tipoVenta"));
+
+        colTotalVenta2.setCellValueFactory(
+                new PropertyValueFactory<>("totalVenta"));
+
         tablaVentas.setItems(historial);
     }
 
+    // ── CARGAR DATOS ─────────────────────────────────────────────
+
     private void cargarCombos() {
-        if (cbTipoVenta != null)
-            cbTipoVenta.setItems(FXCollections.observableArrayList("DIRECTA", "PEDIDO"));
-        if (cbCliente != null)
-            cbCliente.setItems(FXCollections.observableArrayList(clienteDAO.listarTodos()));
-        if (cbMetodoPago != null)
-            cbMetodoPago.setItems(FXCollections.observableArrayList("Efectivo", "Tarjeta", "Transferencia", "Otro"));
-        if (cbTipoComprobante != null)
-            cbTipoComprobante.setItems(FXCollections.observableArrayList("Factura", "Ticket", "Ninguno"));
+
+        cbTipoVenta.setItems(FXCollections.observableArrayList(
+                "DIRECTA",
+                "PEDIDO"
+        ));
+
+        cbCliente.setItems(
+                FXCollections.observableArrayList(
+                        clienteDAO.listarTodos()
+                ));
+
+        cbTipoComprobante.setItems(
+                FXCollections.observableArrayList(
+                        "Factura",
+                        "Ticket",
+                        "Ninguno"
+                ));
+
+        cbFiltroTipo.setItems(
+                FXCollections.observableArrayList(
+                        "Todas",
+                        "DIRECTA",
+                        "PEDIDO"
+                ));
     }
 
     private void cargarHistorial() {
-        historial.setAll(ventaDAO.listarTodas());
+
+        String filtro = cbFiltroTipo.getValue();
+
+        List<Venta> ventas =
+                (filtro == null || filtro.equals("Todas"))
+                        ? ventaDAO.listarTodas()
+                        : ventaDAO.listarPorTipo(filtro);
+
+        historial.setAll(ventas);
     }
+
+    // ── MOSTRAR DETALLE ──────────────────────────────────────────
+
+    private void mostrarDetalleVenta(Venta venta) {
+
+        List<DetalleVenta> detalles =
+                ventaDAO.listarDetalles(venta.getIdVenta());
+
+        detalleActual.setAll(detalles);
+
+        actualizarTotales();
+    }
+
+    // ── ADAPTAR UI ───────────────────────────────────────────────
+
+    private void adaptarUIParaTipo(String tipo) {
+
+        if ("PEDIDO".equals(tipo)) {
+            cbCliente.setDisable(true);
+        } else {
+            cbCliente.setDisable(false);
+        }
+    }
+
+    // ── MeTODO PAGO ──────────────────────────────────────────────
+
+    @FXML
+    public void seleccionarMetodoPago(ActionEvent e) {
+
+        Button boton = (Button) e.getSource();
+
+        metodoPagoActual = boton.getText();
+
+        actualizarEstiloMetodoPago(boton);
+
+        lblMetodoPagoSeleccionado.setText(
+                "Seleccionado: " + metodoPagoActual
+        );
+    }
+
+    private void actualizarEstiloMetodoPago(Button activo) {
+
+        List<Button> botones = List.of(
+                btnEfectivo,
+                btnTransferencia,
+                btnTarjeta,
+                btnOtro
+        );
+
+        for (Button b : botones) {
+
+            b.setStyle(
+                    b == activo
+                            ? ESTILO_METODO_ACTIVO
+                            : ESTILO_METODO_INACTIVO
+            );
+        }
+    }
+
+    // ── AGREGAR PRODUCTO ─────────────────────────────────────────
 
     @FXML
     public void agregarProductoVenta() {
-        Dialog<DetalleVenta> dialog = new Dialog<>();
-        dialog.setTitle("Agregar Producto");
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
-        ComboBox<Producto> cbProd = new ComboBox<>(FXCollections.observableArrayList(productoDAO.listarTodos()));
-        cbProd.setPromptText("Seleccionar producto");
-        TextField txtCant = new TextField("1"); txtCant.setPromptText("Cantidad");
+        String tipo = cbTipoVenta.getValue();
 
-        javafx.scene.layout.VBox box = new javafx.scene.layout.VBox(10,
-                new Label("Producto:"), cbProd, new Label("Cantidad:"), txtCant);
-        box.setPadding(new javafx.geometry.Insets(10));
-        dialog.getDialogPane().setContent(box);
-
-        dialog.setResultConverter(btn -> {
-            if (btn == ButtonType.OK && cbProd.getValue() != null) {
-                Producto p = cbProd.getValue();
-                int cant;
-                try { cant = Integer.parseInt(txtCant.getText().trim()); } catch (Exception e) { cant = 1; }
-                DetalleVenta dv = new DetalleVenta();
-                dv.setProducto(p);
-                dv.setCantidad(cant);
-                dv.setPrecioUnitario(p.getPrecioVenta());
-                dv.calcularSubtotal();
-                return dv;
-            }
-            return null;
-        });
-
-        dialog.showAndWait().ifPresent(dv -> {
-            detalleActual.add(dv);
-            recalcularTotal();
-        });
-    }
-
-    @FXML
-    public void registrarVenta() {
-        String tipo  = cbTipoVenta  != null ? cbTipoVenta.getValue()  : null;
-        String metodo = cbMetodoPago != null ? cbMetodoPago.getValue() : null;
-
-        if (tipo == null || metodo == null || detalleActual.isEmpty()) {
-            alerta("Incompleto", "Selecciona tipo de venta, método de pago y agrega al menos un producto.");
+        if (tipo == null) {
+            alerta("Tipo de venta",
+                    "Selecciona el tipo de venta.");
             return;
         }
 
-        Venta venta = new Venta();
-        venta.setTipoVenta(tipo);
-        venta.setMetodoPago(metodo);
-        venta.setFechaVenta(LocalDate.now());
-        venta.setCliente(cbCliente != null ? cbCliente.getValue() : null);
-        venta.setNumeroComprobante(txtNumeroComprobante != null ? txtNumeroComprobante.getText().trim() : null);
-        venta.setDetalles(new java.util.ArrayList<>(detalleActual));
-        venta.setTotalVenta(detalleActual.stream().map(DetalleVenta::getSubtotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add));
-
-        int id = ventaDAO.guardarVenta(venta, recetaDAO);
-        if (id > 0) {
-            info("Éxito", "Venta #" + id + " registrada. Inventario actualizado automáticamente.");
-            limpiarFormulario();
-            cargarHistorial();
+        if ("PEDIDO".equals(tipo)) {
+            abrirSelectorPedidoNormal();
         } else {
-            alerta("Error", "No se pudo registrar la venta.");
+            abrirSelectorVitrina();
         }
     }
+
+    // ── PEDIDOS NORMALES ─────────────────────────────────────────
+
+    private void abrirSelectorPedidoNormal() {
+
+        List<Pedido> pedidos =
+                pedidoDAO.listarListosPorTipo(false);
+
+        if (pedidos.isEmpty()) {
+
+            alerta("Sin pedidos",
+                    "No hay pedidos LISTOS.");
+
+            return;
+        }
+
+        seleccionarDeListaDialog(
+                "Seleccionar Pedido",
+                "Pedidos listos:",
+                pedidos
+        ).ifPresent(pedido -> {
+
+            pedidoSeleccionado = pedido;
+
+            detalleActual.clear();
+
+            List<DetallePedido> detalles =
+                    pedidoDAO.listarDetalles(
+                            pedido.getIdPedido());
+
+            for (DetallePedido dp : detalles) {
+
+                DetalleVenta dv = new DetalleVenta();
+
+                dv.setProducto(dp.getProducto());
+                dv.setCantidad(dp.getCantidad());
+                dv.setPrecioUnitario(dp.getPrecioUnitario());
+
+                dv.calcularSubtotal();
+
+                detalleActual.add(dv);
+            }
+
+            cbCliente.setValue(pedido.getCliente());
+
+            actualizarTotales();
+        });
+    }
+
+    // ── VITRINA ──────────────────────────────────────────────────
+
+    private void abrirSelectorVitrina() {
+
+        List<Pedido> pedidos =
+                pedidoDAO.listarListosPorTipo(true);
+
+        if (pedidos.isEmpty()) {
+
+            alerta("Sin stock",
+                    "No hay pedidos VITRINA.");
+
+            return;
+        }
+
+        seleccionarDeListaDialog(
+                "Seleccionar Vitrina",
+                "Pedidos vitrinas:",
+                pedidos
+        ).ifPresent(pedido -> {
+
+            List<DetallePedido> disponibles =
+                    pedidoDAO.listarDetallesConRestante(
+                            pedido.getIdPedido());
+
+            seleccionarDeListaDialog(
+                    "Productos",
+                    "Selecciona producto:",
+                    disponibles
+            ).ifPresent(dp -> {
+
+                TextInputDialog dialog =
+                        new TextInputDialog("1");
+
+                dialog.setTitle("Cantidad");
+
+                dialog.setHeaderText(
+                        dp.getProducto().getNombreProducto()
+                );
+
+                dialog.setContentText("Cantidad:");
+
+                dialog.showAndWait().ifPresent(cantStr -> {
+
+                    try {
+
+                        int cantidad =
+                                Integer.parseInt(cantStr);
+
+                        DetalleVenta dv =
+                                new DetalleVenta();
+
+                        dv.setProducto(dp.getProducto());
+                        dv.setCantidad(cantidad);
+                        dv.setPrecioUnitario(
+                                dp.getPrecioUnitario());
+
+                        dv.calcularSubtotal();
+
+                        detalleActual.add(dv);
+
+                        descontarVitrina.merge(
+                                dp.getIdDetallePedido(),
+                                cantidad,
+                                Integer::sum
+                        );
+
+                        actualizarTotales();
+
+                    } catch (Exception ex) {
+
+                        alerta("Error",
+                                "Cantidad inválida.");
+                    }
+                });
+            });
+        });
+    }
+
+    // ── DIALOG GENÉRICO ──────────────────────────────────────────
+
+    private <T> java.util.Optional<T> seleccionarDeListaDialog(
+            String titulo,
+            String header,
+            List<T> items
+    ) {
+        if (items.isEmpty()) return java.util.Optional.empty();
+
+        Dialog<T> dialog = new Dialog<>();
+
+        dialog.setTitle(titulo);
+
+        dialog.setHeaderText(header);
+
+        dialog.getDialogPane().getButtonTypes().addAll(
+                ButtonType.OK,
+                ButtonType.CANCEL
+        );
+
+        ListView<T> listView =
+                new ListView<>(
+                        FXCollections.observableArrayList(items)
+                );
+
+        listView.setPrefHeight(Math.min(items.size() * 36 + 20, 280));
+
+        // Seleccionar primero SOLO si hay items — fix IndexOutOfBoundsException
+        if (!listView.getItems().isEmpty()) {
+            listView.getSelectionModel().select(0);
+        }
+
+        Button okBtn = (Button) dialog.getDialogPane()
+                .lookupButton(ButtonType.OK);
+        okBtn.setDisable(listView.getSelectionModel().getSelectedItem() == null);
+        listView.getSelectionModel().selectedItemProperty().addListener(
+                (obs, o, n) -> okBtn.setDisable(n == null));
+
+        dialog.getDialogPane().setContent(listView);
+
+        dialog.setResultConverter(bt -> {
+
+            if (bt == ButtonType.OK) {
+                return listView.getSelectionModel()
+                        .getSelectedItem();
+            }
+
+            return null;
+        });
+
+        return dialog.showAndWait();
+    }
+
+    // ── CLIENTE RÁPIDO ───────────────────────────────────────────
 
     @FXML
-    public void eliminarItemVenta() {
-        DetalleVenta sel = tablaDetalleVenta != null ? tablaDetalleVenta.getSelectionModel().getSelectedItem() : null;
-        if (sel != null) {
-            detalleActual.remove(sel);
-            recalcularTotal();
+    public void crearClienteRapido() {
+
+        String nombre = txtNuevoCliente.getText().trim();
+
+        if (nombre.isEmpty()) {
+            alerta("Campo vacío",
+                    "Ingresa un nombre.");
+            return;
+        }
+
+        Cliente cliente = new Cliente();
+
+        cliente.setNombre(nombre);
+
+        if (clienteDAO.insertar(cliente)) {
+
+            cbCliente.setItems(
+                    FXCollections.observableArrayList(
+                            clienteDAO.listarTodos()
+                    ));
+
+            txtNuevoCliente.clear();
+
+            info("Cliente creado",
+                    "Cliente agregado.");
         }
     }
 
-    private void recalcularTotal() {
-        BigDecimal total = detalleActual.stream().map(DetalleVenta::getSubtotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        if (lblTotalVenta != null) lblTotalVenta.setText("$" + total.setScale(2, java.math.RoundingMode.HALF_UP));
+    // ── REGISTRAR ────────────────────────────────────────────────
+
+    @FXML
+    public void registrarVenta() {
+
+        if (detalleActual.isEmpty()) {
+            alerta("Sin productos", "Agrega productos.");
+            return;
+        }
+
+        BigDecimal total =
+                detalleActual.stream()
+                        .map(DetalleVenta::getSubtotal)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        LocalDate fecha = dpFechaVenta.getValue();
+        String comprobante = txtNumeroComprobante.getText();
+        String tipo = cbTipoVenta.getValue();
+
+        Venta venta = new Venta();
+        venta.setCliente(cbCliente.getValue());
+        venta.setFechaVenta(fecha);
+        venta.setTipoVenta(tipo);
+        venta.setMetodoPago(metodoPagoActual);
+        venta.setNumeroComprobante(comprobante);
+        venta.setTotalVenta(total);
+        venta.setDetalles(new ArrayList<>(detalleActual));
+
+        if (pedidoSeleccionado != null) {
+            venta.setIdPedido(pedidoSeleccionado.getIdPedido());
+        }
+
+        int id;
+
+        if ("PEDIDO".equals(tipo)) {
+
+            int estadoEntregado =
+                    ventaDAO.obtenerIdEstadoPorNombre("Entregado");
+
+            id = ventaDAO.registrarVentaPedido(venta, estadoEntregado);
+
+        } else {
+
+            id = ventaDAO.registrarVentaDirectaVitrina(
+                    venta, descontarVitrina, pedidoDAO);
+        }
+
+        if (id > 0) {
+
+            // Snapshot para la factura (antes de limpiar)
+            final int idFinal = id;
+            final List<DetalleVenta> detFinal = new ArrayList<>(detalleActual);
+            final Venta ventaFinal = venta;
+            ventaFinal.setIdVenta(idFinal);
+
+            limpiarFormulario();
+            cargarHistorial();
+
+            // Preguntar si abrir factura PDF
+            Alert dlg = new Alert(Alert.AlertType.CONFIRMATION);
+            dlg.setTitle("Venta #" + idFinal + " registrada");
+            dlg.setHeaderText("Total: $" + total.setScale(2, RoundingMode.HALF_UP));
+            dlg.setContentText("¿Deseas abrir la factura en PDF?");
+            dlg.getButtonTypes().setAll(
+                    new ButtonType("Abrir Factura", ButtonBar.ButtonData.YES),
+                    new ButtonType("No, gracias",   ButtonBar.ButtonData.NO)
+            );
+            dlg.showAndWait().ifPresent(btn -> {
+                if (btn.getButtonData() == ButtonBar.ButtonData.YES) {
+                    try {
+                        utils.FacturaGenerator.generarYAbrir(idFinal, ventaFinal, detFinal);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        alerta("Error al generar factura", ex.getMessage());
+                    }
+                }
+            });
+
+        } else {
+            alerta("Error", "No se pudo registrar.");
+        }
     }
 
-    private void limpiarFormulario() {
+    // ── LIMPIAR ──────────────────────────────────────────────────
+
+    @FXML
+    public void limpiarFormulario() {
+
         detalleActual.clear();
-        if (cbTipoVenta    != null) cbTipoVenta.setValue(null);
-        if (cbCliente      != null) cbCliente.setValue(null);
-        if (cbMetodoPago   != null) cbMetodoPago.setValue(null);
-        if (lblTotalVenta  != null) lblTotalVenta.setText("$0.00");
-        if (txtNumeroComprobante != null) txtNumeroComprobante.clear();
+
+        descontarVitrina.clear();
+
+        pedidoSeleccionado = null;
+
+        cbCliente.setValue(null);
+
+        cbCliente.setDisable(false);
+
+        dpFechaVenta.setValue(LocalDate.now());
+
+        cbTipoComprobante.setValue(null);
+
+        txtNumeroComprobante.clear();
+
+        txtNuevoCliente.clear();
+
+        metodoPagoActual = "Efectivo";
+
+        actualizarEstiloMetodoPago(btnEfectivo);
+
+        lblMetodoPagoSeleccionado.setText(
+                "Seleccionado: Efectivo"
+        );
+
+        actualizarTotales();
     }
 
-    private void alerta(String t, String m) {
-        new Alert(Alert.AlertType.ERROR, m, ButtonType.OK) {{ setTitle(t); setHeaderText(null); }}.showAndWait();
+    // ── TOTALES ──────────────────────────────────────────────────
+
+    private void actualizarTotales() {
+
+        BigDecimal subtotal =
+                detalleActual.stream()
+                        .map(DetalleVenta::getSubtotal)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal iva =
+                subtotal.multiply(BigDecimal.valueOf(0.13));
+
+        lblSubtotal.setText(
+                "$" + subtotal.setScale(2, RoundingMode.HALF_UP));
+
+        lblIva.setText(
+                "$" + iva.setScale(2, RoundingMode.HALF_UP));
+
+        lblTotalVenta.setText(
+                "$" + subtotal.add(iva).setScale(2, RoundingMode.HALF_UP));
     }
 
-    private void info(String t, String m) {
-        new Alert(Alert.AlertType.INFORMATION, m, ButtonType.OK) {{ setTitle(t); setHeaderText(null); }}.showAndWait();
+    // ── ALERTAS ──────────────────────────────────────────────────
+
+    private void alerta(String titulo, String msg) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
+    private void info(String titulo, String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
     }
 }
