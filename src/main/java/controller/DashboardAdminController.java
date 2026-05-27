@@ -24,6 +24,7 @@ public class DashboardAdminController {
     @FXML private Button btnReportes;
     @FXML private Button btnInventario;
     @FXML private Button btnUsuarios;
+    @FXML private Button btnClientes;
 
     // Navbar
     @FXML private Label lblTituloModulo;
@@ -85,6 +86,11 @@ public class DashboardAdminController {
     @FXML
     public void mostrarUsuarios(ActionEvent e) {
         cargarVista("/views/usuarios.fxml", "Usuarios", btnUsuarios);
+    }
+
+    @FXML
+    public void mostrarClientes(ActionEvent e) {
+        cargarVista("/views/clientes.fxml", "Clientes", btnClientes);
     }
 
     @FXML
