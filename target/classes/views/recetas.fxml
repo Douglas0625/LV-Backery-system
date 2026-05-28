@@ -20,7 +20,7 @@
 
     <!-- ================= CONTENIDO ================= -->
     <center>
-        <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true" style="-fx-background: #F5F3EF;">
+        <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true" prefHeight="746.0" prefWidth="1302.0" style="-fx-background: #F5F3EF;">
             <content>
                 <VBox spacing="20">
                     <children>
@@ -31,7 +31,7 @@
                                 <VBox spacing="5">
                                     <children>
                                         <Label text="Gestión de Productos y Recetas" textFill="#3E2C27">
-                                            <font><Font name="Segoe UI Bold" size="30" /></font>
+                                            <font><Font name="Segoe UI Bold" size="24.0" /></font>
                                         </Label>
                                         <Label text="Administre productos, recetas e ingredientes" textFill="#7A6E69">
                                             <font><Font name="Segoe UI" size="14" /></font>
@@ -53,7 +53,7 @@
                                         <HBox alignment="CENTER_LEFT">
                                             <children>
                                                 <Label text="Productos Registrados" textFill="#3E2C27">
-                                                    <font><Font name="Segoe UI Bold" size="22" /></font>
+                                                    <font><Font name="Segoe UI Bold" size="18.0" /></font>
                                                 </Label>
                                                 <Region HBox.hgrow="ALWAYS" />
                                                 <!-- Búsqueda en vivo -->
@@ -77,23 +77,26 @@
                                 <VBox maxWidth="420" minWidth="420" prefWidth="420" spacing="18">
                                     <children>
 
-                                        <VBox spacing="14" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 15;">
+                                        <VBox prefHeight="754.0" prefWidth="420.0" spacing="14" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 15;">
                                             <children>
 
                                                 <Label text="Producto y Receta" textFill="#3E2C27">
-                                                    <font><Font name="Segoe UI Bold" size="22" /></font>
+                                                    <font><Font name="Segoe UI Bold" size="24.0" /></font>
                                                 </Label>
 
                                                 <!-- ── SECCIÓN PRODUCTO ── -->
                                                 <Separator />
                                                 <Label text="Datos del Producto" textFill="#8B4A2F">
-                                                    <font><Font name="Segoe UI Bold" size="15" /></font>
+                                                    <font><Font name="Segoe UI Bold" size="18.0" /></font>
                                                 </Label>
 
                                                 <!-- Nombre producto -->
                                                 <VBox spacing="5">
                                                     <children>
-                                                        <Label text="Nombre del Producto" />
+                                                        <Label text="Nombre del Producto">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font></Label>
                                                         <TextField fx:id="txtNombreProducto" promptText="Ej: Cheesecake" />
                                                     </children>
                                                 </VBox>
@@ -101,7 +104,10 @@
                                                 <!-- Descripción -->
                                                 <VBox spacing="5">
                                                     <children>
-                                                        <Label text="Descripción" />
+                                                        <Label text="Descripción">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font></Label>
                                                         <TextArea fx:id="txtDescripcion" prefHeight="70" promptText="Descripción del producto" wrapText="true" />
                                                     </children>
                                                 </VBox>
@@ -111,13 +117,19 @@
                                                     <children>
                                                         <VBox spacing="5" HBox.hgrow="ALWAYS">
                                                             <children>
-                                                                <Label text="Precio Venta" />
+                                                                <Label text="Precio Venta">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font></Label>
                                                                 <TextField fx:id="txtPrecioVenta" promptText="0.00" />
                                                             </children>
                                                         </VBox>
                                                         <VBox spacing="5" HBox.hgrow="ALWAYS">
                                                             <children>
-                                                                <Label text="Unidades / Presentación" />
+                                                                <Label text="Unidades / Presentación">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font></Label>
                                                                 <TextField fx:id="txtUnidades" promptText="Ej: 12" />
                                                             </children>
                                                         </VBox>
@@ -127,7 +139,7 @@
                                                 <!-- ── SECCIÓN RECETA ── -->
                                                 <Separator />
                                                 <Label text="Datos de la Receta" textFill="#8B4A2F">
-                                                    <font><Font name="Segoe UI Bold" size="15" /></font>
+                                                    <font><Font name="Segoe UI Bold" size="18.0" /></font>
                                                 </Label>
 
                                                 <!-- Nombre receta y rendimiento -->
@@ -135,13 +147,19 @@
                                                     <children>
                                                         <VBox spacing="5" HBox.hgrow="ALWAYS">
                                                             <children>
-                                                                <Label text="Nombre de la Receta" />
+                                                                <Label text="Nombre de la Receta">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font></Label>
                                                                 <TextField fx:id="txtNombreReceta" promptText="Ej: Receta Cheesecake" />
                                                             </children>
                                                         </VBox>
                                                         <VBox spacing="5">
                                                             <children>
-                                                                <Label text="Rendimiento" />
+                                                                <Label text="Rendimiento">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font></Label>
                                                                 <TextField fx:id="txtRendimiento" prefWidth="100" promptText="Unidades" />
                                                             </children>
                                                         </VBox>
@@ -154,7 +172,7 @@
                                                 <HBox alignment="CENTER_LEFT">
                                                     <children>
                                                         <Label text="Ingredientes" textFill="#8B4A2F">
-                                                            <font><Font name="Segoe UI Bold" size="15" /></font>
+                                                            <font><Font name="Segoe UI Bold" size="18.0" /></font>
                                                         </Label>
                                                         <Region HBox.hgrow="ALWAYS" />
                                                         <Button onAction="#agregarIngredienteReceta" prefHeight="32" prefWidth="130" style="-fx-background-color: #D8B08C; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6;" text="+ Ingrediente">
@@ -163,7 +181,7 @@
                                                     </children>
                                                 </HBox>
 
-                                                <TableView fx:id="tablaDetalleReceta" prefHeight="220">
+                                                <TableView fx:id="tablaDetalleReceta" minHeight="200.0" prefHeight="149.0" prefWidth="380.0">
                                                     <columns>
                                                         <TableColumn fx:id="colIngredienteRec" prefWidth="155" text="INGREDIENTE" />
                                                         <TableColumn fx:id="colGramosRec" prefWidth="75" text="GRAMOS" />
@@ -173,7 +191,7 @@
                                                 </TableView>
 
                                                 <!-- COSTO ESTIMADO -->
-                                                <VBox spacing="4" style="-fx-background-color: #F2A47F; -fx-padding: 12; -fx-background-radius: 10;">
+                                                <VBox prefHeight="54.0" prefWidth="380.0" spacing="4" style="-fx-background-color: #F2A47F; -fx-padding: 12; -fx-background-radius: 10;">
                                                     <children>
                                                         <Label text="COSTO ESTIMADO" textFill="#8A4B32">
                                                             <font><Font name="Segoe UI Bold" size="12" /></font>

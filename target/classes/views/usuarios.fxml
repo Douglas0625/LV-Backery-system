@@ -15,48 +15,47 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fitToWidth="true" fitToHeight="false"
-            style="-fx-background-color: transparent; -fx-background: transparent;"
-            xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.UsuariosController">
+<ScrollPane fitToHeight="false" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.UsuariosController">
 <content>
 <VBox spacing="15" style="-fx-background-color: #F5F3EF;">
-    <padding><Insets top="20" left="20" right="20" bottom="20"/></padding>
+    <padding><Insets bottom="20" left="20" right="20" top="20" /></padding>
+         <Label text="Gestion de Usuarios" textFill="#4B3832">
+            <font>
+               <Font name="Segoe UI Bold" size="24.0" />
+            </font>
+         </Label>
+         <Label style="-fx-text-fill: black;" text="Acciones CRUD completos para usuarios" />
 
     <!-- CARDS RESUMEN -->
     <HBox spacing="15">
         <children>
-            <VBox spacing="8" HBox.hgrow="ALWAYS"
-                  style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #E5E1DC;">
+            <VBox spacing="8" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #E5E1DC;" HBox.hgrow="ALWAYS">
                 <children>
                     <Label text="TOTAL USUARIOS" textFill="#7A6F68">
-                        <font><Font name="Segoe UI Bold" size="11"/></font>
+                        <font><Font name="Segoe UI Bold" size="11" /></font>
                     </Label>
                     <Label fx:id="lblTotalUsuarios" text="0" textFill="#4B3832">
-                        <font><Font name="Segoe UI Bold" size="34"/></font>
+                        <font><Font name="Segoe UI Bold" size="34" /></font>
                     </Label>
                 </children>
             </VBox>
-            <VBox spacing="8" HBox.hgrow="ALWAYS"
-                  style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #E5E1DC;">
+            <VBox spacing="8" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #E5E1DC;" HBox.hgrow="ALWAYS">
                 <children>
                     <Label text="ADMINISTRADORES" textFill="#7A6F68">
-                        <font><Font name="Segoe UI Bold" size="11"/></font>
+                        <font><Font name="Segoe UI Bold" size="11" /></font>
                     </Label>
                     <Label fx:id="lblTotalAdmins" text="0" textFill="#4B3832">
-                        <font><Font name="Segoe UI Bold" size="34"/></font>
+                        <font><Font name="Segoe UI Bold" size="34" /></font>
                     </Label>
                 </children>
             </VBox>
-            <VBox spacing="8" HBox.hgrow="ALWAYS"
-                  style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #E5E1DC;">
+            <VBox spacing="8" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #E5E1DC;" HBox.hgrow="ALWAYS">
                 <children>
                     <Label text="CAJEROS" textFill="#7A6F68">
-                        <font><Font name="Segoe UI Bold" size="11"/></font>
+                        <font><Font name="Segoe UI Bold" size="11" /></font>
                     </Label>
                     <Label fx:id="lblTotalCajeros" text="0" textFill="#4B3832">
-                        <font><Font name="Segoe UI Bold" size="34"/></font>
+                        <font><Font name="Segoe UI Bold" size="34" /></font>
                     </Label>
                 </children>
             </VBox>
@@ -64,37 +63,31 @@
     </HBox>
 
     <!-- TABLA USUARIOS -->
-    <VBox spacing="12" VBox.vgrow="ALWAYS"
-          style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #E5E1DC; -fx-padding: 18;">
+    <VBox spacing="12" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #E5E1DC; -fx-padding: 18;" VBox.vgrow="ALWAYS">
         <children>
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <children>
                     <Label text="Usuarios" textFill="#4B3832">
-                        <font><Font name="Segoe UI Bold" size="20"/></font>
+                        <font><Font name="Segoe UI Bold" size="18.0" /></font>
                     </Label>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <TextField fx:id="txtBuscarUsuario" prefWidth="220" prefHeight="34"
-                               promptText="Buscar usuario..."
-                               style="-fx-background-color: #F5F3EF; -fx-border-color: #E5E1D8; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <TextField fx:id="txtBuscarUsuario" prefHeight="34" prefWidth="220" promptText="Buscar usuario..." style="-fx-background-color: #F5F3EF; -fx-border-color: #E5E1D8; -fx-border-radius: 5; -fx-background-radius: 5;" />
                 </children>
             </HBox>
-            <TableView fx:id="tablaUsuarios" prefHeight="280" VBox.vgrow="ALWAYS"
-                       style="-fx-background-color: white;">
+            <TableView fx:id="tablaUsuarios" prefHeight="280" style="-fx-background-color: white;" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="colId"       text="ID"       prefWidth="70"/>
-                    <TableColumn fx:id="colNombre"   text="NOMBRE"   prefWidth="260"/>
-                    <TableColumn fx:id="colUsername" text="USUARIO"  prefWidth="200"/>
-                    <TableColumn fx:id="colRol"      text="ROL"      prefWidth="160"/>
+                    <TableColumn fx:id="colId" prefWidth="70" text="ID" />
+                    <TableColumn fx:id="colNombre" prefWidth="260" text="NOMBRE" />
+                    <TableColumn fx:id="colUsername" prefWidth="200" text="USUARIO" />
+                    <TableColumn fx:id="colRol" prefWidth="160" text="ROL" />
                 </columns>
             </TableView>
             <!-- BOTON ELIMINAR -->
             <HBox alignment="CENTER_RIGHT">
                 <children>
-                    <Button text="Eliminar Seleccionado" textFill="WHITE"
-                            onAction="#eliminarUsuario"
-                            style="-fx-background-color: #C0392B; -fx-background-radius: 6; -fx-padding: 8 16 8 16;">
-                        <font><Font name="Segoe UI Bold" size="12"/></font>
-                        <cursor><Cursor fx:constant="HAND"/></cursor>
+                    <Button onAction="#eliminarUsuario" style="-fx-background-color: #C0392B; -fx-background-radius: 6; -fx-padding: 8 16 8 16;" text="Eliminar Seleccionado" textFill="WHITE">
+                        <font><Font name="Segoe UI Bold" size="12" /></font>
+                        <cursor><Cursor fx:constant="HAND" /></cursor>
                     </Button>
                 </children>
             </HBox>
@@ -106,61 +99,53 @@
         <children>
 
             <!-- CREAR USUARIO -->
-            <VBox spacing="14" HBox.hgrow="ALWAYS"
-                  style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #E5E1DC; -fx-padding: 20;">
+            <VBox spacing="14" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #E5E1DC; -fx-padding: 20;" HBox.hgrow="ALWAYS">
                 <children>
                     <Label text="Crear Usuario" textFill="#4B3832">
-                        <font><Font name="Segoe UI Bold" size="18"/></font>
+                        <font><Font name="Segoe UI Bold" size="18" /></font>
                     </Label>
 
                     <VBox spacing="4">
                         <children>
-                            <Label text="Nombre completo">
-                                <font><Font name="Segoe UI Bold" size="12"/></font>
+                            <Label style="-fx-text-fill: black;" text="Nombre completo">
+                                <font><Font name="Segoe UI Bold" size="12" /></font>
                             </Label>
-                            <TextField fx:id="txtNombreCrear" prefHeight="34"
-                                       style="-fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8; -fx-border-radius: 4; -fx-background-radius: 4;"/>
+                            <TextField fx:id="txtNombreCrear" prefHeight="34" style="-fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8; -fx-border-radius: 4; -fx-background-radius: 4;" />
                         </children>
                     </VBox>
 
                     <VBox spacing="4">
                         <children>
-                            <Label text="Usuario">
-                                <font><Font name="Segoe UI Bold" size="12"/></font>
+                            <Label style="-fx-text-fill: black;" text="Usuario">
+                                <font><Font name="Segoe UI Bold" size="12" /></font>
                             </Label>
-                            <TextField fx:id="txtUsernameCrear" prefHeight="34"
-                                       style="-fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8; -fx-border-radius: 4; -fx-background-radius: 4;"/>
+                            <TextField fx:id="txtUsernameCrear" prefHeight="34" style="-fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8; -fx-border-radius: 4; -fx-background-radius: 4;" />
                         </children>
                     </VBox>
 
                     <VBox spacing="4">
                         <children>
-                            <Label text="Contraseña">
-                                <font><Font name="Segoe UI Bold" size="12"/></font>
+                            <Label style="-fx-text-fill: black;" text="Contraseña">
+                                <font><Font name="Segoe UI Bold" size="12" /></font>
                             </Label>
-                            <PasswordField fx:id="txtPasswordCrear" prefHeight="34"
-                                           style="-fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8; -fx-border-radius: 4; -fx-background-radius: 4;"/>
+                            <PasswordField fx:id="txtPasswordCrear" prefHeight="34" style="-fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8; -fx-border-radius: 4; -fx-background-radius: 4;" />
                         </children>
                     </VBox>
 
                     <VBox spacing="4">
                         <children>
-                            <Label text="Rol">
-                                <font><Font name="Segoe UI Bold" size="12"/></font>
+                            <Label style="-fx-text-fill: black;" text="Rol">
+                                <font><Font name="Segoe UI Bold" size="12" /></font>
                             </Label>
-                            <ComboBox fx:id="cbRolCrear" maxWidth="Infinity" prefHeight="34"
-                                      promptText="Seleccione rol"/>
+                            <ComboBox fx:id="cbRolCrear" maxWidth="Infinity" prefHeight="34" promptText="Seleccione rol" />
                         </children>
                     </VBox>
 
                     <HBox alignment="CENTER_RIGHT" spacing="10">
                         <children>
-                            <Button text="Crear Usuario" textFill="WHITE"
-                                    onAction="#crearUsuario"
-                                    prefHeight="38" prefWidth="160"
-                                    style="-fx-background-color: #4B3832; -fx-background-radius: 6;">
-                                <font><Font name="Segoe UI Bold" size="13"/></font>
-                                <cursor><Cursor fx:constant="HAND"/></cursor>
+                            <Button onAction="#crearUsuario" prefHeight="38" prefWidth="160" style="-fx-background-color: #4B3832; -fx-background-radius: 6;" text="Crear Usuario" textFill="WHITE">
+                                <font><Font name="Segoe UI Bold" size="13" /></font>
+                                <cursor><Cursor fx:constant="HAND" /></cursor>
                             </Button>
                         </children>
                     </HBox>
@@ -168,61 +153,53 @@
             </VBox>
 
             <!-- EDITAR USUARIO -->
-            <VBox spacing="14" HBox.hgrow="ALWAYS"
-                  style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #E5E1DC; -fx-padding: 20;">
+            <VBox spacing="14" style="-fx-background-color: white; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #E5E1DC; -fx-padding: 20;" HBox.hgrow="ALWAYS">
                 <children>
                     <Label text="Editar Usuario Seleccionado" textFill="#4B3832">
-                        <font><Font name="Segoe UI Bold" size="18"/></font>
+                        <font><Font name="Segoe UI Bold" size="18" /></font>
                     </Label>
 
                     <VBox spacing="4">
                         <children>
-                            <Label text="Nombre completo">
-                                <font><Font name="Segoe UI Bold" size="12"/></font>
+                            <Label style="-fx-text-fill: black;" text="Nombre completo">
+                                <font><Font name="Segoe UI Bold" size="12" /></font>
                             </Label>
-                            <TextField fx:id="txtNombreEditar" prefHeight="34"
-                                       style="-fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8; -fx-border-radius: 4; -fx-background-radius: 4;"/>
+                            <TextField fx:id="txtNombreEditar" prefHeight="34" style="-fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8; -fx-border-radius: 4; -fx-background-radius: 4;" />
                         </children>
                     </VBox>
 
                     <VBox spacing="4">
                         <children>
-                            <Label text="Usuario">
-                                <font><Font name="Segoe UI Bold" size="12"/></font>
+                            <Label style="-fx-text-fill: black;" text="Usuario">
+                                <font><Font name="Segoe UI Bold" size="12" /></font>
                             </Label>
-                            <TextField fx:id="txtUsernameEditar" prefHeight="34"
-                                       style="-fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8; -fx-border-radius: 4; -fx-background-radius: 4;"/>
+                            <TextField fx:id="txtUsernameEditar" prefHeight="34" style="-fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8; -fx-border-radius: 4; -fx-background-radius: 4;" />
                         </children>
                     </VBox>
 
                     <VBox spacing="4">
                         <children>
-                            <Label text="Nueva Contraseña">
-                                <font><Font name="Segoe UI Bold" size="12"/></font>
+                            <Label prefHeight="15.0" prefWidth="125.0" style="-fx-text-fill: black;" text="Nueva Contraseña">
+                                <font><Font name="Segoe UI Bold" size="12" /></font>
                             </Label>
-                            <PasswordField fx:id="txtPasswordEditar" prefHeight="34"
-                                           style="-fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8; -fx-border-radius: 4; -fx-background-radius: 4;"/>
+                            <PasswordField fx:id="txtPasswordEditar" prefHeight="34" style="-fx-background-color: #F0EFEB; -fx-border-color: #E5E1D8; -fx-border-radius: 4; -fx-background-radius: 4;" />
                         </children>
                     </VBox>
 
                     <VBox spacing="4">
                         <children>
-                            <Label text="Rol">
-                                <font><Font name="Segoe UI Bold" size="12"/></font>
+                            <Label style="-fx-text-fill: black;" text="Rol">
+                                <font><Font name="Segoe UI Bold" size="12" /></font>
                             </Label>
-                            <ComboBox fx:id="cbRolEditar" maxWidth="Infinity" prefHeight="34"
-                                      promptText="Seleccione rol"/>
+                            <ComboBox fx:id="cbRolEditar" maxWidth="Infinity" prefHeight="34" promptText="Seleccione rol" />
                         </children>
                     </VBox>
 
                     <HBox alignment="CENTER_RIGHT" spacing="10">
                         <children>
-                            <Button text="Guardar Cambios" textFill="WHITE"
-                                    onAction="#actualizarUsuario"
-                                    prefHeight="38" prefWidth="160"
-                                    style="-fx-background-color: #5C3D2E; -fx-background-radius: 6;">
-                                <font><Font name="Segoe UI Bold" size="13"/></font>
-                                <cursor><Cursor fx:constant="HAND"/></cursor>
+                            <Button onAction="#actualizarUsuario" prefHeight="38" prefWidth="160" style="-fx-background-color: #5C3D2E; -fx-background-radius: 6;" text="Guardar Cambios" textFill="WHITE">
+                                <font><Font name="Segoe UI Bold" size="13" /></font>
+                                <cursor><Cursor fx:constant="HAND" /></cursor>
                             </Button>
                         </children>
                     </HBox>
