@@ -95,6 +95,18 @@
                     <cursor><Cursor fx:constant="HAND" /></cursor>
                 </Button>
 
+                <!-- BTN CLIENTES -->
+                <Button fx:id="btnClientes" alignment="CENTER_LEFT" graphicTextGap="12"
+                        maxWidth="Infinity" onAction="#mostrarClientes" prefHeight="44"
+                        style="-fx-background-color: transparent; -fx-background-radius: 8; -fx-padding: 10 15 10 15;"
+                        text="Clientes" textFill="WHITE">
+                    <graphic><ImageView fitHeight="24" fitWidth="24" preserveRatio="true">
+                        <image><Image url="@../img/usuario.png" /></image>
+                    </ImageView></graphic>
+                    <font><Font name="Segoe UI" size="14" /></font>
+                    <cursor><Cursor fx:constant="HAND" /></cursor>
+                </Button>
+
                 <!-- SPACER PUSH DOWN -->
                 <Region VBox.vgrow="ALWAYS" />
 

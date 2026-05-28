@@ -13,8 +13,6 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -24,8 +22,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="controller.ReportesController">
+<BorderPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ReportesController">
 
     <!-- ================= CONTENIDO ================= -->
     <center>
@@ -52,7 +49,7 @@
                                     <Label text="Reportes y Estadísticas" textFill="#4B3832">
 
                                         <font>
-                                            <Font name="Segoe UI Bold" size="26.0" />
+                                            <Font name="Segoe UI Bold" size="24.0" />
                                         </font>
 
                                     </Label>
@@ -68,7 +65,7 @@
                             <DatePicker fx:id="dpFechaInicio" promptText="Fecha inicio" />
 
                             <DatePicker fx:id="dpFechaFin" promptText="Fecha fin" />
-                     <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #4b3832;" text="Filtrar" textFill="WHITE" onAction="#onFiltrar">
+                     <Button mnemonicParsing="false" onAction="#onFiltrar" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #4b3832;" text="Filtrar" textFill="WHITE">
                         <cursor>
                            <Cursor fx:constant="HAND" />
                         </cursor>
@@ -93,7 +90,10 @@
 
                             <children>
 
-                                <Label text="VENTAS DEL MES" textFill="#7A6F68" />
+                                <Label text="VENTAS DEL MES" textFill="#7A6F68">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
 
                                 <Label fx:id="lblTotalVentasMes" text="Cargando..." textFill="#4B3832">
 
@@ -112,7 +112,10 @@
 
                             <children>
 
-                                <Label text="GANANCIA NETA" textFill="#7A6F68" />
+                                <Label text="GANANCIA NETA" textFill="#7A6F68">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
 
                                 <Label fx:id="lblGananciaNeta" text="Cargando..." textFill="#4B3832">
 
@@ -131,7 +134,10 @@
 
                             <children>
 
-                                <Label text="PRODUCTO TOP" textFill="#7A6F68" />
+                                <Label text="PRODUCTO TOP" textFill="#7A6F68">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
 
                                 <Label fx:id="lblProductoTop" text="Cargando..." textFill="#4B3832">
 
@@ -150,7 +156,10 @@
 
                             <children>
 
-                                <Label text="STOCK CRÍTICO" textFill="#7A6F68" />
+                                <Label text="STOCK CRÍTICO" textFill="#7A6F68">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></Label>
 
                                 <Label fx:id="lblStockCritico" text="Cargando..." textFill="#D64545">
 
@@ -296,10 +305,10 @@
 
                                     <TableView fx:id="tablaUltimasVentas" prefHeight="300.0" VBox.vgrow="ALWAYS">
                                         <columns>
-                                            <TableColumn fx:id="colVentaId"      prefWidth="80.0"  text="ID" />
+                                            <TableColumn fx:id="colVentaId" prefWidth="80.0" text="ID" />
                                             <TableColumn fx:id="colVentaCliente" prefWidth="180.0" text="Cliente" />
-                                            <TableColumn fx:id="colVentaFecha"   prefWidth="120.0" text="Fecha" />
-                                            <TableColumn fx:id="colVentaTotal"   prefWidth="120.0" text="Total" />
+                                            <TableColumn fx:id="colVentaFecha" prefWidth="120.0" text="Fecha" />
+                                            <TableColumn fx:id="colVentaTotal" prefWidth="120.0" text="Total" />
                                         </columns>
                                     </TableView>
 
@@ -323,7 +332,7 @@
                                     <TableView fx:id="tablaStockCritico" prefHeight="300.0">
                                         <columns>
                                             <TableColumn fx:id="colIngNombre" prefWidth="180.0" text="Ingrediente" />
-                                            <TableColumn fx:id="colIngStock"  prefWidth="100.0" text="Stock (g)" />
+                                            <TableColumn fx:id="colIngStock" prefWidth="100.0" text="Stock (g)" />
                                             <TableColumn fx:id="colIngEstado" prefWidth="100.0" text="Estado" />
                                         </columns>
                                     </TableView>
